@@ -17,8 +17,16 @@
 		Utils_SQL::sql_from_file("../sql/AllInserts.sql");
 	}
 	
-	$promotion = $_GET['idPromotion'];
-	// $promotion=0;
+	if(isset($_GET['idPromotion'])){
+		$promotion_choisie = true;
+		$idPromotion = $_GET['idPromotion'];
+		if($idPromotion == 0){ // AJOUTER TEST SI EXISTANT
+			header('Location: ./index.php');
+		}
+	}
+	else{
+		$promotion_choisie = false;
+	}
 ?>
 <!DOCTYPE html>
 	<head>
@@ -35,11 +43,31 @@
 		<script type="text/javascript" src="../js/inscriptionUE.js?v=<?php echo filemtime("../js/inscriptionUE.js");?>"></script>
 	</head>
 	<body>
+		<div id="barre_selection_promotion">
+			<table>
+				<tr>
+					<td>Selection d'une promotion</td>
+					<td>
+<?php 
+	if($promotion_choisie){
+		echo Promotion::liste_promotion_for_select($idPromotion); 
+	}
+	else{
+		echo Promotion::liste_promotion_for_select(); 
+	}
+?>
+					</td>
+					<td><a href="?page=ajoutPromotion" >Ajout d'une promotion</a></td>
+				</tr>
+			</table>
+<?php
+	if($promotion_choisie){
+		$promotion = $_GET['idPromotion'];
+?>
 		<nav> 
-<?php include_once('./selection_promotion.php'); 
-if ($_GET['idPromotion'] != 0) {
- include_once('./nav.php'); 
-}?>
+<?php
+	include_once('./nav.php'); 
+?>
 		</nav>
 		<section>
 <?php
@@ -48,6 +76,17 @@ if (isset($_GET['page'])) {
 }
 ?>
 		</section>
+<?php
+	}
+	else if(isset($_GET['page']) && $_GET['page'] == "ajoutPromotion"){
+		include_once("./pages/{$_GET['page']}.php");
+	}
+	else{
+?>
+	<p>Merci de choisir une promotion</p>
+<?php
+	}
+?>
 	</body>
 </html>
 	
