@@ -1,3 +1,42 @@
+<?php
+	header("Content-type: text/css");
+?>
+
+div#pageConnexion h1{
+	color:blue;
+	border-bottom: blue 1px solid;
+	}
+
+div#pageConnexion form#formulaireConnexion{
+	margin: 0 auto 0 auto;
+	width:500px;
+}
+
+div#pageConnexion form#formulaireConnexion div#imageLogoConnexion{
+	text-align:center;
+}
+
+div#pageConnexion form#formulaireConnexion div#imageLogoConnexion img{
+	max-width:200px;
+}
+
+div#pageConnexion form#formulaireConnexion div#indications{
+	text-align:center;
+}
+
+div#pageConnexion form#formulaireConnexion fieldset{
+	border-color:blue;
+}
+
+div#pageConnexion form#formulaireConnexion table{
+	padding:0;
+	margin:0 auto 0 auto;
+}
+
+div#pageConnexion div#bas{
+	text-align:center;
+	}
+
 table#edt_semaine{
 	border-collapse:collapse;
 	border: black 1px solid;

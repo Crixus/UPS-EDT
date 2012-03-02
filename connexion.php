@@ -27,27 +27,39 @@
 	<head>
 		<title>UPS-Timetable Connexion</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" href="./css/style.css" />
+		<link rel="stylesheet" href="./css/style.php" />
 	</head>
 	<body>	
-		<form id="formulaireConnexion" method="post">
-			<fieldset>
-				<legend>Connexion</legend>
-				<ol>
-					<li>
-						<label for="Identifiant">Identifiant</label>
-						<input type="text" name="Identifiant" required />
-					</li>
-					<li>
-						<label for="Mot_de_passe">Mot de passe</label>
-						<input type="password" name="Mot_de_passe" required />
-					</li>
-					<li>
-						<label for="Validation_Connexion"></label>
-						<button type="submit" name="Validation_Connexion">Se connecter</button>
-					</li>
-				</ol>
-			</fieldset>
-		</form>
+		<div id="pageConnexion">
+			<h1>Emploi du temps - Université Paul Sabatier</h1>
+			<form id="formulaireConnexion" method="post">
+				<fieldset>
+					<legend>Connexion</legend>
+					<div id="imageLogoConnexion">
+						<img src="./images/logo_UPS.jpg" alt="Logo université Toulouse 3" />
+					</div>
+					<div id="indications">
+						<p>Veuillez entrer :</p>
+					</div>
+					<table>
+						<tr>
+							<td><label for="Identifiant">Identifiant</label></td>
+							<td><input type="text" name="Identifiant" required /></td>
+						</tr>
+						<tr>
+							<td><label for="Mot_de_passe">Mot de passe</label></td>
+							<td><input type="password" name="Mot_de_passe" required /></td>
+						</tr>
+						<tr>
+							<td><label for="Validation_Connexion"></label></td>
+							<td><button type="submit" name="Validation_Connexion">Se connecter</button></td>
+						</tr>
+					</table>
+				</fieldset>
+			</form>
+			<div id="bas">
+				<p>Manuel Utilisateur</p>
+			</div>
+		</div>
 	</body>
 </html>
