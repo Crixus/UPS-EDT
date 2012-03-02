@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 3.4.5deb1
--- http://www.phpmyadmin.net
---
--- Client: localhost
--- Généré le : Sam 04 Février 2012 à 01:21
--- Version du serveur: 5.1.58
--- Version de PHP: 5.3.6-13ubuntu3.3
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -15,17 +6,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-
---
--- Base de données: `UPS_EDT`
---
-
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Promotion`
---
 
 DROP TABLE IF EXISTS `Promotion`;
 
@@ -39,45 +19,30 @@ CREATE TABLE IF NOT EXISTS `Promotion` (
   UNIQUE KEY `nom` (`nom`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Specialite`
---
-
 DROP TABLE IF EXISTS `Specialite`;
 
 CREATE TABLE IF NOT EXISTS `Specialite` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idPromotion` int(11) NOT NULL,
   `nom` varchar(100) COLLATE utf8_bin NOT NULL,
+  `intitule` varchar(100) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (`nom`,`idPromotion`),
   FOREIGN KEY (idPromotion) REFERENCES Promotion(id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Groupe_Administratif`
---
 
 DROP TABLE IF EXISTS `Groupe_Administratif`;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Administratif` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) COLLATE utf8_bin NOT NULL,
-  `identifiant` varchar(100) COLLATE utf8_bin NOT NULL,
-  `type` varchar(20) COLLATE utf8_bin NOT NULL,
+  `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE (`identifiant`)
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
+  UNIQUE (`nom`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
-
---
--- Structure de la table `Groupe_Cours`
---
 
 DROP TABLE IF EXISTS `Groupe_Cours`;
 
@@ -91,12 +56,6 @@ CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   UNIQUE (`identifiant`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Groupe_Etudiants`
---
-
 DROP TABLE IF EXISTS `Groupe_Etudiants`;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
@@ -108,8 +67,6 @@ CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
   FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
   UNIQUE (`identifiant`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `Utilisateur`;
 
@@ -123,10 +80,6 @@ CREATE TABLE IF NOT EXISTS `Utilisateur` (
   UNIQUE (`login`),
   UNIQUE (`type`, `idCorrespondant`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
---
--- Structure de la table `Etudiant`
---
 
 DROP TABLE IF EXISTS `Etudiant`;
 
@@ -147,12 +100,6 @@ CREATE TABLE IF NOT EXISTS `Etudiant` (
   UNIQUE (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Intervenant`
---
-
 DROP TABLE IF EXISTS `Intervenant`;
 
 CREATE TABLE IF NOT EXISTS `Intervenant` (
@@ -162,15 +109,10 @@ CREATE TABLE IF NOT EXISTS `Intervenant` (
   `email` varchar(100) NOT NULL,
   `telephone` varchar(50) NOT NULL,
   `notificationsActives` tinyint(1) NOT NULL DEFAULT '1',
+  `actif` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `UE`
---
 
 DROP TABLE IF EXISTS `UE`;
 
@@ -190,12 +132,6 @@ CREATE TABLE IF NOT EXISTS `UE` (
   UNIQUE (`nom`, `idPromotion`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Batiment`
---
-
 DROP TABLE IF EXISTS `Batiment`; 
 
 CREATE TABLE IF NOT EXISTS `Batiment` (
@@ -207,25 +143,13 @@ CREATE TABLE IF NOT EXISTS `Batiment` (
   UNIQUE KEY (`nom`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Type_Salle`
---
-
 DROP TABLE IF EXISTS `Type_Salle`;
 
 CREATE TABLE IF NOT EXISTS `Type_Salle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Salle`
---
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `Salle`;
 
@@ -240,26 +164,23 @@ CREATE TABLE IF NOT EXISTS `Salle` (
   FOREIGN KEY (`nomBatiment`) REFERENCES Type_Salle(`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Type_Cours`
---
+CREATE TABLE IF NOT EXISTS `Style` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nomCouleur` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `couleurTexte` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `couleurFond` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `Type_Cours`;
 
 CREATE TABLE IF NOT EXISTS `Type_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(20) NOT NULL,
+  `idStyle` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (`nom`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Cours`
---
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `Cours`;
 
@@ -278,12 +199,6 @@ CREATE TABLE IF NOT EXISTS `Cours` (
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Publication`
---
-
 DROP TABLE IF EXISTS `Publication`;
 
 CREATE TABLE IF NOT EXISTS `Publication` (
@@ -293,12 +208,6 @@ CREATE TABLE IF NOT EXISTS `Publication` (
   FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`),
   FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Appartient_Cours_GroupeCours`
---
 
 DROP TABLE IF EXISTS `Appartient_Cours_GroupeCours`;
 
@@ -310,12 +219,6 @@ CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
   FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Appartient_Etudiant_GroupeAdministratif`
---
-
 DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeAdministratif`;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
@@ -325,12 +228,6 @@ CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
   FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`),
   FOREIGN KEY (`idGroupeAdministratif`) REFERENCES Groupe_Administratif(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Appartient_Etudiant_GroupeEtudiants`
---
 
 DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeEtudiants`;
 
@@ -342,11 +239,7 @@ CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
   FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- --------------------------------------------------------
 
---
--- Structure de la table `Appartient_Salle_TypeSalle`
---
 
 DROP TABLE IF EXISTS `Appartient_Salle_TypeSalle`;
 
@@ -356,28 +249,52 @@ CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
   PRIMARY KEY (`idSalle`,`idTypeSalle`),
   FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
   FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
+  `idTypeSalle` int(11) NOT NULL,
+  `idTypeCours` int(11) NOT NULL,
+  PRIMARY KEY (`idTypeSalle`,`idTypeCours`),
+  FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`),
+  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- --------------------------------------------------------
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Options` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `valeur` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
---
--- Vues de la table `Cours`
---
+CREATE TABLE IF NOT EXISTS `Inscription` (
+  `idUE` int(11) NOT NULL,
+  `idEtudiant` int(11) NOT NULL,
+  PRIMARY KEY (`idUE`,`idEtudiant`),
+  FOREIGN KEY (`idUE`) REFERENCES UE(`id`),
+  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+
 
 DROP VIEW IF EXISTS `V_Infos_Cours`;
 
 CREATE VIEW `V_Infos_Cours` AS
-SELECT Cours.id AS id, UE.nom AS nomUE, Intervenant.nom AS nomIntervenant, Intervenant.prenom AS prenomIntervenant, Type_Cours.nom AS nomTypeCours, Cours.tsDebut as tsDebut, Cours.tsFin AS tsFin,
-V_Liste_Salles.nomSalle AS nomSalle, V_Liste_Salles.nomBatiment AS nomBatiment, V_Liste_Salles.lat AS lat, V_Liste_Salles.lon AS lon,
+SELECT Cours.id AS id, UE.nom AS nomUE, 
+	CASE Cours.idIntervenant WHEN 0 THEN "" ELSE Intervenant.nom END AS nomIntervenant, 
+	CASE Cours.idIntervenant WHEN 0 THEN "" ELSE Intervenant.prenom END AS prenomIntervenant, 
+	Cours.idIntervenant AS idIntervenant, Type_Cours.nom AS nomTypeCours, Cours.tsDebut as tsDebut, Cours.tsFin AS tsFin,
+	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.nomSalle END AS nomSalle, 
+	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.nomBatiment END AS nomBatiment, 
+	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.lat END AS lat, 	
+	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.lon END AS lon, 
 UE.idPromotion AS idPromotion
 FROM Cours
 JOIN Type_Cours ON Type_Cours.id = Cours.idTypeCours
-JOIN V_Liste_Salles ON V_Liste_Salles.id = Cours.idSalle
-JOIN Intervenant ON Cours.idIntervenant = Intervenant.id
+JOIN V_Liste_Salles ON (V_Liste_Salles.id = Cours.idSalle OR Cours.idSalle = 0)
+JOIN Intervenant ON (Cours.idIntervenant = Intervenant.id OR Cours.idIntervenant = 0)
 JOIN UE ON UE.id = Cours.idUE
-ORDER BY idPromotion, tsDebut;
+GROUP BY Cours.id
+ORDER BY idPromotion, tsDebut
+
 
 DROP VIEW IF EXISTS `V_Cours_Etudiants`;
 
@@ -391,20 +308,16 @@ JOIN Groupe_Cours ON Groupe_Cours.id = Publication.idGroupeCours
 JOIN Appartient_Cours_GroupeCours ON Appartient_Cours_GroupeCours.idGroupeCours = Groupe_Cours.id
 JOIN Cours ON Cours.id = Appartient_Cours_GroupeCours.idCours;
 
-DROP VIEW IF EXISTS `V_Infos_Cours_Etudiants`;
+DROP VIEW IF EXISTS `V_Infos_Etudiant`;
 
-CREATE VIEW `V_Infos_Cours_Etudiants` AS
-SELECT V_Cours_Etudiants.idCours AS idCours, V_Cours_Etudiants.idEtudiant AS idEtudiant,
-V_Infos_Cours.tsDebut as tsDebut, V_Infos_Cours.tsFin as tsFin
-FROM V_Cours_Etudiants
-JOIN V_Infos_Cours ON V_Infos_Cours.id = V_Cours_Etudiants.idCours
-ORDER BY idEtudiant, tsDebut;
-
--- --------------------------------------------------------
-
---
--- Vue de la table `Salle`
---
+CREATE VIEW `V_Infos_Etudiant` AS
+SELECT `Etudiant`.`id` AS `id`,`Etudiant`.`nom` AS `nom`,`Etudiant`.`prenom` AS `prenom`,`Etudiant`.`numeroEtudiant` AS `numeroEtudiant`,
+	CASE `Etudiant`.`idSpecialite` WHEN 0 THEN "" ELSE `Specialite`.`nom` END AS `nomSpecialite`, 
+	`Etudiant`.`email` AS `email`,`Etudiant`.`telephone` AS `telephone`,`Etudiant`.`notificationsActives` AS `notificationsActives`,`Etudiant`.`idPromotion` AS `idPromotion` 
+FROM `Etudiant` 
+JOIN `Specialite` ON (`Specialite`.`id` = `Etudiant`.`idSpecialite` OR `Etudiant`.`idSpecialite` = 0)
+GROUP BY `Etudiant`.id
+ORDER BY `Etudiant`.`nom`,`Etudiant`.`prenom`,`Etudiant`.`numeroEtudiant`;
 
 DROP VIEW IF EXISTS `V_Liste_Salles`;
 
@@ -414,12 +327,6 @@ FROM Salle
 JOIN Batiment ON Batiment.nom = Salle.nomBatiment
 ORDER BY nomBatiment, nomSalle;
 
--- --------------------------------------------------------
-
---
--- Vue de la table `Specialite`
---
-
 DROP VIEW IF EXISTS `V_Liste_Specialite`;
 
 CREATE VIEW `V_Liste_Specialite`
@@ -428,19 +335,17 @@ FROM Specialite
 JOIN Promotion ON Specialite.idPromotion = Promotion.id
 ORDER BY annee, nomPromotion, nomSpecialite;
 
--- --------------------------------------------------------
-
---
--- Vues de la table `UE`
---
-
 DROP VIEW IF EXISTS `V_Infos_UE`;
 
 CREATE VIEW `V_Infos_UE` AS
-SELECT UE.id AS id, UE.nom AS nom, UE.nbHeuresCours AS nbHeuresCours, UE.nbHeuresTD AS nbHeuresTD, UE.nbHeuresTP AS nbHeuresTP, UE.ECTS AS ECTS,
-Intervenant.nom AS nomResponsable, Intervenant.prenom AS prenomResponsable, Intervenant.email AS emailResponsable,
-Promotion.nom AS nomPromotion, Promotion.annee AS anneePromotion
+SELECT UE.id AS id, UE.nom AS nom, UE.intitule AS intitule, UE.nbHeuresCours AS nbHeuresCours, UE.nbHeuresTD AS nbHeuresTD, UE.nbHeuresTP AS nbHeuresTP, UE.ECTS AS ECTS,
+	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.nom END AS nomResponsable, 
+	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.prenom END AS prenomResponsable, 
+	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.email END AS emailResponsable, 
+	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.id END AS idResponsable, 
+	Promotion.nom AS nomPromotion, Promotion.annee AS anneePromotion, UE.idPromotion AS idPromotion
 FROM UE
-JOIN Intervenant ON UE.idResponsable = Intervenant.id
+JOIN Intervenant ON (UE.idResponsable = Intervenant.id OR UE.idResponsable = 0)
 JOIN Promotion ON UE.idPromotion = Promotion.id
+GROUP BY UE.id
 ORDER BY anneePromotion, nom;
