@@ -8,6 +8,7 @@ div#page_administration div#page_administration_haut{
 	float:left;
 	width: 100%;
 	border-bottom: solid 1px black;
+	margin: 0;
 }
 
 div#page_administration div#page_administration_haut div#page_administration_titre{
@@ -16,6 +17,7 @@ div#page_administration div#page_administration_haut div#page_administration_tit
 
 div#page_administration div#page_administration_haut div#page_administration_titre h1{
 	font-size:25px;
+	margin: 0px 10px 0px 10px;
 }
 
 div#page_administration div#page_administration_haut div#barre_selection_promotion{
@@ -36,7 +38,7 @@ div#page_administration div#page_administration_milieu{
 
 div#page_administration nav{
 	float: left;
-	width: 300px;
+	width: 260px;
 	padding: 10px;
 }
 
@@ -52,20 +54,19 @@ div#page_administration nav ul{
 }
 
 div#page_administration section{
-	min-width:700px;
+	background-color:white;
 	min-height:450px;
-	margin-left:300px;
 	padding: 20px;
 	border-left: solid 1px black;
-}
-
-div#page_administration section p,
-div#page_administration section ul,
-div#page_administration section table{
-	font-size:14px;
+	overflow-x:auto;
 }
 
 div#page_administration section ul{
 	padding-left:20px;
 	margin: 0px 0px 10px 0px;
+}
+
+div#page_administration div#page_administration_bas{
+	width:100%;
+	text-align:center;
 }

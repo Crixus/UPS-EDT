@@ -46,7 +46,7 @@
 		<div id="page_administration">
 			<div id="page_administration_haut">
 				<div id="page_administration_titre">
-					<h1>Administration</h1>
+					<h1><a href="./index.php<?php if($promotion_choisie){ echo "?idPromotion=$idPromotion"; } ?>">Administration</a></h1>
 				</div>
 				<div id="barre_selection_promotion">
 					<table>
@@ -100,6 +100,9 @@
 	}
 ?>
 				</section>
+			</div>
+			<div id="page_administration_bas">
+				<p>Manuel Administration</p>
 			</div>
 		</div>
 	</body>

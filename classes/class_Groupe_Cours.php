@@ -159,7 +159,7 @@
 				if($administration){
 					$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeCours&amp;modifier_groupeCours=$idGroupeCours";
 					$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeCours&amp;supprimer_groupeCours=$idGroupeCours";
-					echo "$tab\t\t<td><img src=\"../images/modify.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce groupe de cours ?') ? '{$pageSuppression}' : ''\"/>\n";
+					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce groupe de cours ?') ? '{$pageSuppression}' : ''\"/>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}

@@ -166,7 +166,7 @@
 				}
 				if($administration){
 					$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutPromotion&amp;modifier_promotion=$idPromo";
-					echo "$tab\t\t<td><img src=\"../images/modify.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\"></td>\n";
+					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\"></td>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}

@@ -138,7 +138,7 @@
 				if($administration){
 					$pageModification = "./index.php?idPromotion=$idPromotion&amp;page=ajoutSalle&amp;modifier_salle=$idSalle";
 					$pageSuppression = "./index.php?idPromotion=$idPromotion&amp;page=ajoutSalle&amp;supprimer_salle=$idSalle";
-					echo "$tab\t\t<td><img src=\"../images/modify.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette salle ?') ? '{$pageSuppression}' : ''\"/>\n";
+					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette salle ?') ? '{$pageSuppression}' : ''\"/>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}

@@ -228,7 +228,7 @@
 					if($administration){
 						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutUE&amp;modifier_UE=$idUE";
 						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutUE&amp;supprimer_UE=$idUE";
-						echo "$tab\t\t<td><img src=\"../images/modify.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette UE ?') ? '{$pageSuppression}' : ''\"/>\n";
+						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette UE ?') ? '{$pageSuppression}' : ''\"/>\n";
 				}
 					echo "$tab\t</tr>\n";
 				}

@@ -131,7 +131,7 @@
 					if($administration){
 						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutEtudiant&amp;modifier_etudiant=$idEtudiant";
 						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutEtudiant&amp;supprimer_etudiant=$idEtudiant";
-						echo "$tab\t\t<td><img src=\"../images/modify.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.jpg\" width=\"20\" height=\"20\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cet étudiant ?') ? '{$pageSuppression}' : ''\"/>\n";
+						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cet étudiant ?') ? '{$pageSuppression}' : ''\"/>\n";
 					}
 					echo "$tab\t</tr>\n";
 				}

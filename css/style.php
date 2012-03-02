@@ -7,6 +7,7 @@
 html, body{
 	margin:0;
 	padding:0;
+	font-family : "Times New Roman";
 }
 
 h1, h2, h3, h4, h5, h6, ul, ol, li{
@@ -14,7 +15,7 @@ h1, h2, h3, h4, h5, h6, ul, ol, li{
 	padding:0;
 }
 
-p, table{
+p, table, ul, input, select{
 	font-size:12px;
 }
 
