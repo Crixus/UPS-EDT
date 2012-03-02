@@ -18,6 +18,21 @@
 		}
 	}
 	
+	if(!isset($_GET['semaine'])){
+		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine(time());
+		header("Location: ./index.php?semaine=$debutSemaine");
+	}
+	else{
+		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']);
+		if($debutSemaine != $_GET['semaine']){
+			header("Location: ./index.php?semaine=$debutSemaine");
+		}
+	}
+	
+	$nbSecondesSemaine = (7*24*3600);
+	$semainePredente = $_GET['semaine'] - $nbSecondesSemaine;
+	$semaineSuivante = $_GET['semaine'] + $nbSecondesSemaine;
+	
 	// Serialisation / Unserialisation / Variable de Session Utilisateur (necessaire quand la variable de session est un objet
 	// ATTENTION SI MISE A JOUR D'ETUDIANT !!!
 	if(!isset($_SESSION['Utilisateur_Serialize'])){
@@ -48,10 +63,15 @@
 	</head>
 	<body>
 		<h1>Ups TimeTable</h1>
-		<p><a href="./deconnexion.php">Deconnexion</a></p>
+		<h2>Semaine du <?php echo date('d/m/Y',$_GET['semaine']); ?> au <?php echo date('d/m/Y',$semaineSuivante-1); ?></h2>
+		<ul>
+			<li><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>">Semaine suivante</a></li>
+			<li><a href="./index.php?semaine=<?php echo $semainePredente; ?>">Semaine précèdente</a></li>
+		</ul>
 <?php
-	EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Utilisateur']->getId(), '2012-02-06', '2012-02-13');	
+	EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
 ?>
+		<p><a href="./deconnexion.php">Deconnexion</a></p>
 	</body>
 </html>
 	

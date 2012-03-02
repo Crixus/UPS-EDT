@@ -13,12 +13,15 @@
 		}
 		
 		public static function liste_cours_etudiants_entre_dates($idEtudiant, $tsDebut, $tsFin){
+			$tsDebut = date('Y-m-d',$tsDebut);
+			$tsFin = date('Y-m-d',$tsFin);
 			$listeId = Array();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT idCours FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<?");
+				$requete = "SELECT idCours FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<?";
+				$req = $bdd->prepare($requete);
 				$req->execute(
 					Array(
 						$idEtudiant,
@@ -39,7 +42,11 @@
 			return $listeId;
 		}
 		
-		public static function cours_etudiants_semaine($idEtudiant, $tsDebut, $tsFin){
+		public static function timestamp_debut_semaine($timestamp_actuel){
+			return mktime(0, 0, 0, date('n',$timestamp_actuel), date('j',$timestamp_actuel), date('Y',$timestamp_actuel)) - ((date('N',$timestamp_actuel)-1)*3600*24); 
+		}
+		
+		public static function cours_etudiants_semaine($idEtudiant, $tsDebut){
 			// DIVISER LES COURS DE PLUSIEURS JOURS !!!
 			$joursDeLaSemaine = 
 				Array(
@@ -52,7 +59,8 @@
 					"Sun" => Array(),
 				);
 			
-			$listeCoursSemaine = EmploiDuTemps::liste_cours_etudiants_entre_dates($idEtudiant, $tsDebut, $tsFin);
+			$listeCoursSemaine = EmploiDuTemps::liste_cours_etudiants_entre_dates($idEtudiant, $tsDebut, $tsDebut + (7*24*3600-1));
+			
 			foreach($listeCoursSemaine as $idCours){
 				$Cours = new Cours($idCours);
 				$jour = date("D", strtotime($Cours->getTsDebut()));
@@ -61,7 +69,7 @@
 			return $joursDeLaSemaine;
 		}
 		
-		public static function affichage_edt_semaine_table($idEtudiant, $tsDebut, $tsFin){
+		public static function affichage_edt_semaine_table($idEtudiant, $tsDebut){
 			$jours = Array(
 				'Lundi' => 'Mon',
 				'Mardi' => 'Tue',
@@ -71,7 +79,7 @@
 				'Samedi' => 'Sat'
 			);
 			
-			$cours_etudiants_semaine = EmploiDuTemps::cours_etudiants_semaine($idEtudiant, $tsDebut, $tsFin);
+			$cours_etudiants_semaine = EmploiDuTemps::cours_etudiants_semaine($idEtudiant, $tsDebut);
 ?>
 	<table id="edt_semaine">
 		<tr class="fondGrisFonce">
