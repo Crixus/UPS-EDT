@@ -4,18 +4,14 @@
 		public static $nomTable = "V_Infos_Cours";
 		
 		public static $attributs = Array(
-			"id",
 			"nomUE",
-			"nomIntervenant",
 			"prenomIntervenant",
+			"nomIntervenant",
 			"nomTypeCours",
 			"tsDebut",
 			"tsFin",
 			"nomSalle",
-			"nomBatiment",
-			"lat",
-			"lon",
-			"idPromotion"
+			"nomBatiment"
 		);
 		
 		public function getId(){return $this->id;}
@@ -45,6 +41,27 @@
 			}
 		}
 		
+		public static function liste_cours($idPromotion){
+			$listeId = Array();
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? ORDER BY tsDebut");
+				$req->execute(
+					Array($idPromotion)
+				);
+				while($ligne = $req->fetch()){
+					array_push($listeId, $ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeId;
+		}
+		
 		public function getHeureDebut(){
 			$explode = explode(" ",$this->tsDebut);
 			$heureDebut = $explode[1];
@@ -70,27 +87,6 @@
 		public function nbQuartsHeure(){
 			$time = (strtotime($this->tsFin) - strtotime($this->tsDebut)) / 900;
 			return $time;
-		}
-		
-		public static function liste_cours($idPromotion){
-			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? ORDER BY nomBatiment, nomSalle");
-				$req->execute(
-					Array($idPromotion)
-				);
-				while($ligne = $req->fetch()){
-					array_push($listeId, $ligne['id']);
-				}
-				$req->closeCursor();
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-			return $listeId;
 		}
 		
 		public function toString(){

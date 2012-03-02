@@ -9,6 +9,8 @@
 		}
 	}
 	
+	Cours::prise_en_compte_formulaire();
+	
 	$promotion = $_GET['idPromotion'];
 	
 ?>

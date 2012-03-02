@@ -8,15 +8,13 @@
 			"idGroupeEtudiants"
 		);
 		
-		public function Appartient_Etudiant_GroupeEtudiants($id){
+		public function Appartient_Etudiant_GroupeEtudiants(){
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Appartient_Etudiant_GroupeEtudiants::$nomTable." WHERE id=?");
-				$req->execute(
-					Array($id)
-					);
+				$req = $bdd->prepare("SELECT * FROM ".Appartient_Etudiant_GroupeEtudiants::$nomTable);
+				$req->execute();
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				

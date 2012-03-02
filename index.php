@@ -44,7 +44,7 @@
 	<head>
 		<title>UPS TimeTable</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" href="./css/style.css" />
+		<link rel="stylesheet" href="./css/style.php" />
 	</head>
 	<body>
 		<h1>Ups TimeTable</h1>

@@ -32,7 +32,7 @@
 	<head>
 		<title>Administration</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/style.php" />
 		<script type="text/javascript" src="../js/prototype.js?v=<?php echo filemtime("../js/prototype.js");?>"></script>	
 		<script type="text/javascript" src="../js/gestionPromotion.js?v=<?php echo filemtime("../js/gestionPromotion.js");?>"></script>
 		<script type="text/javascript" src="../js/ajoutCours.js?v=<?php echo filemtime("../js/ajoutCours.js");?>"></script>
@@ -43,50 +43,65 @@
 		<script type="text/javascript" src="../js/inscriptionUE.js?v=<?php echo filemtime("../js/inscriptionUE.js");?>"></script>
 	</head>
 	<body>
-		<div id="barre_selection_promotion">
-			<table>
-				<tr>
-					<td>Selection d'une promotion</td>
-					<td>
-<?php 
-	if($promotion_choisie){
-		echo Promotion::liste_promotion_for_select($idPromotion); 
-	}
-	else{
-		echo Promotion::liste_promotion_for_select(); 
-	}
-?>
-					</td>
-					<td><a href="?page=ajoutPromotion" >Ajout d'une promotion</a></td>
-				</tr>
-			</table>
+		<div id="page_administration">
+			<div id="page_administration_haut">
+				<div id="page_administration_titre">
+					<h1>Administration</h1>
+				</div>
+				<div id="barre_selection_promotion">
+					<table>
+						<tr>
+							<td>Selection d'une promotion</td>
+							<td>
+		<?php 
+			if($promotion_choisie){
+				echo Promotion::liste_promotion_for_select($idPromotion); 
+			}
+			else{
+				echo Promotion::liste_promotion_for_select(); 
+			}
+		?>
+							</td>
+							<td><a href="?page=ajoutPromotion" >Ajout d'une promotion</a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="page_administration_milieu">
 <?php
 	if($promotion_choisie){
 		$promotion = $_GET['idPromotion'];
+		include_once('./nav.php'); 
 ?>
-		<nav> 
+				<section>
+					<ul>
+					<li>TOTAL EN COURS 80%</li>
+					<li>
+						Reste à faire : [6 à 9h] Fin Possible le 11 Mars (developpement) puis 18 Mars (tests + style)<br />
+						- Ajouter la gestion de couleur à un type de cours [2h]<br />
+						- Gestion des groupes d'étudiants [2 à 4h]<br />
+						- Gestion des groupes de cours [2h à 3h]<br />				
+						- TESTS [?]<br />
+						- Modifier le CSS<br />
+					</li>					
+				</ul>
 <?php
-	include_once('./nav.php'); 
-?>
-		</nav>
-		<section>
-<?php
-if (isset($_GET['page'])) {
-	include_once("./pages/{$_GET['page']}.php");
-}
-?>
-		</section>
-<?php
+		if(isset($_GET['page'])){
+			include_once("./pages/{$_GET['page']}.php");
+		}
 	}
 	else if(isset($_GET['page']) && $_GET['page'] == "ajoutPromotion"){
 		include_once("./pages/{$_GET['page']}.php");
 	}
 	else{
 ?>
-	<p>Merci de choisir une promotion</p>
+					<p>Merci de choisir une promotion</p>
 <?php
 	}
 ?>
+				</section>
+			</div>
+		</div>
 	</body>
 </html>
 	

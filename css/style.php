@@ -1,6 +1,18 @@
 <?php
 	header("Content-type: text/css");
+	
+	include_once('./administration.css');
 ?>
+
+html, body{
+	margin:0;
+	padding:0;
+}
+
+h1, h2, h3, h4, h5, h6, ul, ol, li{
+	margin:0;
+	padding:0;
+}
 
 div#pageConnexion h1{
 	color:blue;

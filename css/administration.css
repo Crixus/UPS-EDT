@@ -1,0 +1,71 @@
+div#page_administration{
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+div#page_administration div#page_administration_haut{
+	float:left;
+	width: 100%;
+	border-bottom: solid 1px black;
+}
+
+div#page_administration div#page_administration_haut div#page_administration_titre{
+	float:left;
+}
+
+div#page_administration div#page_administration_haut div#page_administration_titre h1{
+	font-size:25px;
+}
+
+div#page_administration div#page_administration_haut div#barre_selection_promotion{
+	float: right;
+	width: 450px;
+}
+
+div#page_administration div#page_administration_haut div#barre_selection_promotion table{
+	margin: 0;
+	padding: 0;
+}
+
+div#page_administration div#page_administration_milieu{
+	float:left;
+	width: 100%;
+	border-bottom: solid 1px black;
+	background-color: #f3f3f3;
+}
+
+div#page_administration nav{
+	float: left;
+	width: 220px;
+	padding: 10px;
+}
+
+div#page_administration nav h1{
+	font-size: 14px;
+}
+
+div#page_administration nav ul{
+	font-size: 12px;
+	list-style-type: none;
+	margin: 0;
+	padding: 0px 0px 0px 10px;
+}
+
+div#page_administration section{
+	min-width:700px;
+	margin-left:220px;
+	padding: 20px;
+	border-left: solid 1px black;
+}
+
+div#page_administration section p,
+div#page_administration section ul,
+div#page_administration section table{
+	font-size:14px;
+}
+
+div#page_administration section ul{
+	padding-left:20px;
+	margin: 0px 0px 10px 0px;
+}

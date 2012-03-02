@@ -4,7 +4,6 @@
 		public static $nomTable = "Promotion";
 		
 		public static $attributs = Array(
-			"id",
 			"nom",
 			"annee",
 			"tsDebut",

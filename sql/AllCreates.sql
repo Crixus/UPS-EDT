@@ -251,6 +251,8 @@ CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
   FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `Appartient_TypeSalle_TypeCours`;
+
 CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   `idTypeSalle` int(11) NOT NULL,
   `idTypeCours` int(11) NOT NULL,
@@ -259,6 +261,8 @@ CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+DROP TABLE IF EXISTS `Options`;
+
 CREATE TABLE IF NOT EXISTS `Options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -266,13 +270,15 @@ CREATE TABLE IF NOT EXISTS `Options` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `Inscription`;
+
 CREATE TABLE IF NOT EXISTS `Inscription` (
   `idUE` int(11) NOT NULL,
   `idEtudiant` int(11) NOT NULL,
   PRIMARY KEY (`idUE`,`idEtudiant`),
   FOREIGN KEY (`idUE`) REFERENCES UE(`id`),
   FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin ;
 
 
 DROP VIEW IF EXISTS `V_Infos_Cours`;
@@ -293,7 +299,7 @@ JOIN V_Liste_Salles ON (V_Liste_Salles.id = Cours.idSalle OR Cours.idSalle = 0)
 JOIN Intervenant ON (Cours.idIntervenant = Intervenant.id OR Cours.idIntervenant = 0)
 JOIN UE ON UE.id = Cours.idUE
 GROUP BY Cours.id
-ORDER BY idPromotion, tsDebut
+ORDER BY idPromotion, tsDebut;
 
 
 DROP VIEW IF EXISTS `V_Cours_Etudiants`;
