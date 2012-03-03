@@ -62,16 +62,27 @@
 		<link rel="stylesheet" href="./css/style.php" />
 	</head>
 	<body>
-		<h1>Ups TimeTable</h1>
-		<h2>Semaine du <?php echo date('d/m/Y',$_GET['semaine']); ?> au <?php echo date('d/m/Y',$semaineSuivante-1); ?></h2>
-		<ul>
-			<li><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>">Semaine suivante</a></li>
-			<li><a href="./index.php?semaine=<?php echo $semainePredente; ?>">Semaine précèdente</a></li>
-		</ul>
+		<div id="affichage_edt_semaine">
+			<h1>Ups TimeTable</h1>
+			<h2>Affichage emploi du temps semaine</h2>
+			<table id="navigation_semaine">
+				<tr>
+					<td><a href="./index.php?semaine=<?php echo $semainePredente; ?>"><img src="./images/fleche_gauche.jpg" alt="fleche gauche" /></a></td>
+					<td>Semaine du <?php echo date('d/m/Y',$_GET['semaine']); ?> au <?php echo date('d/m/Y',$semaineSuivante-1); ?></td>
+					<td><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>"><img src="./images/fleche_droite.jpg" alt="fleche droite" /></a></td>
+				</tr>
+			</table>
+			<section>
 <?php
 	EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
 ?>
-		<p><a href="./deconnexion.php">Deconnexion</a></p>
+			</section>
+			<footer>
+				<p><a href="#">Téléchargement PDF</a> - <a href="#">Téléchargement Google Agenda</a></p>
+				<p><a href="#">Manuel Utilisateur</a></p>
+				<p><a href="./deconnexion.php">Deconnexion</a></p>
+			</footer>
+		</div>
 	</body>
 </html>
 	

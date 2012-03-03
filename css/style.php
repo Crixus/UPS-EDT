@@ -1,6 +1,7 @@
 <?php
 	header("Content-type: text/css");
 	
+	include_once('./emploi_du_temps.css');
 	include_once('./administration.css');
 ?>
 

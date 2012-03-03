@@ -1,0 +1,20 @@
+div#affichage_edt_semaine{
+}
+
+div#affichage_edt_semaine h2{
+	text-align:center;
+}
+
+div#affichage_edt_semaine table#navigation_semaine{
+	font-size:15px;
+	margin:0px auto 0px auto;
+}
+
+div#affichage_edt_semaine section table#edt_semaine{
+	width:95%;
+	margin:0px auto 0px auto;
+}
+
+div#affichage_edt_semaine footer{
+	text-align:center;
+}
