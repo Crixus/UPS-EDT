@@ -1,6 +1,10 @@
 <?php
 	header("Content-type: text/css");
 	
+	include_once('../includes/infos_bdd.php');
+	include_once('../classes/class_Type_Cours.php');
+	include_once('../classes/class_Options.php');
+	
 	include_once('./emploi_du_temps.css');
 	include_once('./administration.css');
 ?>
@@ -88,15 +92,15 @@ tr.fondGrisFonce{
 	background-color:#b3b3b3;
 	}
 
-table#edt_semaine td.Cours{
-	background-color:#96c8ff;
-	border: black 1px solid;
+<?php
+	foreach(Type_Cours::liste_nom_type_cours() as $nom){
+		echo "table#edt_semaine td.$nom{\n";
+		echo "\tbackground-color: ".Options::valeur_from_nom("background_color_$nom").";\n";
+		echo "\tcolor: ".Options::valeur_from_nom("color_$nom").";\n";
+		echo "\tborder: black 1px solid;\n";
+		echo "}\n\n";
 	}
-	
-table#edt_semaine td.Examen{
-	background-color:#FF3333;
-	border: black 1px solid;
-	}
+?>
 
 table#edt_semaine td.heurePaire{
 	background-color:#e9e9e9;

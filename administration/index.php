@@ -20,7 +20,7 @@
 		$promotion_choisie = false;
 	}
 	
-	Option::test_validation_formulaire_administration();
+	Options::test_validation_formulaire_administration();
 ?>
 <!DOCTYPE html>
 	<head>
