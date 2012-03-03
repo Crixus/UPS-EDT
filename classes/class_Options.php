@@ -15,8 +15,8 @@
 		
 		public function Options($nom){
 			try{
-				$pdo_Optionss[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Optionss);
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Options::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -34,19 +34,19 @@
 			}
 		}
 		
-		public static function generer_array_Optionss_style(){
-			$Optionss_style = Array();
+		public static function generer_array_Options_style(){
+			$Options_style = Array();
 			foreach(Type_Cours::liste_nom_type_cours() as $nom){
-				$Optionss_style["Arriere Plan $nom"] = "background_color_$nom";
-				$Optionss_style["Couleur Texte $nom"] = "color_$nom";
+				$Options_style["Arriere Plan $nom"] = "background_color_$nom";
+				$Options_style["Couleur Texte $nom"] = "color_$nom";
 			}
-			return $Optionss_style;
+			return $Options_style;
 		}
 		
 		public static function existe_Options($nom){
 			try{
-				$pdo_Optionss[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Optionss);
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM ".Options::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -64,8 +64,8 @@
 		
 		public static function valeur_from_nom($nom){
 			try{
-				$pdo_Optionss[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Optionss);
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Options::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -83,8 +83,8 @@
 		
 		public static function ajouter_Options($nom, $valeur){
 			try{
-				$pdo_Optionss[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Optionss);
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Options::$nomTable." VALUES(?, ?, ?)");
 				
@@ -103,8 +103,8 @@
 		
 		public static function modifier_Options($nom, $valeur){
 			try{
-				$pdo_Optionss[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Optionss);
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Options::$nomTable." SET valeur=? WHERE nom=?;");
 				$req->execute(
@@ -125,11 +125,11 @@
 			
 			echo "$tab<form id=\"administration_stype_typeCours\" method=\"post\">\n";
 			echo "$tab\t<table>\n";
-			foreach(Options::generer_array_Optionss_style() as $label => $nom){
+			foreach(Options::generer_array_Options_style() as $label => $nom){
 				$valeur = Options::valeur_from_nom($nom);
 				echo "$tab\t\t<tr>\n";
 				echo "$tab\t\t\t<td>$label</td>\n";
-				echo "$tab\t\t\t<td><input type=\"text\" name=\"$nom\" value=\"$valeur\"/></td>\n";
+				echo "$tab\t\t\t<td><input type=\"color\" name=\"$nom\" value=\"$valeur\"/></td>\n";
 				echo "$tab\t\t</tr>\n";
 			}
 			echo "$tab\t\t<tr>\n";
@@ -143,7 +143,7 @@
 		public static function test_validation_formulaire_administration(){
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if(isset($_POST[$name_formulaire])){
-				foreach(Options::generer_array_Optionss_style() as $nom){
+				foreach(Options::generer_array_Options_style() as $nom){
 					if(Options::existe_Options($nom)){
 						// TEST SI COULEUR
 						Options::modifier_Options($nom, $_POST[$nom]);
