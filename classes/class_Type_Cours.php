@@ -66,6 +66,25 @@
 			return $listeId;
 		}
 		
+		public function liste_nom_type_cours(){
+			$listeNom = Array();
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->query("SELECT nom FROM ".Type_Cours::$nomTable." ORDER BY nom");
+				
+				while($ligne = $req->fetch()){
+					array_push($listeNom, $ligne['nom']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeNom;
+		}
+		
 		public static function liste_type_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$liste_type_salle = Type_Salle::liste_type_salle();

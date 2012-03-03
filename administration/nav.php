@@ -79,7 +79,7 @@
 			<h1>Gestion affichage</h1>
 			<ul>
 				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutTypeCours" >Ajout d'une couleur d'un type de cours </a>
+					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
 				</li>
 			</ul>
 		</nav>

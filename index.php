@@ -29,9 +29,8 @@
 		}
 	}
 	
-	$nbSecondesSemaine = (7*24*3600);
-	$semainePredente = $_GET['semaine'] - $nbSecondesSemaine;
-	$semaineSuivante = $_GET['semaine'] + $nbSecondesSemaine;
+	$semainePredente = $_GET['semaine'] - 604800;
+	$semaineSuivante = $_GET['semaine'] + 604800;
 	
 	// Serialisation / Unserialisation / Variable de Session Utilisateur (necessaire quand la variable de session est un objet
 	// ATTENTION SI MISE A JOUR D'ETUDIANT !!!

@@ -59,7 +59,7 @@
 					"Sun" => Array(),
 				);
 			
-			$listeCoursSemaine = EmploiDuTemps::liste_cours_etudiants_entre_dates($idEtudiant, $tsDebut, $tsDebut + (7*24*3600-1));
+			$listeCoursSemaine = EmploiDuTemps::liste_cours_etudiants_entre_dates($idEtudiant, $tsDebut, $tsDebut + 604799);
 			
 			foreach($listeCoursSemaine as $idCours){
 				$Cours = new Cours($idCours);

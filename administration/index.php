@@ -2,19 +2,11 @@
 	// Informations de base de données
 	include_once('../includes/infos_bdd.php');
 	
-	// Création des tables (phase de deploiement / tests)
-	define('CREER_TABLES', false);
-	
 	$repertoire = opendir("../classes/");
 	while($fichier = readdir($repertoire)){
 		if($fichier != '..' && $fichier != '.'){
 			include_once("../classes/$fichier");
 		}
-	}
-	
-	if(CREER_TABLES){
-		Utils_SQL::sql_from_file("../sql/AllCreates.sql");
-		Utils_SQL::sql_from_file("../sql/AllInserts.sql");
 	}
 	
 	if(isset($_GET['idPromotion'])){
@@ -27,6 +19,8 @@
 	else{
 		$promotion_choisie = false;
 	}
+	
+	Option::test_validation_formulaire_administration();
 ?>
 <!DOCTYPE html>
 	<head>

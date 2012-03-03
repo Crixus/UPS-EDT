@@ -266,9 +266,17 @@ DROP TABLE IF EXISTS `Options`;
 CREATE TABLE IF NOT EXISTS `Options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `valeur` int(11) NOT NULL,
+  `valeur` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+INSERT INTO `Options` (`nom`, `valeur`) VALUES
+("background_color_Cours", "#96C8FF"),
+("background_color_TD", "#FFFFFF"),
+("background_color_TP", "#FFFFFF"),
+("background_color_Examen", "#FF3333"),
+("background_color_Reunion", "#FFFFFF"),
+("background_color_Autre", "#FFFFFF");
 
 DROP TABLE IF EXISTS `Inscription`;
 
