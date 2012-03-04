@@ -97,15 +97,15 @@
 				
 				//Ajout de l'étudiant dans la table Utilisateur
 				$idEtudiant = $bdd->lastInsertId(); 
-				try{				
+				try{ // try dans un try de meme style
 					$idCorrespondant = $idEtudiant;
 					$type = "Etudiant";
-					$login = strtolower($prenom)."_".strtolower($nom);
-					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72";
+					$login = strtolower($prenom)."_".strtolower($nom); // Pas de gestion de conflit...
+					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72"; // Mot de passe pareil pour tlm...
 					
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
+					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Inutile
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options); // Nouvelle instance de BD dans une instance de BD
+					$bdd->query("SET NAMES utf8"); 
 					$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
 					
 					$req->execute(

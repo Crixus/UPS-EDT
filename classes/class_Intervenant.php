@@ -61,6 +61,7 @@
 		
 		public static function ajouter_intervenant($nom, $prenom, $email, $telephone){
 			try{
+				//On ajoute d'abord l'Intervenant
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
@@ -78,32 +79,29 @@
 					)
 				);
 				
-				//Ajout de l'intervenant dans la table Utilisateur
+				//On créé maintenant l'Utilisateur associé
 				$idIntervenant = $bdd->lastInsertId(); 
-				try{				
-					$idCorrespondant = $idIntervenant;
-					$type = "Intervenant";
-					$login = strtolower($prenom)."_".strtolower($nom);
-					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72";
-					
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
-					
-					$req->execute(
-						Array(
-							"",
-							$login,
-							$motDePasse, 
-							$type, 
-							$idCorrespondant
-						)
-					);
+				$type = "Intervenant";
+				$login = strtolower($prenom)."_".strtolower($nom);
+				if(Utilisateur::existe_login($login)){
+					$count = 2;
+					while(Utilisateur::existe_login($login."_$count")){
+						$count++;
+					}
+					$login .= "_$count";
 				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}	
+				$motDePasse = md5("pass"); // -_- Generer un mot de passe
+					
+				$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
+				$req->execute(
+					Array(
+						"",
+						$login,
+						$motDePasse, 
+						$type, 
+						$idIntervenant
+					)
+				);
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
