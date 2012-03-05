@@ -90,7 +90,7 @@
 					}
 					$login .= "_$count";
 				}
-				$motDePasse = md5("pass"); // -_- Generer un mot de passe
+				$motDePasse = md5("pass"); // Generer un mot de passe
 					
 				$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
 				$req->execute(

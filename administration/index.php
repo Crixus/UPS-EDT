@@ -20,6 +20,8 @@
 		$promotion_choisie = false;
 	}
 	
+	Intervenant::prise_en_compte_formulaire();
+	Intervenant::prise_en_compte_suppression();
 	Options::test_validation_formulaire_administration();
 ?>
 <!DOCTYPE html>

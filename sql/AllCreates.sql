@@ -363,3 +363,9 @@ JOIN Intervenant ON (UE.idResponsable = Intervenant.id OR UE.idResponsable = 0)
 JOIN Promotion ON UE.idPromotion = Promotion.id
 GROUP BY UE.id
 ORDER BY anneePromotion, nom;
+
+DROP TABLE IF EXISTS `V_Infos_Cours_Etudiants`;
+
+CREATE VIEW `V_Infos_Cours_Etudiants` AS 
+SELECT `V_Cours_Etudiants`.`idCours` AS `idCours`,`V_Cours_Etudiants`.`idEtudiant` AS `idEtudiant`,`V_Infos_Cours`.`tsDebut` AS `tsDebut`,`V_Infos_Cours`.`tsFin` AS `tsFin` 
+FROM (`V_Cours_Etudiants` join `V_Infos_Cours` on((`V_Infos_Cours`.`id` = `V_Cours_Etudiants`.`idCours`))) order by `V_Cours_Etudiants`.`idEtudiant`,`V_Infos_Cours`.`tsDebut`;
