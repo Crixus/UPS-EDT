@@ -67,8 +67,18 @@
 <?php
 	if($promotion_choisie){
 		$promotion = $_GET['idPromotion'];
-		include_once('./nav.php'); 
 ?>
+				<nav>
+<?php
+		include_once('./nav.php'); 
+?>		
+				<h1>Gestion affichage</h1>
+				<ul>
+					<li>
+						<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
+					</li>
+				</ul>
+				</nav>
 				<section>
 					<ul>
 					<li>TOTAL EN COURS 80%</li>
@@ -86,12 +96,32 @@
 			include_once("./pages/{$_GET['page']}.php");
 		}
 	}
-	else if(isset($_GET['page']) && $_GET['page'] == "ajoutPromotion"){
+	else if(isset($_GET['page']) && ($_GET['page'] == "styleTypeCours" || $_GET['page'] == "ajoutPromotion")){
+?>
+				<nav>
+				<h1>Gestion affichage</h1>
+				<ul>
+					<li>
+						<a href="?page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
+					</li>
+				</ul>
+				</nav>
+				<section>
+<?php
 		include_once("./pages/{$_GET['page']}.php");
 	}
 	else{
 ?>
-					<p>Merci de choisir une promotion</p>
+				<nav>
+				<h1>Gestion affichage</h1>
+				<ul>
+					<li>
+						<a href="?page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
+					</li>
+				</ul>
+				</nav>
+				<section>
+				<p>Merci de choisir une promotion</p>
 <?php
 	}
 ?>

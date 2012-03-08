@@ -1,4 +1,3 @@
-		<nav>
 			<h1>Gestion des cours</h1>
 			<ul>
 				<li>
@@ -75,11 +74,3 @@
 					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutTypeSalle" >Ajout d'un type de salle</a>
 				</li>
 			</ul>
-			
-			<h1>Gestion affichage</h1>
-			<ul>
-				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
-				</li>
-			</ul>
-		</nav>
