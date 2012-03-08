@@ -82,24 +82,25 @@
 		}
 		
 		
-		public static function liste_salle_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_salle_to_table($administration, $nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			
 			$liste_salles = V_Liste_Salles::liste_salles();
 			$liste_type_salle = Type_Salle::liste_type_salle();
 			$nbre_type_salle = Type_Salle::getNbreTypeSalle();
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
 			echo "$tab<table class=\"listeCours\">\n";
 			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			echo "$tab\t\t<th rowspan='2'>Batiment</th>\n";
-			echo "$tab\t\t<th rowspan='2'>Salle</th>\n";
-			echo "$tab\t\t<th rowspan='2'>Capacité</th>\n";
-			echo "$tab\t\t<th rowspan='2'>Latitude</th>\n";
-			echo "$tab\t\t<th rowspan='2'>Longitude</th>\n";
+			echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
+			echo "$tab\t\t<th rowspan=\"2\">Salle</th>\n";
+			echo "$tab\t\t<th rowspan=\"2\">Capacité</th>\n";
+			echo "$tab\t\t<th rowspan=\"2\">Latitude</th>\n";
+			echo "$tab\t\t<th rowspan=\"2\">Longitude</th>\n";
 
 			echo "$tab\t\t<th colspan='{$nbre_type_salle}'>Type de salles</th>\n";
 			if($administration){
-				echo "$tab\t\t<th rowspan='2'>Actions</th>\n";
+				echo "$tab\t\t<th rowspan=\"2\">Actions</th>\n";
 			}
 			echo "$tab\t</tr>\n";
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
@@ -136,21 +137,17 @@
 				}
 			
 				if($administration){
-					$pageModification = "./index.php?idPromotion=$idPromotion&amp;page=ajoutSalle&amp;modifier_salle=$idSalle";
-					$pageSuppression = "./index.php?idPromotion=$idPromotion&amp;page=ajoutSalle&amp;supprimer_salle=$idSalle";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette salle ?') ? '{$pageSuppression}' : ''\"/>\n";
+					$pageModification = "./index.php?page=ajoutSalle&amp;modifier_salle=$idSalle";
+					$pageSuppression = "./index.php?page=ajoutSalle&amp;supprimer_salle=$idSalle";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td><a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a><a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}
 			
 			echo "$tab</table>\n";
-		}
-		
-		public function toString(){
-			$string = "";
-			foreach(V_Liste_Salles::$attributs as $att){
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
 		}
 	}

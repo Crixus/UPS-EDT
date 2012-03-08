@@ -168,8 +168,8 @@
 			}			
 		}
 		
-		public function formulaireAjoutSalle($nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutSalle($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_nom_batiment = Salle::listeNomBatiment();
 			
 			if(isset($_GET['modifier_salle'])){ 
@@ -186,7 +186,7 @@
 				$capaciteModif = "";
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -234,12 +234,15 @@
 					$idPromotion = $_GET['idPromotion'];	
 					if(isset($_GET['modifier_salle'])){
 						Salle::modifier_salle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSalle&modification_salle=1";
+						$pageDestination = "./index.php?page=ajoutSalle&modification_salle=1";
 					}
 					else{
 						// C'est une nouveau salle
 						Salle::ajouter_salle($nom, $nomBatiment, $capacite);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSalle&modification_salle=1";
+						$pageDestination = "./index.php?page=ajoutSalle&ajout_salle=1";
+					}
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 					}
 					header("Location: $pageDestination");
 				}
@@ -247,26 +250,33 @@
 		}
 		
 		public static function prise_en_compte_suppression(){
-			if(isset($_GET['supprimer_salle'])){	
-				$idPromotion = $_GET['idPromotion'];		
+			if(isset($_GET['supprimer_salle'])){
 				if(true){ // Test de saisie
 					Salle::supprimer_salle($_GET['supprimer_salle']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSalle&supprimer_salle=1";	
+					$pageDestination = "./index.php?page=ajoutSalle&suppression_salle=1";	
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+					}
+					header("Location : $pageDestination"); // Ne fonctionne pas ??
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			if(isset($_GET['ajout_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">La salle a bien été ajouté</p>";
+				echo "$tab<p class=\"notificationAdministration\">La salle a bien été ajoutée</p>";
 			}
 			if(isset($_GET['modification_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">La salle a bien été modifié</p>";
+				echo "$tab<p class=\"notificationAdministration\">La salle a bien été modifiée</p>";
 			}
+			if(isset($_GET['suppression_salle'])){
+				echo "$tab<p class=\"notificationAdministration\">La salle a bien été supprimée</p>";
+			}
+			echo "$tab<h1>Gestion des salles</h1>\n";
 			Salle::formulaireAjoutSalle($nombreTabulations + 1);
-			echo "$tab<h1>Liste des salles</h1>\n";
-			V_Liste_Salles::liste_Salle_to_table($_GET['idPromotion'], $nombreTabulations + 1);
+			echo "$tab<h2>Liste des salles</h2>\n";
+			V_Liste_Salles::liste_Salle_to_table($nombreTabulations + 1);
 		}
 		
 		public function toUl(){
@@ -275,13 +285,5 @@
 				$string .= "<li>$att : ".$this->$att."</li>\n";
 			}
 			return "$string</ul>\n";
-		}
-		
-		public static function creer_table(){
-			return Utils_SQL::sql_from_file("./sql/".Salle::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table(){
-			return Utils_SQL::sql_supprimer_table(Salle::$nomTable);
 		}
 	}

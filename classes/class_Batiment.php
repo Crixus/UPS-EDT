@@ -189,7 +189,7 @@
 				$lonModif = "value=\"\"";
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -271,8 +271,9 @@
 			if(isset($_GET['suppression_batiment'])){
 				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été supprimé</p>\n";
 			}
+			echo "$tab<h1>Gestion des salles</h1>\n";
 			Batiment::formulaireAjoutBatiment($nombreTabulations + 1);
-			echo "$tab<h1>Liste des batiments</h1>\n";
+			echo "$tab<h2>Liste des batiments</h2>\n";
 			Batiment::liste_Batiment_to_table($nombreTabulations + 1);
 		}
 	}

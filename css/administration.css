@@ -61,6 +61,18 @@ div#page_administration section{
 	overflow-x:auto;
 }
 
+div#page_administration section h1{
+	width:100%;
+	border-bottom: black 1px solid;
+	margin:0px 0px 10px 0px;
+	font-size:20px;
+}
+
+div#page_administration section h2{
+	margin:0px 0px 10px 20px;
+	font-size:18px;
+}
+
 div#page_administration section ul{
 	padding-left:20px;
 	margin: 0px 0px 10px 0px;

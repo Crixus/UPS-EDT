@@ -120,7 +120,6 @@
 		}
 		
 		public static function formulaire_modification_Options_style_typeCours($nombreTabulations = 0){
-			
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			echo "$tab<h1>Gestion d'affichage</h1>\n";

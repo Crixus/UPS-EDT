@@ -48,6 +48,8 @@
 	Intervenant::prise_en_compte_formulaire();
 	Intervenant::prise_en_compte_suppression();
 	Options::prise_en_compte_formulaire();
+	Salle::prise_en_compte_formulaire();
+	Salle::prise_en_compte_suppression();
 ?>
 <!DOCTYPE html>
 	<head>
