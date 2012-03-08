@@ -74,14 +74,14 @@
 						<tr>
 							<td>Selection d'une promotion</td>
 							<td>
-		<?php 
-			if($promotion_choisie){
-				echo Promotion::liste_promotion_for_select($idPromotion); 
-			}
-			else{
-				echo Promotion::liste_promotion_for_select(); 
-			}
-		?>
+<?php 
+	if($promotion_choisie){
+		echo Promotion::liste_promotion_for_select($idPromotion, 8); 
+	}
+	else{
+		echo Promotion::liste_promotion_for_select(null, 8); 
+	}
+?>
 							</td>
 							<td><a href="?page=ajoutPromotion" >Ajout d'une promotion</a></td>
 						</tr>

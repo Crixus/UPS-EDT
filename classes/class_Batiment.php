@@ -4,6 +4,7 @@
 		public static $nomTable = "Batiment";
 		
 		public static $attributs = Array(
+			"id",
 			"nom",
 			"lat",
 			"lon"
@@ -35,6 +36,25 @@
 			}
 		}
 		
+		public static function existe_batiment($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Batiment::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+					);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function liste_batiment(){
 			$listeId = Array();
 			try{
@@ -54,14 +74,12 @@
 			return $listeId;
 		}
 		
-		public static function liste_Batiment_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_Batiment_to_table($administration, $nombreTabulations = 0){
 			$liste_batiment = Batiment::liste_batiment();
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
-			echo "$tab<table class=\"listeCours\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			
+			echo "$tab<table class=\"listeCours\">\n";			
+			echo "$tab\t<tr class=\"fondGrisFonce\">\n";			
 			echo "$tab\t\t<th>Nom</th>\n";
 			echo "$tab\t\t<th>Latitude</th>\n";
 			echo "$tab\t\t<th>Longitude</th>\n";
@@ -74,23 +92,25 @@
 			$cpt = 0;
 			foreach($liste_batiment as $idBatiment){
 				$Batiment = new Batiment($idBatiment);
-				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
+				$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
 				$cpt++; $cpt %= 2;
 				
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				foreach(Batiment::$attributs as $att){
-					echo "$tab\t\t<td>".$Batiment->$att."</td>\n";
-				}
+				echo "$tab\t\t<td>{$Batiment->getNom()}</td>\n";
+				echo "$tab\t\t<td>{$Batiment->getLat()}</td>\n";
+				echo "$tab\t\t<td>{$Batiment->getLon()}</td>\n";
+
 				if($administration){
-					$pageModification = "./index.php?idPromotion=$idPromotion&amp;page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
-					$pageSuppression = "./index.php?idPromotion=$idPromotion&amp;page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce batiment ?') ? '{$pageSuppression}' : ''\"/>\n";
+					$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
+					$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td><a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a><a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a></td>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}
-			
 			echo "$tab</table>\n";
 		}
 		
@@ -196,7 +216,7 @@
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
 			if(isset($_GET['modifier_batiment'])){ $valueSubmit = "Modifier le batiment"; }else{ $valueSubmit = "Ajouter le batiment"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutBatiment\" value=\"{$valueSubmit}\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutBatiment\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
@@ -212,12 +232,15 @@
 					$idPromotion = $_GET['idPromotion'];	
 					if(isset($_GET['modifier_batiment'])){
 						Batiment::modifier_batiment($_GET['modifier_batiment'], $nom, $lat, $lon);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutBatiment&modification_batiment=1";
+						$pageDestination = "./index.php?page=ajoutBatiment&modification_batiment=1";
 					}
 					else{
 						// C'est un nouveau batiment
 						Batiment::ajouter_batiment($nom, $lat, $lon);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutBatiment&modification_batiment=1";
+						$pageDestination = "./index.php?page=ajoutBatiment&ajout_batiment=1";
+					}
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 					}
 					header("Location: $pageDestination");
 				}
@@ -225,11 +248,14 @@
 		}
 		
 		public static function prise_en_compte_suppression(){
-			if(isset($_GET['supprimer_batiment'])){	
-				$idPromotion = $_GET['idPromotion'];		
-				if(true){ // Test de saisie
+			if(isset($_GET['supprimer_batiment'])){			
+				if(Batiment::existe_batiment($_GET['supprimer_batiment'])){
 					Batiment::supprimer_batiment($_GET['supprimer_batiment']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutBatiment&supprimer_batiment=1";	
+					$pageDestination = "./index.php?page=ajoutBatiment&suppression_batiment=1";	
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+					}
+					header("Location: $pageDestination");
 				}
 			}
 		}
@@ -237,29 +263,16 @@
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			if(isset($_GET['ajout_batiment'])){
-				echo "$tab<p class=\"notificationAdministration\">Le batiment a bien été ajouté</p>";
+				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été ajouté</p>\n";
 			}
 			if(isset($_GET['modification_batiment'])){
-				echo "$tab<p class=\"notificationAdministration\">Le batiment a bien été modifié</p>";
+				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été modifié</p>\n";
+			}
+			if(isset($_GET['suppression_batiment'])){
+				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été supprimé</p>\n";
 			}
 			Batiment::formulaireAjoutBatiment($nombreTabulations + 1);
 			echo "$tab<h1>Liste des batiments</h1>\n";
-			Batiment::liste_Batiment_to_table($_GET['idPromotion'], $nombreTabulations + 1);
-		}
-		
-		public function toString(){
-			$string = "";
-			foreach(Batiment::$attributs as $att){
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table(){
-			return Utils_SQL::sql_from_file("./sql/".Batiment::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table(){
-			return Utils_SQL::sql_supprimer_table(Batiment::$nomTable);
+			Batiment::liste_Batiment_to_table($nombreTabulations + 1);
 		}
 	}

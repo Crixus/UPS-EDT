@@ -117,24 +117,22 @@
 			return $listeId;
 		}
 		
-		public function liste_promotion_for_select($promotion = 0) {
+		public function liste_promotion_for_select($idPromotion = null, $nombreTabulations = 0) {
 			$tab="";
+			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_promotion = Promotion::liste_promotion();
 			echo "$tab<select onChange='selection_promotion(this)'>\n";
 			
-			if ($promotion == 0)
-				echo "$tab\t<option value=0 selected>--</option>\n";
-			else
-				echo "$tab\t<option value=0>--</option>\n";
+			echo "$tab\t<option value=0>--</option>\n";
 			
-			foreach ($liste_promotion as $idPromotion) {
-				$Promotion = new Promotion($idPromotion);
+			foreach ($liste_promotion as $idPromotionListe) {
+				$Promotion = new Promotion($idPromotionListe);
 				$nom = $Promotion->getNom();
 				
-				if ($promotion == $idPromotion)
-					echo "$tab\t<option value={$idPromotion} selected>{$nom}</option>\n";
+				if ($idPromotionListe == $idPromotion)
+					echo "$tab\t<option value={$idPromotionListe} selected>{$nom}</option>\n";
 				else
-					echo "$tab\t<option value={$idPromotion}>{$nom}</option>\n";
+					echo "$tab\t<option value={$idPromotionListe}>{$nom}</option>\n";
 			}
 			
 			echo "$tab</select>\n";
@@ -142,7 +140,7 @@
 		
 		public static function liste_promotion_to_table($idPromotion, $administration, $nombreTabulations = 0){
 			$liste_promotion = Promotion::liste_promotion();
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			echo "$tab<table class=\"listeCours\">\n";
 			
@@ -264,8 +262,7 @@
 		
 		// Formulaire
 		public function formulaireAjoutPromotion($idPromotion, $nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
-			
+			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			if(isset($_GET['modifier_promotion'])){ 
 				$titre = "Modifier une promotion";
 				$Promotion = new Promotion($_GET['modifier_promotion']);
@@ -364,7 +361,7 @@
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			if(isset($_GET['ajout_promotion'])){
 				echo "$tab<p class=\"notificationAdministration\">La promotion a bien été ajouté</p>";
 			}
