@@ -123,6 +123,8 @@
 			
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
+			echo "$tab<h1>Gestion d'affichage</h1>\n";
+			echo "$tab<h2>Gestion des couleurs de type de cours</h2>\n";
 			echo "$tab<form id=\"administration_stype_typeCours\" method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			foreach(Options::generer_array_Options_style() as $label => $nom){
@@ -140,7 +142,7 @@
 			echo "$tab</form>\n";
 		}
 		
-		public static function test_validation_formulaire_administration(){
+		public static function prise_en_compte_formulaire(){
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if(isset($_POST[$name_formulaire])){
 				foreach(Options::generer_array_Options_style() as $nom){
@@ -152,7 +154,11 @@
 						// TEST SI COULEUR
 						Options::ajouter_Options($nom, $_POST[$nom]);
 					}
-					header("Location: index.php?idPromotion={$_GET['idPromotion']}&page=styleTypeCours");
+					$location = "index.php?page=styleTypeCours";
+					if(isset($_GET['idPromotion'])){
+						$location .= "&idPromotion={$_GET['idPromotion']}";
+					}
+					header("Location: $location");
 				}
 			}
 		}

@@ -25,11 +25,8 @@
 				</li>
 			</ul>
 
-			<h1>Gestions des Utilisateurs</h1>
+			<h1>Gestions des Etudiants</h1>
 			<ul>
-				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutIntervenant" >Ajout d'un intervenant</a>
-				</li>
 				<li>
 					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutEtudiant" >Ajout d'un étudiant</a>
 				</li>
@@ -59,18 +56,5 @@
 			<ul>
 				<li>
 					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=gestionPublication" >Gestion de la publication</a>
-				</li>
-			</ul>
-			
-			<h1>Gestion des Salles</h1>
-			<ul>
-				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutBatiment" >Ajout d'un batiment</a>
-				</li>
-				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutSalle" >Ajout d'une salle</a>
-				</li>
-				<li>
-					<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=ajoutTypeSalle" >Ajout d'un type de salle</a>
 				</li>
 			</ul>

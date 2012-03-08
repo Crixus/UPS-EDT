@@ -2,6 +2,7 @@
 	// Informations de base de données
 	include_once('../includes/infos_bdd.php');
 	
+	// Importation des classes
 	$repertoire = opendir("../classes/");
 	while($fichier = readdir($repertoire)){
 		if($fichier != '..' && $fichier != '.'){
@@ -9,10 +10,11 @@
 		}
 	}
 	
+	// Test sur la promotion (voir si la promotion est choisie et sécurité)
 	if(isset($_GET['idPromotion'])){
 		$promotion_choisie = true;
 		$idPromotion = $_GET['idPromotion'];
-		if($idPromotion == 0){ // AJOUTER TEST SI EXISTANT
+		if(!Promotion::existe_promotion($idPromotion)){ 
 			header('Location: ./index.php');
 		}
 	}
@@ -20,9 +22,32 @@
 		$promotion_choisie = false;
 	}
 	
+	// Test sur la page (voir si page choisie et sécurité)
+	$listePagesAdminPromo = Array(
+		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", "ajoutSpecialite.php", "gestionPublication.php"
+	);
+	$listePagesAdminHorsPromo = Array(
+		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php"
+	);
+	
+	if(isset($_GET['page'])){
+		if(isset($_GET['idPromotion'])){
+			if(!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo) && !in_array("{$_GET['page']}.php", $listePagesAdminPromo)){
+				header('Location: ./index.php');
+			}
+		}
+		else{
+			if(!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo)){
+				header('Location: ./index.php');
+			}
+		}
+	}
+	
+	Batiment::prise_en_compte_formulaire();
+	Batiment::prise_en_compte_suppression();	
 	Intervenant::prise_en_compte_formulaire();
 	Intervenant::prise_en_compte_suppression();
-	Options::test_validation_formulaire_administration();
+	Options::prise_en_compte_formulaire();
 ?>
 <!DOCTYPE html>
 	<head>
@@ -64,72 +89,32 @@
 				</div>
 			</div>
 			<div id="page_administration_milieu">
-<?php
-	if($promotion_choisie){
-		$promotion = $_GET['idPromotion'];
-?>
 				<nav>
-<?php
-		include_once('./nav.php'); 
-?>		
-				<h1>Gestion affichage</h1>
-				<ul>
-					<li>
-						<a href="?idPromotion=<?php echo $promotion; ?>&amp;page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
-					</li>
-				</ul>
+<?php 
+	include_once('./nav_hors_promo.php');
+	if(isset($_GET['idPromotion'])){ include_once('./nav_promo.php'); }
+?>
 				</nav>
 				<section>
-					<ul>
-					<li>TOTAL EN COURS 80%</li>
-					<li>
-						Reste à faire : [6 à 9h] Fin Possible le 11 Mars (developpement) puis 18 Mars (tests + style)<br />
-						- Ajouter la gestion de couleur à un type de cours [2h]<br />
-						- Gestion des groupes d'étudiants [2 à 4h]<br />
-						- Gestion des groupes de cours [2h à 3h]<br />				
-						- TESTS [?]<br />
-						- Modifier le CSS<br />
-					</li>					
-				</ul>
-<?php
-		if(isset($_GET['page'])){
-			include_once("./pages/{$_GET['page']}.php");
-		}
-	}
-	else if(isset($_GET['page']) && ($_GET['page'] == "styleTypeCours" || $_GET['page'] == "ajoutPromotion")){
-?>
-				<nav>
-				<h1>Gestion affichage</h1>
-				<ul>
-					<li>
-						<a href="?page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
-					</li>
-				</ul>
-				</nav>
-				<section>
-<?php
-		include_once("./pages/{$_GET['page']}.php");
-	}
-	else{
-?>
-				<nav>
-				<h1>Gestion affichage</h1>
-				<ul>
-					<li>
-						<a href="?page=styleTypeCours" >Ajout d'une couleur d'un type de cours </a>
-					</li>
-				</ul>
-				</nav>
-				<section>
-				<p>Merci de choisir une promotion</p>
-<?php
-	}
+<?php 
+	if(isset($_GET['page'])){ include_once("./pages/{$_GET['page']}.php"); } 
 ?>
 				</section>
 			</div>
 			<div id="page_administration_bas">
 				<p>Manuel Administration</p>
 			</div>
+			<ul>
+				<li>TOTAL EN COURS 80%</li>
+				<li>
+					Reste à faire : [6 à 9h] Fin Possible le 11 Mars (developpement) puis 18 Mars (tests + style)<br />
+					- Ajouter la gestion de couleur à un type de cours [2h]<br />
+					- Gestion des groupes d'étudiants [2 à 4h]<br />
+					- Gestion des groupes de cours [2h à 3h]<br />				
+					- TESTS [?]<br />
+					- Modifier le CSS<br />
+				</li>					
+			</ul>
 		</div>
 	</body>
 </html>
