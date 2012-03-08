@@ -104,8 +104,8 @@
 					$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
 					$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
 					if(isset($_GET['idPromotion'])){
-						$pageModification .= "&idPromotion={$_GET['idPromotion']}";
-						$pageSuppression .= "&idPromotion={$_GET['idPromotion']}";
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 					}
 					echo "$tab\t\t<td><a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a><a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a></td>\n";
 				}
