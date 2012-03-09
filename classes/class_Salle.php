@@ -58,6 +58,7 @@
 			}
 		}
 		
+		// Ne devrait pas être ici
 		public function listeNomBatiment() {
 			$listeNom = Array();
 			try{
@@ -118,6 +119,7 @@
 			}
 		}
 		
+		// ATTENTION AJOUTER LA MODIFICATION DE CHAQUE COURS ASSOCIE A LA SALLE PAR DEFAUT
 		public static function supprimer_salle($idSalle){
 			//Suppression des entrées de la table "Appartient_Salle_TypeSalle
 			try{

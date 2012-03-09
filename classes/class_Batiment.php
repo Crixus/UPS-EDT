@@ -36,6 +36,46 @@
 			}
 		}
 		
+		public function liste_salles(){
+			$listeSalle = Array();
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
+				$req->execute(
+					Array($this->nomBatiment)
+					);
+				while($ligne = $req->fetch()){
+					array_push($listeSalle, new Salle($ligne['id']));
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeSalle;
+		}
+		
+		public function supprimer_salle_associées(){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
+				$req->execute(
+					Array($this->nom)
+					);
+				while($ligne = $req->fetch()){
+					Salle::supprimer_salle($ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function existe_batiment($id){
 			try{
 				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -156,6 +196,8 @@
 		}
 		
 		public static function supprimer_batiment($idBatiment){
+			$Batiment = new Batiment($idBatiment);
+			$Batiment->supprimer_salle_associées();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
@@ -228,9 +270,12 @@
 				$nom = $_POST['nom'];
 				$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
 				$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];	
+				$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
+				$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
+				$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
+				if($nom_correct && $lat_correct && $lon_correct){
 					if(isset($_GET['modifier_batiment'])){
+						// C'est une modification de batiment
 						Batiment::modifier_batiment($_GET['modifier_batiment'], $nom, $lat, $lon);
 						$pageDestination = "./index.php?page=ajoutBatiment&modification_batiment=1";
 					}
@@ -240,6 +285,7 @@
 						$pageDestination = "./index.php?page=ajoutBatiment&ajout_batiment=1";
 					}
 					if(isset($_GET['idPromotion'])){
+						// Si l'idPromotion est choisie, on l'ajoute au lien (pour ne pas le perdre)
 						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 					}
 					header("Location: $pageDestination");
@@ -250,13 +296,18 @@
 		public static function prise_en_compte_suppression(){
 			if(isset($_GET['supprimer_batiment'])){			
 				if(Batiment::existe_batiment($_GET['supprimer_batiment'])){
+					// Le batiment existe
 					Batiment::supprimer_batiment($_GET['supprimer_batiment']);
 					$pageDestination = "./index.php?page=ajoutBatiment&suppression_batiment=1";	
-					if(isset($_GET['idPromotion'])){
-						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
-					}
-					header("Location: $pageDestination");
 				}
+				else{
+					// Le batiment n'existe pas
+					$pageDestination = "./index.php?page=ajoutBatiment";
+				}
+				if(isset($_GET['idPromotion'])){
+					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+				}
+				header("Location: $pageDestination");	
 			}
 		}
 		
@@ -271,9 +322,9 @@
 			if(isset($_GET['suppression_batiment'])){
 				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été supprimé</p>\n";
 			}
-			echo "$tab<h1>Gestion des salles</h1>\n";
+			echo "$tab<h1>Gestion des bâtiments</h1>\n";
 			Batiment::formulaireAjoutBatiment($nombreTabulations + 1);
-			echo "$tab<h2>Liste des batiments</h2>\n";
+			echo "$tab<h2>Liste des bâtiments</h2>\n";
 			Batiment::liste_Batiment_to_table($nombreTabulations + 1);
 		}
 	}

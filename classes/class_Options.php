@@ -144,17 +144,13 @@
 		public static function prise_en_compte_formulaire(){
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if(isset($_POST[$name_formulaire])){
-				$regexCouleur = '`^#([A-F0-9]{6})$`';
 				foreach(Options::generer_array_Options_style() as $nom){
-					$post = strtoupper($_POST[$nom]);
-					if(Options::existe_Options($nom)){
-						if(preg_match($regexCouleur, $post)){
-							Options::modifier_Options($nom, $post);
+					if(PregMatch::est_couleur_avec_diez($_POST[$nom])){
+						if(Options::existe_Options($nom)){
+							Options::modifier_Options($nom, strtoupper($_POST[$nom]));
 						}
-					}
-					else{
-						if(preg_match($regexCouleur, $post)){
-							Options::ajouter_Options($nom, $post);
+						else{
+							Options::ajouter_Options($nom, strtoupper($_POST[$nom]));
 						}
 					}
 					$location = "index.php?page=styleTypeCours";
