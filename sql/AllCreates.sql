@@ -62,21 +62,23 @@ CREATE TABLE IF NOT EXISTS `Promotion` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Specialite` (
+  -- Si la Promotion est supprimée, alors la spécialité est supprimée
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idPromotion` int(11) NOT NULL,
   `nom` varchar(100) COLLATE utf8_bin NOT NULL,
   `intitule` varchar(100) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (`nom`,`idPromotion`),
-  FOREIGN KEY (idPromotion) REFERENCES Promotion(id)
+  FOREIGN KEY (idPromotion) REFERENCES Promotion(id) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Administratif` (
+  -- Si la Promotion est supprimée, alors le groupe administratif est supprimé
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE ,
   UNIQUE (`nom`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -101,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Utilisateur` (
+  -- En fait on aurait du laisser séparé, là on va se faire chier tanpis
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(100) NOT NULL,
   `motDePasse` varchar(32) NOT NULL,
@@ -138,20 +141,24 @@ CREATE TABLE IF NOT EXISTS `Intervenant` (
   `actif` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0 ;
+
+INSERT INTO `Intervenant` (`id`, `nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `actif`) VALUES
+(0, 'DEFAULT', 'DEFAULT', 'DEFAULT@UPS-EDT.com', '', 0, 1);
 
 CREATE TABLE IF NOT EXISTS `UE` (
+  -- Si l'intervenant est supprimé, alors l'id doit être mise à celle par defaut (a faire)
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) COLLATE utf8_bin NOT NULL,  
-  `intitule` varchar(100) COLLATE utf8_bin NOT NULL,
+  `nom` varchar(50) NOT NULL,  
+  `intitule` varchar(100) NOT NULL,
   `nbHeuresCours` double NOT NULL,
   `nbHeuresTD` double NOT NULL,
   `nbHeuresTP` double NOT NULL,
   `ECTS` double NOT NULL,
-  `idResponsable` int(11),
+  `idResponsable` int(11), -- DEFAULT idParDefaut
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`),
+  FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`), -- ON DELETE SET idResponsable DEFAULT
   FOREIGN KEY (`idPromotion`) REFERENCES Promotion (`id`) ,
   UNIQUE (`nom`, `idPromotion`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
@@ -174,20 +181,22 @@ CREATE TABLE IF NOT EXISTS `Type_Salle` (
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Salle` (
+  -- Si le Batiment est modifie, on modifier le nomBatiment de la salle (clé primaire)
+  -- Si le Batiment est supprimé alors on supprime la salle
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) COLLATE utf8_bin NOT NULL,
-  `nomBatiment` varchar(50) COLLATE utf8_bin NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `nomBatiment` varchar(50) NOT NULL,
   `capacite` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`,`nomBatiment`),
-  FOREIGN KEY `nomBatiment` (`nomBatiment`) REFERENCES Batiment(`nom`) ON DELETE CASCADE
+  FOREIGN KEY `nomBatiment` (`nomBatiment`) REFERENCES Batiment(`nom`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `Style` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nomCouleur` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `couleurTexte` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `couleurFond` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `nomCouleur` varchar(50) NOT NULL,
+  `couleurTexte` varchar(50) NOT NULL,
+  `couleurFond` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
@@ -200,10 +209,12 @@ CREATE TABLE IF NOT EXISTS `Type_Cours` (
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Cours` (
+   -- Si la salle est supprimée, alors on met la salle par defaut (vérifier que la salle par défaut est dans la BD)
+   -- Si l'intervenant est supprimé, alors on met l'intervenant par defaut (vérifier que l'intervenant par défaut est dans le BD)
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idUE` int(11) NOT NULL,
-  `idSalle` int(11) NOT NULL,
-  `idIntervenant` int(11) NOT NULL,
+  `idSalle` int(11) NOT NULL DEFAULT 0,
+  `idIntervenant` int(11) NOT NULL DEFAULT 0,
   `idTypeCours` int(11) NOT NULL,
   `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -215,11 +226,13 @@ CREATE TABLE IF NOT EXISTS `Cours` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Publication` (
+  -- Si le groupe d'etudiant est supprimé, alors on supprime la publication
+  -- Si le groupe de cours est supprimé, alors on supprime la publication
   `idGroupeEtudiants` int(11) NOT NULL,
   `idGroupeCours` int(11) NOT NULL,
   PRIMARY KEY (`idGroupeEtudiants`,`idGroupeCours`),
-  FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`),
-  FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
+  FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
@@ -265,8 +278,8 @@ CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
 
 CREATE TABLE IF NOT EXISTS `Options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `valeur` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `valeur` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 

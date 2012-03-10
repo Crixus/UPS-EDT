@@ -57,25 +57,6 @@
 			return $listeSalle;
 		}
 		
-		public function supprimer_salle_associées(){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
-				$req->execute(
-					Array($this->nom)
-					);
-				while($ligne = $req->fetch()){
-					Salle::supprimer_salle($ligne['id']);
-				}
-				$req->closeCursor();
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
 		public static function existe_batiment($id){
 			try{
 				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -147,7 +128,10 @@
 						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 					}
-					echo "$tab\t\t<td><a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a><a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a></td>\n";
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
+					echo "<a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+					echo "</td>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}
@@ -162,12 +146,7 @@
 				$req = $bdd->prepare("INSERT INTO ".Batiment::$nomTable." VALUES(?, ?, ?, ?)");
 				
 				$req->execute(
-					Array(
-						"",
-						$nom,
-						$lat, 
-						$lon
-					)
+					Array("", $nom, $lat, $lon)
 				);			
 			}
 			catch(Exception $e){
@@ -182,12 +161,7 @@
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Batiment::$nomTable." SET nom=?, lat=?, lon=? WHERE id=?;");
 				$req->execute(
-					Array(
-						$nom, 
-						$lat, 
-						$lon, 
-						$idBatiment
-					)
+					Array($nom, $lat, $lon, $idBatiment)
 				);
 			}
 			catch(Exception $e){
@@ -196,15 +170,14 @@
 		}
 		
 		public static function supprimer_batiment($idBatiment){
+			// Un DELETE va supprimer les salles (DELETE ON CASCADE)
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Batiment::$nomTable." WHERE id=?;");
 				$req->execute(
-					Array(
-						$idBatiment
-					)
+					Array($idBatiment)
 				);
 			}
 			catch(Exception $e){
@@ -286,7 +259,7 @@
 						// Si l'idPromotion est choisie, on l'ajoute au lien (pour ne pas le perdre)
 						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 					}
-					header("Location: $pageDestination");
+					//header("Location: $pageDestination");
 				}
 			}
 		}
@@ -303,6 +276,7 @@
 					$pageDestination = "./index.php?page=ajoutBatiment";
 				}
 				if(isset($_GET['idPromotion'])){
+					// Si l'idPromotion est choisie, on l'ajoute au lien (pour ne pas le perdre)
 					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 				}
 				header("Location: $pageDestination");	
@@ -314,10 +288,10 @@
 			if(isset($_GET['ajout_batiment'])){
 				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été ajouté</p>\n";
 			}
-			if(isset($_GET['modification_batiment'])){
+			else if(isset($_GET['modification_batiment'])){
 				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été modifié</p>\n";
 			}
-			if(isset($_GET['suppression_batiment'])){
+			else if(isset($_GET['suppression_batiment'])){
 				echo "$tab<p class=\"notificationAdministration\">Le bâtiment a bien été supprimé</p>\n";
 			}
 			echo "$tab<h1>Gestion des bâtiments</h1>\n";
