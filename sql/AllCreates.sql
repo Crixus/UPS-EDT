@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `Cours` (
    -- Si l'intervenant est supprimé, alors on met l'intervenant par defaut (vérifier que l'intervenant par défaut est dans le BD)
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idUE` int(11) NOT NULL,
-  `idSalle` int(11) NOT NULL DEFAULT 0,
+  `idSalle` int(11) NOT NULL,
   `idIntervenant` int(11) NOT NULL DEFAULT 0,
   `idTypeCours` int(11) NOT NULL,
   `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',

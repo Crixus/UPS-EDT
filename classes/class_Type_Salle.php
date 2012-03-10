@@ -67,7 +67,7 @@
 			return $listeId;
 		}
 		
-		public static function liste_type_salle_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_type_salle_to_table($nombreTabulations = 0, $administration = false){
 			$liste_type_salle = Type_Salle::liste_type_salle();
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbre_type_cours = Type_Cours::getNbreTypeCours();
@@ -117,9 +117,16 @@
 				}
 				
 				if($administration){
-					$pageModification = "./index.php?idPromotion=$idPromotion&amp;page=ajoutTypeSalle&amp;modifier_type_salle=$idTypeSalle";
-					$pageSuppression = "./index.php?idPromotion=$idPromotion&amp;page=ajoutTypeSalle&amp;supprimer_type_salle=$idTypeSalle";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce type de salle ?') ? '{$pageSuppression}' : ''\"/>\n";
+					$pageModification = "./index.php?&page=ajoutTypeSalle&modifier_type_salle=$idTypeSalle";
+					$pageSuppression = "./index.php?&page=ajoutTypeSalle&supprimer_type_salle=$idTypeSalle";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le type de salle ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+					echo "</td>";
 				}
 				echo "$tab\t</tr>\n";
 			}
@@ -165,49 +172,14 @@
 		}
 		
 		public static function supprimer_type_salle($idTypeSalle){
-			//Suppression des entrées de la table "Appartient_Salle_TypeSalle
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Appartient_Salle_TypeSalle::$nomTable." WHERE idTypeSalle=?;");
+				$req = $bdd->prepare("DELETE FROM ".Type_Salle::$nomTable." WHERE id=?;");
 				$req->execute(
-					Array(
-						$idTypeSalle
-					)
+					Array($idTypeSalle)
 				);
-				
-				//Suppression des entrées de la table "Appartient_TypeSalle_TypeCours
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("DELETE FROM ".Appartient_TypeSalle_TypeCours::$nomTable." WHERE idTypeSalle=?;");
-					$req->execute(
-						Array(
-							$idTypeSalle
-						)
-					);
-				
-					//Suppression du type de salle
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-						$bdd->query("SET NAMES utf8");
-						$req = $bdd->prepare("DELETE FROM ".Type_Salle::$nomTable." WHERE id=?;");
-						$req->execute(
-							Array(
-								$idTypeSalle
-							)
-						);
-					}
-					catch(Exception $e){
-						echo "Erreur : ".$e->getMessage()."<br />";
-					}
-				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -250,43 +222,54 @@
 		public static function prise_en_compte_formulaire(){
 			if(isset($_POST['validerAjoutTypeSalle'])){
 				$nom = $_POST['nom'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];	
+				if(true){ // Test de saisie	
 					if(isset($_GET['modifier_type_salle'])){
 						Type_Salle::modifier_type_salle($_GET['modifier_type_salle'], $nom);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeSalle&modification_type_salle=1";
+						$pageDestination = "./index.php?page=ajoutTypeSalle&modification_type_salle=1";
 					}
 					else{
 						// C'est un nouveau type de salle
 						Type_Salle::ajouter_type_salle($nom);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeSalle&modification_type_salle=1";
+						$pageDestination = "./index.php?page=ajoutTypeSalle&ajout_type_salle=1";
 					}
-					header("Location: $pageDestination");
+					if(isset($_GET['idPromotion'])){
+					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+					}
+					header("Location : $pageDestination"); // Ne fonctionne pas ??
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
-			if(isset($_GET['supprimer_type_salle'])){	
-				$idPromotion = $_GET['idPromotion'];		
+			if(isset($_GET['supprimer_type_salle'])){		
 				if(true){ // Test de saisie
 					Type_Salle::supprimer_type_salle($_GET['supprimer_type_salle']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeSalle&supprimer_type_salle=1";	
+					$pageDestination = "./index.php?page=ajoutTypeSalle&suppression_type_salle=1";	
 				}
+				else{
+					$pageDestination = "./index.php?page=ajoutTypeSalle";	
+				}
+				if(isset($_GET['idPromotion'])){
+					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+				}
+				header("Location: $pageDestination");
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			if(isset($_GET['ajout_type_salle'])){
 				echo "$tab<p class=\"notificationAdministration\">Le type de salle a bien été ajouté</p>";
 			}
-			if(isset($_GET['modification_type_salle'])){
+			else if(isset($_GET['modification_type_salle'])){
 				echo "$tab<p class=\"notificationAdministration\">Le type de salle a bien été modifié</p>";
+			}
+			else if(isset($_GET['suppression_type_salle'])){
+				echo "$tab<p class=\"notificationAdministration\">Le type de salle a bien été supprimé</p>";
 			}
 			Type_Salle::formulaireAjoutTypeSalle($nombreTabulations + 1);
 			echo "$tab<h1>Liste des types de salles</h1>\n";
-			Type_Salle::liste_type_salle_to_table($_GET['idPromotion'], $nombreTabulations + 1);
+			Type_Salle::liste_type_salle_to_table($nombreTabulations + 1, true);
 		}
 		
 		public function appartient_salle_typeSalle($idSalle, $idType_Salle) {
@@ -311,21 +294,5 @@
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}			
-		}
-		
-		public function toString(){
-			$string = "";
-			foreach(Type_Salle::$attributs as $att){
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table(){
-			return Utils_SQL::sql_from_file("./sql/".Type_Salle::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table(){
-			return Utils_SQL::sql_supprimer_table(Type_Salle::$nomTable);
 		}
 	}

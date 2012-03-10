@@ -368,12 +368,4 @@
 			echo "$tab<h2>Liste des salles</h2>\n";
 			Salle::liste_Salle_to_table($nombreTabulations + 1);
 		}
-		
-		public function toUl(){
-			$string = "<ul>\n";
-			foreach(Salle::$attributs as $att){
-				$string .= "<li>$att : ".$this->$att."</li>\n";
-			}
-			return "$string</ul>\n";
-		}
 	}
