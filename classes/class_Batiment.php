@@ -130,7 +130,7 @@
 					}
 					echo "$tab\t\t<td>";
 					echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
-					echo "<a href=\"$pageSuppression\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le bâtiment ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
 					echo "</td>\n";
 				}
 				echo "$tab\t</tr>\n";
