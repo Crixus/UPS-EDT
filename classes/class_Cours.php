@@ -122,6 +122,36 @@
 			}
 		}
 		
+		public static function modifier_salle($idCours, $idSalle){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idSalle=? WHERE id=?;");
+				$req->execute(
+					Array($idSalle, $idCours)
+				);
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
+		public static function modifier_salle_tout_cours($idSalleSrc, $idSalleDst){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idSalle=? WHERE idSalle=?;");
+				$req->execute(
+					Array($idSalleDst, $idSalleSrc)
+				);
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
 			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
 			$nbCours = sizeof($liste_cours);

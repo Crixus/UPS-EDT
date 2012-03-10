@@ -171,7 +171,10 @@ CREATE TABLE IF NOT EXISTS `Batiment` (
   `lon` double DEFAULT NULL,
   PRIMARY KEY (`id`), 
   UNIQUE KEY (`nom`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;
+
+INSERT INTO `Batiment` (`id`, `nom`, `lat`, `lon`) VALUES
+(0, 'DEFAULT', NULL, NULL);
 
 
 CREATE TABLE IF NOT EXISTS `Type_Salle` (
@@ -190,7 +193,10 @@ CREATE TABLE IF NOT EXISTS `Salle` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`,`nomBatiment`),
   FOREIGN KEY `nomBatiment` (`nomBatiment`) REFERENCES Batiment(`nom`) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;
+
+INSERT INTO `Salle` (`id`, `nom`, `nomBatiment`, `capacite`) VALUES
+(0, 'Non assigné', 'DEFAULT', 999);
 
 CREATE TABLE IF NOT EXISTS `Style` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -260,19 +266,21 @@ CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
+  -- Si une salle est suprimée, alors Appartient_Salle_TypeSalle associé et supprimé
+  -- Si un type de salle est suprimée, alors Appartient_Salle_TypeSalle associé et supprimé
   `idSalle` int(11) NOT NULL,
   `idTypeSalle` int(11) NOT NULL,
   PRIMARY KEY (`idSalle`,`idTypeSalle`),
   FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`)
+  FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   `idTypeSalle` int(11) NOT NULL,
   `idTypeCours` int(11) NOT NULL,
   PRIMARY KEY (`idTypeSalle`,`idTypeCours`),
-  FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`),
-  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
+  FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
