@@ -7,7 +7,49 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+-- On doit les faire dans l'ordre
+
+DROP TABLE IF EXISTS `Options`;
+
+DROP TABLE IF EXISTS `Utilisateur`;
+
+DROP TABLE IF EXISTS `Inscription`;
+
+DROP TABLE IF EXISTS `Publication`;
+DROP TABLE IF EXISTS `Appartient_Cours_GroupeCours`;
+DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeEtudiants`;
+DROP TABLE IF EXISTS `Groupe_Cours`;
+DROP TABLE IF EXISTS `Groupe_Etudiants`;
+
+DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeAdministratif`;
+DROP TABLE IF EXISTS `Groupe_Administratif`;
+
+DROP TABLE IF EXISTS `Cours`;
+DROP TABLE IF EXISTS `UE`;
+DROP TABLE IF EXISTS `Intervenant`;
+
+DROP TABLE IF EXISTS `Appartient_Salle_TypeSalle`;
+DROP TABLE IF EXISTS `Appartient_TypeSalle_TypeCours`;
+
+DROP TABLE IF EXISTS `Type_Salle`;
+DROP TABLE IF EXISTS `Type_Cours`;
+
+DROP TABLE IF EXISTS `Salle`;
+DROP TABLE IF EXISTS `Batiment`; 
+
+DROP TABLE IF EXISTS `Etudiant`;
+
+DROP TABLE IF EXISTS `Specialite`;
+
 DROP TABLE IF EXISTS `Promotion`;
+
+DROP VIEW IF EXISTS `V_Infos_Cours`;
+DROP VIEW IF EXISTS `V_Cours_Etudiants`;
+DROP VIEW IF EXISTS `V_Infos_Etudiant`;
+DROP VIEW IF EXISTS `V_Liste_Salles`;
+DROP VIEW IF EXISTS `V_Liste_Specialite`;
+DROP VIEW IF EXISTS `V_Infos_UE`;
+DROP VIEW IF EXISTS `V_Infos_Cours_Etudiants`;
 
 CREATE TABLE IF NOT EXISTS `Promotion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -17,9 +59,7 @@ CREATE TABLE IF NOT EXISTS `Promotion` (
   `tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Specialite`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Specialite` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -29,22 +69,16 @@ CREATE TABLE IF NOT EXISTS `Specialite` (
   PRIMARY KEY (`id`),
   UNIQUE (`nom`,`idPromotion`),
   FOREIGN KEY (idPromotion) REFERENCES Promotion(id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Groupe_Administratif`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Administratif` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
   UNIQUE (`nom`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `Groupe_Cours`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -52,11 +86,9 @@ CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   `identifiant` varchar(100) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
   UNIQUE (`identifiant`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Groupe_Etudiants`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,11 +96,9 @@ CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
   `identifiant` varchar(100) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
   UNIQUE (`identifiant`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-DROP TABLE IF EXISTS `Utilisateur`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Utilisateur` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -79,9 +109,7 @@ CREATE TABLE IF NOT EXISTS `Utilisateur` (
   PRIMARY KEY (`id`),
   UNIQUE (`login`),
   UNIQUE (`type`, `idCorrespondant`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Etudiant`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Etudiant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -95,12 +123,10 @@ CREATE TABLE IF NOT EXISTS `Etudiant` (
   `idSpecialite` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`idSpecialite`) REFERENCES Specialite(`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`),
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
   UNIQUE (`numeroEtudiant`),
   UNIQUE (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Intervenant`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Intervenant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -112,9 +138,7 @@ CREATE TABLE IF NOT EXISTS `Intervenant` (
   `actif` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `UE`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `UE` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -128,30 +152,26 @@ CREATE TABLE IF NOT EXISTS `UE` (
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion (`id`),
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion (`id`) ,
   UNIQUE (`nom`, `idPromotion`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
-DROP TABLE IF EXISTS `Batiment`; 
 
 CREATE TABLE IF NOT EXISTS `Batiment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   `lat` double DEFAULT NULL,
   `lon` double DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`), 
   UNIQUE KEY (`nom`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
-DROP TABLE IF EXISTS `Type_Salle`;
 
 CREATE TABLE IF NOT EXISTS `Type_Salle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Salle`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Salle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -160,9 +180,8 @@ CREATE TABLE IF NOT EXISTS `Salle` (
   `capacite` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`,`nomBatiment`),
-  FOREIGN KEY `nomBatiment` (`nomBatiment`) REFERENCES Batiment(`nom`),
-  FOREIGN KEY (`nomBatiment`) REFERENCES Type_Salle(`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  FOREIGN KEY `nomBatiment` (`nomBatiment`) REFERENCES Batiment(`nom`) ON DELETE CASCADE
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `Style` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -170,9 +189,7 @@ CREATE TABLE IF NOT EXISTS `Style` (
   `couleurTexte` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `couleurFond` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Type_Cours`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Type_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -180,9 +197,7 @@ CREATE TABLE IF NOT EXISTS `Type_Cours` (
   `idStyle` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (`nom`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Cours`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -197,9 +212,7 @@ CREATE TABLE IF NOT EXISTS `Cours` (
   FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
   FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`),
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Publication`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Publication` (
   `idGroupeEtudiants` int(11) NOT NULL,
@@ -207,9 +220,7 @@ CREATE TABLE IF NOT EXISTS `Publication` (
   PRIMARY KEY (`idGroupeEtudiants`,`idGroupeCours`),
   FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`),
   FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-DROP TABLE IF EXISTS `Appartient_Cours_GroupeCours`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
   `idCours` int(11) NOT NULL,
@@ -217,9 +228,7 @@ CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
   PRIMARY KEY (`idCours`,`idGroupeCours`),
   FOREIGN KEY (`idCours`) REFERENCES Cours(`id`),
   FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeAdministratif`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
   `idEtudiant` int(11) NOT NULL,
@@ -227,9 +236,7 @@ CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
   PRIMARY KEY (`idEtudiant`,`idGroupeAdministratif`),
   FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`),
   FOREIGN KEY (`idGroupeAdministratif`) REFERENCES Groupe_Administratif(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeEtudiants`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
   `idEtudiant` int(11) NOT NULL,
@@ -237,21 +244,15 @@ CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
   PRIMARY KEY (`idEtudiant`,`idGroupeEtudiants`),
   FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`),
   FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-
-
-DROP TABLE IF EXISTS `Appartient_Salle_TypeSalle`;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
   `idSalle` int(11) NOT NULL,
   `idTypeSalle` int(11) NOT NULL,
   PRIMARY KEY (`idSalle`,`idTypeSalle`),
-  FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
+  FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `Appartient_TypeSalle_TypeCours`;
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   `idTypeSalle` int(11) NOT NULL,
@@ -259,16 +260,15 @@ CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   PRIMARY KEY (`idTypeSalle`,`idTypeCours`),
   FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`),
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-DROP TABLE IF EXISTS `Options`;
 
 CREATE TABLE IF NOT EXISTS `Options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `valeur` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 INSERT INTO `Options` (`nom`, `valeur`) VALUES
 ("background_color_Cours", "#96C8FF"),
@@ -278,18 +278,21 @@ INSERT INTO `Options` (`nom`, `valeur`) VALUES
 ("background_color_Reunion", "#FFFFFF"),
 ("background_color_Autre", "#FFFFFF");
 
-DROP TABLE IF EXISTS `Inscription`;
-
 CREATE TABLE IF NOT EXISTS `Inscription` (
   `idUE` int(11) NOT NULL,
   `idEtudiant` int(11) NOT NULL,
   PRIMARY KEY (`idUE`,`idEtudiant`),
   FOREIGN KEY (`idUE`) REFERENCES UE(`id`),
   FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin ;
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ;
 
 
-DROP VIEW IF EXISTS `V_Infos_Cours`;
+CREATE VIEW `V_Liste_Salles` AS
+SELECT Salle.id AS id, Salle.nom AS nomSalle, Salle.nomBatiment AS nomBatiment, Salle.capacite AS capacite, Batiment.lat AS lat, Batiment.lon AS lon
+FROM Salle
+JOIN Batiment ON Batiment.nom = Salle.nomBatiment
+ORDER BY nomBatiment, nomSalle;
+
 
 CREATE VIEW `V_Infos_Cours` AS
 SELECT Cours.id AS id, UE.nom AS nomUE, 
@@ -309,9 +312,6 @@ JOIN UE ON UE.id = Cours.idUE
 GROUP BY Cours.id
 ORDER BY idPromotion, tsDebut;
 
-
-DROP VIEW IF EXISTS `V_Cours_Etudiants`;
-
 CREATE VIEW `V_Cours_Etudiants` AS
 SELECT Cours.id AS idCours, Etudiant.id AS idEtudiant
 FROM Etudiant
@@ -322,7 +322,7 @@ JOIN Groupe_Cours ON Groupe_Cours.id = Publication.idGroupeCours
 JOIN Appartient_Cours_GroupeCours ON Appartient_Cours_GroupeCours.idGroupeCours = Groupe_Cours.id
 JOIN Cours ON Cours.id = Appartient_Cours_GroupeCours.idCours;
 
-DROP VIEW IF EXISTS `V_Infos_Etudiant`;
+
 
 CREATE VIEW `V_Infos_Etudiant` AS
 SELECT `Etudiant`.`id` AS `id`,`Etudiant`.`nom` AS `nom`,`Etudiant`.`prenom` AS `prenom`,`Etudiant`.`numeroEtudiant` AS `numeroEtudiant`,
@@ -333,23 +333,13 @@ JOIN `Specialite` ON (`Specialite`.`id` = `Etudiant`.`idSpecialite` OR `Etudiant
 GROUP BY `Etudiant`.id
 ORDER BY `Etudiant`.`nom`,`Etudiant`.`prenom`,`Etudiant`.`numeroEtudiant`;
 
-DROP VIEW IF EXISTS `V_Liste_Salles`;
 
-CREATE VIEW `V_Liste_Salles` AS
-SELECT Salle.id AS id, Salle.nom AS nomSalle, Salle.nomBatiment AS nomBatiment, Salle.capacite AS capacite, Batiment.lat AS lat, Batiment.lon AS lon
-FROM Salle
-JOIN Batiment ON Batiment.nom = Salle.nomBatiment
-ORDER BY nomBatiment, nomSalle;
-
-DROP VIEW IF EXISTS `V_Liste_Specialite`;
 
 CREATE VIEW `V_Liste_Specialite`
 AS SELECT Specialite.id AS id, Specialite.nom AS nomSpecialite, Promotion.nom AS nomPromotion, Promotion.annee AS annee
 FROM Specialite
 JOIN Promotion ON Specialite.idPromotion = Promotion.id
 ORDER BY annee, nomPromotion, nomSpecialite;
-
-DROP VIEW IF EXISTS `V_Infos_UE`;
 
 CREATE VIEW `V_Infos_UE` AS
 SELECT UE.id AS id, UE.nom AS nom, UE.intitule AS intitule, UE.nbHeuresCours AS nbHeuresCours, UE.nbHeuresTD AS nbHeuresTD, UE.nbHeuresTP AS nbHeuresTP, UE.ECTS AS ECTS,
@@ -363,8 +353,6 @@ JOIN Intervenant ON (UE.idResponsable = Intervenant.id OR UE.idResponsable = 0)
 JOIN Promotion ON UE.idPromotion = Promotion.id
 GROUP BY UE.id
 ORDER BY anneePromotion, nom;
-
-DROP TABLE IF EXISTS `V_Infos_Cours_Etudiants`;
 
 CREATE VIEW `V_Infos_Cours_Etudiants` AS 
 SELECT `V_Cours_Etudiants`.`idCours` AS `idCours`,`V_Cours_Etudiants`.`idEtudiant` AS `idEtudiant`,`V_Infos_Cours`.`tsDebut` AS `tsDebut`,`V_Infos_Cours`.`tsFin` AS `tsFin` 

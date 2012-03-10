@@ -196,8 +196,6 @@
 		}
 		
 		public static function supprimer_batiment($idBatiment){
-			$Batiment = new Batiment($idBatiment);
-			$Batiment->supprimer_salle_associées();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);

@@ -1,108 +1,37 @@
--- phpMyAdmin SQL Dump
--- version 3.4.5deb1
--- http://www.phpmyadmin.net
---
--- Client: localhost
--- Généré le : Sam 04 Février 2012 à 01:21
--- Version du serveur: 5.1.58
--- Version de PHP: 5.3.6-13ubuntu3.3
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Base de données: `UPS_EDT`
---
+INSERT INTO `Promotion` (`nom`, `annee`, `tsDebut`, `tsFin`) VALUES
+('L1 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
+('L2 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
+('L3 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
+('M1 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
+('M2 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00');
 
--- --------------------------------------------------------
+INSERT INTO `Specialite` (`idPromotion`, `nom`, `intitule`) VALUES
+-- idPromotion 4 = Master 1 Informatique
+(4, 'DL', 'Développement Logiciel'),
+(4, 'IHM', 'Interaction Homme-Machine'),
+(4, 'IA&RF', 'Intelligence Artificielle et Reconnaissance des Formes'),
+(4, 'IM', 'Images et Multimédia'),
+(4, 'CAMSI', 'Conception d''Architectures de Machines et de Systèmes Informatiques');
 
---
--- Contenu de la table `Appartient_Cours_GroupeCours`
---
-
-INSERT INTO `Appartient_Cours_GroupeCours` (`idCours`, `idGroupeCours`) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 1);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Appartient_Etudiant_GroupeEtudiants`
---
-
-INSERT INTO `Appartient_Etudiant_GroupeEtudiants` (`idEtudiant`, `idGroupeEtudiants`) VALUES
-(1, 1),
-(1, 2),
-(2, 1),
-(2, 2),
-(3, 1),
-(3, 2),
-(4, 1),
-(4, 2),
-(5, 1),
-(5, 4),
-(6, 1),
-(6, 2);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Appartient_Salle_TypeSalle`
---
-
-INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
-(1, 1),
-(1, 2),
-(2, 2),
-(3, 2),
-(4, 1),
-(4, 2),
-(5, 2),
-(6, 2),
-(7, 2),
-(8, 3),
-(9, 3),
-(10, 3),
-(11, 3),
-(12, 3),
-(13, 3),
-(14, 3),
-(15, 1),
-(15, 2),
-(16, 1),
-(16, 2);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Appartient_TypeSalle_TypeCours`
---
-
-INSERT INTO `Appartient_TypeSalle_TypeCours` (`idTypeSalle`, `idTypeCours`) VALUES
-(1, 1),
-(1, 2),
-(1, 4),
-(1, 5),
-(1, 6),
-(2, 1),
-(2, 2),
-(2, 6),
-(3, 3),
-(3, 6);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Batiment`
---
+INSERT INTO `Etudiant` (`numeroEtudiant`, `nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `idPromotion`, `idSpecialite`) VALUES
+(1, 'Curny', 'Jérémy', 'jeremy.curny@gmail.com', '', 1, 4, 1),
+(2, 'Letourneur', 'Anthony', 'mail1@mail.com', '', 1, 4, 1),
+(3, 'Chapeyroux', 'Sebastien', 'chapeyroux.sebastien@gmail.com', '', 1, 4, 1),
+(4, 'Francois', 'Marie', 'mail3@mail.com', '', 1, 4, 2),
+(5, 'Salvatore', 'Benoit', 'mail4@mail.com', '', 1, 4, 3),
+(6, 'Dachy', 'Mathieu', 'mail5@mail.com', '', 1, 4, 1),
+(20800000, 'Carassus', 'Vincent', 'carassus@gmail.com', '', 1, 4, 1),
+(155, 'Sans D''Aggut', 'Thomas', 'mailThomas', '', 1, 4, 2),
+(12, 'Collet', 'Lois', 'mailCollet@mail.com', '', 1, 4, 1),
+(20700251, 'Weissebeck', 'Thierry', 'mailThierry@mail.fr', '', 1, 4, 1);
 
 INSERT INTO `Batiment` (`nom`, `lat`, `lon`) VALUES
 ("1A", 43.562186, 1.467211),
@@ -133,64 +62,71 @@ INSERT INTO `Batiment` (`nom`, `lat`, `lon`) VALUES
 ("U3", 43.562038, 1.470076),
 ("U4", 43.562722, 1.469378);
 
--- --------------------------------------------------------
 
---
--- Contenu de la table `Cours`
---
+INSERT INTO `Salle` (`nom`, `nomBatiment`, `capacite`) VALUES
+('A16', '1A', 30),
+('010', '1R1', 30),
+('017', '1R1', 30),
+('B7', '1TP1', 30),
+('BMIG', '1TP1', 30),
+('213', 'U2', 30),
+('112', 'U3', 20),
+('210', 'U3', 20),
+('211', 'U3', 20),
+('212', 'U3', 20),
+('213', 'U3', 20),
+('214', 'U3', 20),
+('215', 'U3', 20),
+('216', 'U3', 20),
+('302', 'U4', 30),
+('312', 'U4', 30);
 
-INSERT INTO `Cours` (`id`, `idUE`, `idSalle`, `idIntervenant`, `idTypeCours`, `tsDebut`, `tsFin`) VALUES
-(1, 5, 4, 1, 1, '2012-02-06 06:45:00', '2012-02-06 08:45:00'),
-(2, 10, 1, 1, 1, '2012-02-06 09:00:00', '2012-02-06 11:00:00'),
-(3, 9, 1, 1, 1, '2012-02-07 06:45:00', '2012-02-07 08:45:00'),
-(4, 6, 15, 1, 1, '2012-02-07 12:30:00', '2012-02-07 14:30:00');
+INSERT INTO `Type_Cours` (`nom`, `idStyle`) VALUES
+('Cours', 0),
+('TD', 0),
+('TP', 0),
+('Examen', 0),
+('Reunion', 0),
+('Autre', 0);
 
--- --------------------------------------------------------
+INSERT INTO `Type_Salle` (`nom`) VALUES
+('Amphi'),
+('Salle de TD'),
+('Salle de TP');
 
---
--- Contenu de la table `Etudiant`
---
+INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 2),
+(4, 1),
+(4, 2),
+(5, 2),
+(6, 2),
+(7, 2),
+(8, 3),
+(9, 3),
+(10, 3),
+(11, 3),
+(12, 3),
+(13, 3),
+(14, 3),
+(15, 1),
+(15, 2),
+(16, 1),
+(16, 2);
 
-INSERT INTO `Etudiant` (`numeroEtudiant`, `nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `idPromotion`, `idSpecialite`) VALUES
-(1, 'Curny', 'Jérémy', 'jeremy.curny@gmail.com', '', 1, 4, 1),
-(2, 'Letourneur', 'Anthony', 'mail1@mail.com', '', 1, 4, 1),
-(3, 'Chapeyroux', 'Sebastien', 'chapeyroux.sebastien@gmail.com', '', 1, 4, 1),
-(4, 'Francois', 'Marie', 'mail3@mail.com', '', 1, 4, 2),
-(5, 'Salvatore', 'Benoit', 'mail4@mail.com', '', 1, 4, 3),
-(6, 'Dachy', 'Mathieu', 'mail5@mail.com', '', 1, 4, 1),
-(20800000, 'Carassus', 'Vincent', 'carassus@gmail.com', '', 1, 4, 1),
-(155, 'Sans D''Aggut', 'Thomas', 'mailThomas', '', 1, 4, 2),
-(12, 'Collet', 'Lois', 'mailCollet@mail.com', '', 1, 4, 1),
-(20700251, 'Weissebeck', 'Thierry', 'mailThierry@mail.fr', '', 1, 4, 1);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Groupe_Cours`
---
-
-INSERT INTO `Groupe_Cours` (`nom`, `identifiant`, `idPromotion`) VALUES
-('Cours Tronc Commun', '2011-M1 Informatique-Tronc Commun-Cours', 4),
-('Cours RC', '2011-M1 Informatique-RC-Cours', 4),
-('Cours CISI', '2011-M1 Informatique-CISI-Cours', 4);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Groupe_Etudiants`
---
-
-INSERT INTO `Groupe_Etudiants` (`nom`, `identifiant`, `idPromotion`) VALUES
-('Promotion', '2011-M1 Informatique-Promotion', 4),
-('Etudiants de CISI', '2011-M1 Informatique-CISI', 4),
-('Etudiants de R', '2011-M1 Informatique-R', 4),
-('Etudiants de RC', '2011-M1 Informatique-RC', 4);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Intervenant`
---
+INSERT INTO `Appartient_TypeSalle_TypeCours` (`idTypeSalle`, `idTypeCours`) VALUES
+(1, 1),
+(1, 2),
+(1, 4),
+(1, 5),
+(1, 6),
+(2, 1),
+(2, 2),
+(2, 6),
+(3, 3),
+(3, 6);
 
 INSERT INTO `Intervenant` (`nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `actif`) VALUES
 ('Palanque', 'Philippe', 'mailPalanque@mail.com', '', 1, 1),
@@ -226,99 +162,6 @@ INSERT INTO `Intervenant` (`nom`, `prenom`, `email`, `telephone`, `notifications
 ('Kouame', 'Denis', 'mailKouame@mail.com', '', 1, 1),
 ('Crouzil', 'Alain', 'mailCrouzil@mail.com', '', 1, 1),
 ('Senac', 'Christine', 'mailSenac@mail.com', '', 1, 1);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Promotion`
---
-
-INSERT INTO `Promotion` (`nom`, `annee`, `tsDebut`, `tsFin`) VALUES
-('L1 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
-('L2 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
-('L3 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
-('M1 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00'),
-('M2 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00');
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Publication`
---
-
-INSERT INTO `Publication` (`idGroupeEtudiants`, `idGroupeCours`) VALUES
-(1, 1),
-(2, 3),
-(4, 2);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Salle`
---
-
-INSERT INTO `Salle` (`nom`, `nomBatiment`, `capacite`) VALUES
-('A16', '1A', 30),
-('010', '1R1', 30),
-('017', '1R1', 30),
-('B7', '1TP1', 30),
-('BMIG', '1TP1', 30),
-('213', 'U2', 30),
-('112', 'U3', 20),
-('210', 'U3', 20),
-('211', 'U3', 20),
-('212', 'U3', 20),
-('213', 'U3', 20),
-('214', 'U3', 20),
-('215', 'U3', 20),
-('216', 'U3', 20),
-('302', 'U4', 30),
-('312', 'U4', 30);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Specialite`
---
-
-INSERT INTO `Specialite` (`idPromotion`, `nom`, `intitule`) VALUES
--- idPromotion 4 = Master 1 Informatique
-(4, 'DL', 'Développement Logiciel'),
-(4, 'IHM', 'Interaction Homme-Machine'),
-(4, 'IA&RF', 'Intelligence Artificielle et Reconnaissance des Formes'),
-(4, 'IM', 'Images et Multimédia'),
-(4, 'CAMSI', 'Conception d''Architectures de Machines et de Systèmes Informatiques');
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Type_Cours`
---
-
-INSERT INTO `Type_Cours` (`nom`, `idStyle`) VALUES
-('Cours', 0),
-('TD', 0),
-('TP', 0),
-('Examen', 0),
-('Reunion', 0),
-('Autre', 0);
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `Type_Salle`
---
-
-INSERT INTO `Type_Salle` (`nom`) VALUES
-('Amphi'),
-('Salle de TD'),
-('Salle de TP');
-
--- --------------------------------------------------------
-
---
--- Contenu de la table `UE`
---
 
 INSERT INTO `UE` (`nom`, `intitule`, `nbHeuresCours`, `nbHeuresTD`, `nbHeuresTP`, `ECTS`, `idResponsable`, `idPromotion`) VALUES
 ('MCPR', 'Modèles et Concepts du Parralèlisme et de la Répartition', 12, 12, 12, 3, 3, 4),
@@ -369,11 +212,49 @@ INSERT INTO `UE` (`nom`, `intitule`, `nbHeuresCours`, `nbHeuresTD`, `nbHeuresTP`
 ('ASDSI', 'Algorithmes et Structures de Données pour la Synthèse d''Images', 10, 10, 12, 3, 9, 4),
 ('IVO', 'Introduction à la Vision par Ordinateur', 10, 10, 12, 3, 32, 4);
 
--- --------------------------------------------------------
 
---
--- Contenu de la table `Utilisateur`
---
+INSERT INTO `Cours` (`id`, `idUE`, `idSalle`, `idIntervenant`, `idTypeCours`, `tsDebut`, `tsFin`) VALUES
+(1, 5, 4, 1, 1, '2012-02-06 06:45:00', '2012-02-06 08:45:00'),
+(2, 10, 1, 1, 1, '2012-02-06 09:00:00', '2012-02-06 11:00:00'),
+(3, 9, 1, 1, 1, '2012-02-07 06:45:00', '2012-02-07 08:45:00'),
+(4, 6, 15, 1, 1, '2012-02-07 12:30:00', '2012-02-07 14:30:00');
+
+INSERT INTO `Groupe_Etudiants` (`nom`, `identifiant`, `idPromotion`) VALUES
+('Promotion', '2011-M1 Informatique-Promotion', 4),
+('Etudiants de CISI', '2011-M1 Informatique-CISI', 4),
+('Etudiants de R', '2011-M1 Informatique-R', 4),
+('Etudiants de RC', '2011-M1 Informatique-RC', 4);
+
+INSERT INTO `Groupe_Cours` (`nom`, `identifiant`, `idPromotion`) VALUES
+('Cours Tronc Commun', '2011-M1 Informatique-Tronc Commun-Cours', 4),
+('Cours RC', '2011-M1 Informatique-RC-Cours', 4),
+('Cours CISI', '2011-M1 Informatique-CISI-Cours', 4);
+
+INSERT INTO `Appartient_Etudiant_GroupeEtudiants` (`idEtudiant`, `idGroupeEtudiants`) VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2),
+(3, 1),
+(3, 2),
+(4, 1),
+(4, 2),
+(5, 1),
+(5, 4),
+(6, 1),
+(6, 2);
+
+INSERT INTO `Appartient_Cours_GroupeCours` (`idCours`, `idGroupeCours`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 1);
+
+INSERT INTO `Publication` (`idGroupeEtudiants`, `idGroupeCours`) VALUES
+(1, 1),
+(2, 3),
+(4, 2);
+
 
 INSERT INTO `Utilisateur` (`login`, `motDePasse`, `type`, `idCorrespondant`) VALUES
 ('jeremy_curny', '1a1dc91c907325c69271ddf0c944bc72', 'Etudiant', 1),
