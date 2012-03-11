@@ -297,7 +297,13 @@ INSERT INTO `Options` (`nom`, `valeur`) VALUES
 ("background_color_TP", "#FFFFFF"),
 ("background_color_Examen", "#FF3333"),
 ("background_color_Reunion", "#FFFFFF"),
-("background_color_Autre", "#FFFFFF");
+("background_color_Autre", "#FFFFFF"),
+("color_Cours", "#000000"),
+("color_TD", "#000000"),
+("color_TP", "#000000"),
+("color_Examen", "#000000"),
+("color_Reunion", "#000000"),
+("color_Autre", "#000000");
 
 CREATE TABLE IF NOT EXISTS `Inscription` (
   `idUE` int(11) NOT NULL,

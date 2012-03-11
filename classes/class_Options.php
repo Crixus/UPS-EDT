@@ -67,7 +67,7 @@
 				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Options::$nomTable." WHERE nom=?");
+				$req = $bdd->prepare("SELECT valeur FROM ".Options::$nomTable." WHERE nom=?");
 				$req->execute(
 					Array($nom)
 					);
@@ -79,6 +79,27 @@
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
+		}
+		
+		public static function toutes_valeurs_distinct(){
+			$listeValeurs = Array();
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT DISTINCT valeur FROM ".Options::$nomTable."");
+				$req->execute(
+					Array()
+					);
+				while($ligne = $req->fetch()){
+					array_push($listeValeurs, $ligne['valeur']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeValeurs;
 		}
 		
 		public static function ajouter_Options($nom, $valeur){
@@ -125,20 +146,30 @@
 			echo "$tab<h1>Gestion d'affichage</h1>\n";
 			echo "$tab<h2>Gestion des couleurs de type de cours</h2>\n";
 			echo "$tab<form id=\"administration_stype_typeCours\" method=\"post\">\n";
-			echo "$tab\t<table>\n";
+			echo "$tab\t<table id=\"administration_style_typesCours\">\n";
 			foreach(Options::generer_array_Options_style() as $label => $nom){
 				$valeur = Options::valeur_from_nom($nom);
 				echo "$tab\t\t<tr>\n";
 				echo "$tab\t\t\t<td>$label</td>\n";
-				echo "$tab\t\t\t<td><input type=\"color\" name=\"$nom\" value=\"$valeur\"/></td>\n";
+				echo "$tab\t\t\t<td><input type=\"color\" name=\"$nom\" value=\"$valeur\" /></td>\n";
+				$class = "bg".substr($valeur, 1);
+				echo "$tab\t\t\t<td class=\"$class\"></td>\n";
 				echo "$tab\t\t</tr>\n";
 			}
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
 			echo "$tab\t\t\t<td><input type=\"submit\" name=\"valider_formulaire_administration_stype_typeCours\" value=\"Valider\"/></td>\n";
+			echo "$tab\t\t\t<td></td>\n";
 			echo "$tab\t\t</tr>\n";
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
+			echo "$tab<table id=\"edt_semaine\">\n";
+			foreach(Type_Cours::liste_nom_type_cours() as $nom){
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td class=\"$nom\">$nom</td>\n";
+				echo "$tab\t\t</tr>\n";
+			}
+			echo "$tab</table>\n";
 		}
 		
 		public static function prise_en_compte_formulaire(){

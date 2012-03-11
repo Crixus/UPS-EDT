@@ -3,7 +3,7 @@
 		
 		public static function est_couleur_avec_diez($string){
 			$regexCouleur = '`^#([A-F0-9]{6})$`';
-			$string = strtoupper($regexCouleur);
+			$string = strtoupper($string);
 			return preg_match($regexCouleur, $string);
 		}
 		

@@ -100,6 +100,15 @@ tr.fondGrisFonce{
 		echo "\tborder: black 1px solid;\n";
 		echo "}\n\n";
 	}
+	
+	foreach(Options::toutes_valeurs_distinct() as $valeur){
+		$class = "bg".substr($valeur, 1);
+		echo "table#administration_style_typesCours tr td.$class{\n";
+		echo "\tbackground-color: $valeur;\n";
+		echo "\tborder: black 1px solid;\n";
+		echo "\twidth:50px;";
+		echo "}\n\n";
+	}
 ?>
 
 table#edt_semaine td.heurePaire{
