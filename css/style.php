@@ -80,17 +80,17 @@ table#edt_semaine th, table#edt_semaine td{
 	text-align:center;
 }
 
-tr.fondBlanc{
+tr.fondBlanc, th.fondBlanc, td.fondBlanc{
 	background-color:white;
 }
 
-tr.fondGris{
+tr.fondGris, th.fondGris, td.fondGris{
 	background-color:#cfcfcf;
-	}
+}
 
-tr.fondGrisFonce{
+tr.fondGrisFonce, th.fondGrisFonce, td.fondGrisFonce{
 	background-color:#b3b3b3;
-	}
+}
 
 <?php
 	foreach(Type_Cours::liste_nom_type_cours() as $nom){
