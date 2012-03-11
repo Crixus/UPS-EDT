@@ -4,6 +4,7 @@
 		public static $nomTable = "Intervenant";
 		
 		public static $attributs = Array(
+			"id",
 			"nom",
 			"prenom",
 			"email",
@@ -17,6 +18,8 @@
 		public function getPrenom(){ return $this->prenom; }
 		public function getEmail(){ return $this->email; }
 		public function getTelephone(){ return $this->telephone; }
+		public function getNotificationsActives(){ return $this->notificationsActives; }
+		public function getActif(){ return $this->actif; }
 		
 		public function Intervenant($id){
 			try{
@@ -39,7 +42,7 @@
 			}
 		}
 		
-		public function getIntervenant($id) {
+		public static function getIntervenant($id) {
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
@@ -219,28 +222,27 @@
 			}
 		}
 		
-		public function liste_UE_responsable($idPromotion, $idIntervenant) {
-			$listeNomUE = Array();
+		public function liste_id_UE() {
+			$listeIdUE = Array();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT nom FROM ".UE::$nomTable." WHERE idResponsable = ? AND idPromotion = ? ORDER BY nom");
+				$req = $bdd->prepare("SELECT id FROM ".UE::$nomTable." WHERE idResponsable = ? ORDER BY nom");
 				$req->execute(
 					array(
-						$idIntervenant,
-						$idPromotion
+						$this->id
 					)
 				);
 				while($ligne = $req->fetch()){
-					array_push($listeNomUE, $ligne['nom']);
+					array_push($listeIdUE, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-			return $listeNomUE;		
+			return $listeIdUE;		
 		}
 		
 		public static function liste_intervenant(){
@@ -249,7 +251,7 @@
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Intervenant::$nomTable." ORDER BY nom");
+				$req = $bdd->prepare("SELECT id FROM ".Intervenant::$nomTable." ORDER BY nom");
 				$req->execute();
 				while($ligne = $req->fetch()){
 					array_push($listeId, $ligne['id']);
@@ -286,57 +288,47 @@
 			
 			$cpt = 0;
 			foreach($liste_intervenant as $idIntervenant){
-				$Intervenant = new Intervenant($idIntervenant);
+				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
-				$cpt++; $cpt %= 2;
+				$Intervenant = new Intervenant($idIntervenant);
+				$listeIdUE = $Intervenant->liste_id_UE();
 				
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				foreach(Intervenant::$attributs as $att){
-					if ($att == "notificationsActives"){ 
-						if ($Intervenant->$att)
-							$checked = "checked = \"checked\"" ;
-						else
-							$checked = "";
-						$nomCheckbox = "{$idIntervenant}_notifications";
-						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
-					}
-					else if ($att == "actif"){ 
-						if ($Intervenant->$att)
-							$checked = "checked = \"checked\"" ;
-						else
-							$checked = "";
-						$nomCheckbox = "{$idIntervenant}_actif";
-						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
-					}
-					else
-						echo "$tab\t\t<td>".$Intervenant->$att."</td>\n";
-				}
+				echo "$tab\t\t<td>".$Intervenant->nom."</td>\n";
+				echo "$tab\t\t<td>".$Intervenant->prenom."</td>\n";
+				echo "$tab\t\t<td>".$Intervenant->email."</td>\n";
+				echo "$tab\t\t<td>".$Intervenant->telephone."</td>\n";
+				$checked = ($Intervenant->notificationsActives) ? "checked = \"checked\"" : $checked = "";
+				$nomCheckbox = "{$idIntervenant}_notifications";
+				echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+				$checked = ($Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
+				$nomCheckbox = "{$idIntervenant}_actif";
+				echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 				
-				$liste_UE_responsable = Intervenant::liste_UE_responsable($_GET['idPromotion'], $idIntervenant);
-				$nbUE = sizeof($liste_UE_responsable);
-				if ($nbUE == 0)
-					echo "$tab\t\t<td></td>\n";
-				else {
-					$cptBoucle = 1;
-					echo "$tab\t\t<td>";
-					foreach ($liste_UE_responsable as $nomUE) {
-						if ($cptBoucle == 1)							
-							echo $nomUE;
-						else if ($cptBoucle != $nbUE)												
-							echo ", ".$nomUE;
-						else
-							echo  " et ".$nomUE;
-						$cptBoucle ++;
+				$nbUE = sizeof($listeIdUE); $cptBoucle = 1;
+				echo "$tab\t\t<td>";
+				foreach ($listeIdUE as $idUE) {
+					$UE = new UE($idUE);
+					if($cptBoucle != 1){
+						if ($cptBoucle != $nbUE){ echo ", "; }
+						else{ echo" et "; }
 					}
-					echo "</td>\n";
+					echo "{$UE->getNom()}({$UE->getAnnee()})";
+					$cptBoucle ++;
 				}
+				echo "</td>\n";
 				
 				if($administration){
-					$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
-					$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cet intervenant ?') ? '{$pageSuppression}' : ''\"/>\n";
+					$pageModification = "./index.php?page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
+					$pageSuppression = "./index.php?page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer l\'intervenant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+					echo "</td>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}
@@ -410,16 +402,18 @@
 				$prenom = $_POST['prenom'];
 				$email = $_POST['email'];
 				$telephone = $_POST['telephone'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];					
+				if(true){ // Test de saisie				
 					if(isset($_GET['modifier_intervenant'])){
 						Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutIntervenant&modification_intervenant=1";
+						$pageDestination = "./index.php?page=ajoutIntervenant&modification_intervenant=1";
 					}
 					else{
 						// C'est un nouveau intervenant
 						Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutIntervenant&ajout_intervenant=1";
+						$pageDestination = "./index.php?page=ajoutIntervenant&ajout_intervenant=1";
+					}
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
 					}
 					header("Location: $pageDestination");
 				}
@@ -428,10 +422,12 @@
 		
 		public static function prise_en_compte_suppression(){
 			if(isset($_GET['supprimer_intervenant'])){	
-				$idPromotion = $_GET['idPromotion'];	
 				if(true){ // Test de saisie
 					Intervenant::supprimer_intervenant($_GET['supprimer_intervenant']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutIntervenant&supprimer_intervenant=1";	
+					$pageDestination = "./index.php?page=ajoutIntervenant&suppression_intervenant=1";
+					if(isset($_GET['idPromotion'])){
+						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+					}
 				}
 			}
 		}		
@@ -444,24 +440,11 @@
 			if(isset($_GET['modification_intervenant'])){
 				echo "$tab<p class=\"notificationAdministration\">L'intervenant a bien été modifié</p>";
 			}
+			if(isset($_GET['suppression_intervenant'])){
+				echo "$tab<p class=\"notificationAdministration\">L'intervenant a bien été supprimé</p>";
+			}
 			Intervenant::formulaireAjoutIntervenant($nombreTabulations + 1);
 			echo "$tab<h1>Liste des intervenants</h1>\n";
 			Intervenant::liste_Intervenant_to_table($nombreTabulations + 1);
-		}
-		
-		public function toUl(){
-			$string = "<ul>\n";
-			foreach(Intervenant::$attributs as $att){
-				$string .= "<li>$att : ".$this->$att."</li>\n";
-			}
-			return "$string</ul>\n";
-		}
-		
-		public static function creer_table(){
-			return Utils_SQL::sql_from_file("./sql/".Intervenant::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table(){
-			return Utils_SQL::sql_supprimer_table(Intervenant::$nomTable);
 		}
 	}

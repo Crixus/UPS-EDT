@@ -10,7 +10,8 @@
 			"nbHeuresTD",
 			"nbHeuresTP",
 			"ECTS",
-			"idResponsable"
+			"idResponsable",
+			"idPromotion"
 		);
 		
 		public function UE($id){
@@ -67,6 +68,11 @@
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
+		}
+		
+		public function getAnnee(){
+			$Promotion = new Promotion($this->idPromotion);
+			return $Promotion->getAnnee();
 		}
 		
 		public static function modifier_UE($idUE, $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion){
