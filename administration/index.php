@@ -108,17 +108,6 @@
 			<div id="page_administration_bas">
 				<p>Manuel Administration</p>
 			</div>
-			<ul>
-				<li>TOTAL EN COURS 80%</li>
-				<li>
-					Reste à faire : [6 à 9h] Fin Possible le 11 Mars (developpement) puis 18 Mars (tests + style)<br />
-					- Ajouter la gestion de couleur à un type de cours [2h]<br />
-					- Gestion des groupes d'étudiants [2 à 4h]<br />
-					- Gestion des groupes de cours [2h à 3h]<br />				
-					- TESTS [?]<br />
-					- Modifier le CSS<br />
-				</li>					
-			</ul>
 		</div>
 	</body>
 </html>
