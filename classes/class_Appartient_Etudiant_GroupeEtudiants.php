@@ -29,8 +29,8 @@
 		
 		public function liste_appartenance_etudiant_groupeEtudiants() {
 			$idPromotion = $_GET['idPromotion'];
-			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants();
-			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants();
+			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
+			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$liste_etudiants = V_Infos_Etudiant::liste_etudiant($idPromotion);
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";

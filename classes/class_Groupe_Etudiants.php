@@ -33,13 +33,15 @@
 			}
 		}
 		
-		public function getNbreGroupeEtudiants(){ 
+		public function getNbreGroupeEtudiants($idPromotion){ 
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Groupe_Etudiants::$nomTable);
-				$req->execute();
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Groupe_Etudiants::$nomTable." WHERE idPromotion=?");
+				$req->execute(
+					array($idPromotion)
+				);
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
@@ -108,14 +110,16 @@
 			}
 		}
 		
-		public static function liste_groupeEtudiants(){
+		public static function liste_groupeEtudiants($idPromotion){
 			$listeId = Array();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Groupe_Etudiants::$nomTable." ORDER BY nom");
-				$req->execute();
+				$req = $bdd->prepare("SELECT * FROM ".Groupe_Etudiants::$nomTable." WHERE idPromotion=? ORDER BY nom");
+				$req->execute(
+					array($idPromotion)
+				);
 				while($ligne = $req->fetch()){
 					array_push($listeId, $ligne['id']);
 				}
@@ -127,44 +131,50 @@
 			return $listeId;
 		}
 		
-		public static function liste_groupeEtudiants_to_table($administration, $nombreTabulations = 0){
-			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants();
+		public static function liste_groupeEtudiants_to_table($idPromotion, $administration, $nombreTabulations = 0){
+			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
+			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
-			echo "$tab<table class=\"listeCours\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			echo "$tab\t\t<th>Nom</th>\n";
-			echo "$tab\t\t<th>Identifiant</th>\n";
-			
-		
-			if($administration){
-				echo "$tab\t\t<th>Actions</th>\n";
+			if ($nbreGroupeEtudiants == 0) {
+				echo "$tab<h2>Aucun groupe d'étudiants n'a été créés pour cette promotion</h2>\n";
 			}
-			echo "$tab\t</tr>\n";
+			else {			
+				echo "$tab<table class=\"listeCours\">\n";
+				
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo "$tab\t\t<th>Nom</th>\n";
+				echo "$tab\t\t<th>Identifiant</th>\n";
+				
 			
-			$cpt = 0;
-			foreach($liste_groupeEtudiants as $idGroupeEtudiants){
-				$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
-				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
-				$cpt++; $cpt %= 2;
-				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				foreach(Groupe_Etudiants::$attributs as $att){
-					echo "$tab\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
-				}
-				
 				if($administration){
-					$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeEtudiants&amp;modifier_groupeEtudiants=$idGroupeEtudiants";
-					$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeEtudiants&amp;supprimer_groupeEtudiants=$idGroupeEtudiants";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce groupe d\'étudiants ?') ? '{$pageSuppression}' : ''\"/>\n";
+					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach($liste_groupeEtudiants as $idGroupeEtudiants){
+					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
+					
+					if($cpt == 0){ $couleurFond="fondBlanc"; }
+					else{ $couleurFond="fondGris"; }
+					$cpt++; $cpt %= 2;
+					
+					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					foreach(Groupe_Etudiants::$attributs as $att){
+						echo "$tab\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
+					}
+					
+					if($administration){
+						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeEtudiants&amp;modifier_groupeEtudiants=$idGroupeEtudiants";
+						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeEtudiants&amp;supprimer_groupeEtudiants=$idGroupeEtudiants";
+						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce groupe d\'étudiants ?') ? '{$pageSuppression}' : ''\"/>\n";
+					}
+					echo "$tab\t</tr>\n";
+				}
+				
+				echo "$tab</table>\n";
 			}
-			
-			echo "$tab</table>\n";
 		}
 		
 		public function formulaireAjoutGroupeEtudiants($idPromotion, $nombresTabulations = 0){
@@ -253,7 +263,7 @@
 			}
 			Groupe_Etudiants::formulaireAjoutGroupeEtudiants($idPromotion, $nombreTabulations + 1);
 			echo "$tab<h1>Liste des groupes d'étudiants</h1>\n";
-			Groupe_Etudiants::liste_groupeEtudiants_to_table($nombreTabulations + 1);
+			Groupe_Etudiants::liste_groupeEtudiants_to_table($idPromotion, $nombreTabulations + 1);
 		}
 		
 		public function toString(){
