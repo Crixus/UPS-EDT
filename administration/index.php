@@ -24,7 +24,7 @@
 	
 	// Test sur la page (voir si page choisie et sécurité)
 	$listePagesAdminPromo = Array(
-		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", "ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php"
+		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", "ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php", "gestionGroupeCours.php"
 	);
 	$listePagesAdminHorsPromo = Array(
 		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php"
@@ -66,6 +66,7 @@
 		<script type="text/javascript" src="../js/gestionUtilisateurs.js?v=<?php echo filemtime("../js/gestionUtilisateurs.js");?>"></script>
 		<script type="text/javascript" src="../js/gestionPublication.js?v=<?php echo filemtime("../js/gestionPublication.js");?>"></script>
 		<script type="text/javascript" src="../js/gestionGroupeEtudiants.js?v=<?php echo filemtime("../js/gestionGroupeEtudiants.js");?>"></script>
+		<script type="text/javascript" src="../js/gestionGroupeCours.js?v=<?php echo filemtime("../js/gestionGroupeCours.js");?>"></script>
 		<script type="text/javascript" src="../js/inscriptionUE.js?v=<?php echo filemtime("../js/inscriptionUE.js");?>"></script>
 	</head>
 	<body>
