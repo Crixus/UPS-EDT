@@ -1,0 +1,2 @@
+<?php
+	Appartient_Etudiant_GroupeEtudiants::liste_appartenance_etudiant_groupeEtudiants();
