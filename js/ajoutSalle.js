@@ -5,7 +5,8 @@ var appartenance_salle_typeSalle = function (idSalle, idType_Salle, element) {
 	else
 		var appartient = 0; //Suppression du lien dans la table Appartenance_Salle_TypeSalle
 	
-	new Ajax.Request('../ajax/appartenance_salle_typeSalle.php', {
+	
+	new Ajax.Request('../administration/fonctions/appartenance_salle_typeSalle.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {

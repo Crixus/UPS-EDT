@@ -36,7 +36,7 @@ var appartenance_typeSalle_typeCours = function (idType_Cours, idType_Salle, ele
 	else
 		var appartient = 0; //Suppression du lien dans la table Appartenance_TypeSalle_TypeCours
 	
-	new Ajax.Request('../ajax/appartenance_typeSalle_typeCours.php', {
+	new Ajax.Request('../administration/fonctions/appartenance_typeSalle_typeCours.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {
@@ -54,7 +54,7 @@ var appartenance_typeSalle_typeCours = function (idType_Cours, idType_Salle, ele
 var update_select_typeSalle = function(idSalle) {
 	var idType_Cours = document.getElementsByName("typeCours")[0].options[document.getElementsByName("typeCours")[0].selectedIndex].value;
 
-	new Ajax.Request('../ajax/appartenance_typeSalle_typeCours.php', {
+	new Ajax.Request('../administration/fonctions/appartenance_typeSalle_typeCours.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {

@@ -5,7 +5,7 @@ var etudiant_notificationsActives = function (idEtudiant, element) {
 	else
 		var appartient = 0; //MAJ de "notifications_actives" de la table Etudiant à 0
 	
-	new Ajax.Request('../ajax/gestion_notificationActives_et_actif.php', {
+	new Ajax.Request('../administration/fonctions/gestion_notificationActives_et_actif.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {
@@ -26,7 +26,7 @@ var intervenant_notificationsActives = function (idIntervenant, element) {
 	else
 		var appartient = 0; //MAJ de "notifications_actives" de la table Intervenant à 0
 	
-	new Ajax.Request('../ajax/gestion_notificationActives_et_actif.php', {
+	new Ajax.Request('../administration/fonctions/gestion_notificationActives_et_actif.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {

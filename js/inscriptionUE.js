@@ -12,7 +12,7 @@ var inscription_UE = function (idEtudiant, idUE ,element) {
 		document.getElementsByName('case_promotion_'+idUE)[0].checked = "";
 	}
 	
-	new Ajax.Request('../ajax/inscription_UE.php', {
+	new Ajax.Request('../administration/fonctions/inscription_UE.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {
@@ -62,7 +62,7 @@ var inscription_UE_promotion = function (idPromotion, idUE, nbre_etudiants, elem
 		}
 	}
 	
-	new Ajax.Request('../ajax/inscription_UE.php', {
+	new Ajax.Request('../administration/fonctions/inscription_UE.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {

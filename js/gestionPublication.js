@@ -6,7 +6,7 @@ var appartenance_groupeCours_groupeEtudiants = function (idGroupeCours, idGroupe
 	else
 		var appartient = 0; //Suppression du lien dans la table Publication
 		
-	new Ajax.Request('../ajax/appartenance_groupeCours_groupeEtudiants.php', {
+	new Ajax.Request('../administration/fonctions/appartenance_groupeCours_groupeEtudiants.php', {
 		method : 'POST',
 		encoding : 'iso-8859-1',
 		parameters : {
