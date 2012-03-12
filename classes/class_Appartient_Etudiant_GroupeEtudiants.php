@@ -38,7 +38,7 @@
 			echo "$tab<h1>Gestion des groupes d'étudiants</h1>\n";
 			
 			if ($nbre_etudiants == 0) {
-				echo "$tab<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion</h2>\n";
+				echo "$tab<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion et aucun etudiants n'y a été inscrits</h2>\n";
 			}
 			else {
 				echo "$tab<table name=\"tabGestionGroupeEtudiants\" class=\"listeCours\">\n";
