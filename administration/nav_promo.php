@@ -48,7 +48,7 @@
 					<a href="?idPromotion=<?php echo $_GET['idPromotion']; ?>&amp;page=ajoutGroupeEtudiants" >Ajout d'un groupe d'étudiant</a>
 				</li>
 				<li>
-					<a href="?idPromotion=<?php echo $_GET['idPromotion']; ?>&amp;page=ajoutGroupeEtudiants" >Gestion des groupes d'étudiants </a>
+					<a href="?idPromotion=<?php echo $_GET['idPromotion']; ?>&amp;page=gestionGroupeEtudiants" >Gestion des groupes d'étudiants </a>
 				</li>
 			</ul>
 
