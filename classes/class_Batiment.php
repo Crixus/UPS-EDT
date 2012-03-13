@@ -291,7 +291,7 @@
 			
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";	
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}
 		}	
 		
 		public static function prise_en_compte_formulaire(){

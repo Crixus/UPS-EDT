@@ -3,3 +3,4 @@
 	afficher_notifications(5);
 	afficher_erreurs(5);
 	Batiment::page_administration(5); 
+?>

@@ -368,7 +368,7 @@
 				$valueSubmit = "Modifier l'intervenant"; 
 				$nameSubmit = "validerModificationIntervenant";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_intervenant']}\" />";
-				$lienAnnulation = "index.php?page=ajoutBatiment";
+				$lienAnnulation = "index.php?page=ajoutIntervenant";
 				if(isset($_GET['idPromotion'])){
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
@@ -421,7 +421,9 @@
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";			
+			echo "$tab</form>\n";
+			
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
 		}		
 		
 		public static function prise_en_compte_formulaire(){
