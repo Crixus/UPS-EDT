@@ -34,13 +34,42 @@
 			}
 		}
 		
-		public static function generer_array_Options_style(){
-			$Options_style = Array();
-			foreach(Type_Cours::liste_nom_type_cours() as $nom){
-				$Options_style["Arriere Plan $nom"] = "background_color_$nom";
-				$Options_style["Couleur Texte $nom"] = "color_$nom";
+		public static function ajouter_Options($nom, $valeur){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("INSERT INTO ".Options::$nomTable." VALUES(?, ?, ?)");
+				
+				$req->execute(
+					Array(
+						"",
+						$nom, 
+						$valeur
+					)
+				);
 			}
-			return $Options_style;
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
+		public static function modifier_Options($nom, $valeur){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("UPDATE ".Options::$nomTable." SET valeur=? WHERE nom=?;");
+				$req->execute(
+					Array(
+						$valeur,
+						$nom
+					)
+				);
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
 		}
 		
 		public static function existe_Options($nom){
@@ -60,6 +89,15 @@
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
+		}
+		
+		public static function generer_array_Options_style(){
+			$Options_style = Array();
+			foreach(Type_Cours::liste_nom_type_cours() as $nom){
+				$Options_style["Arriere Plan $nom"] = "background_color_$nom";
+				$Options_style["Couleur Texte $nom"] = "color_$nom";
+			}
+			return $Options_style;
 		}
 		
 		public static function valeur_from_nom($nom){
@@ -102,48 +140,9 @@
 			return $listeValeurs;
 		}
 		
-		public static function ajouter_Options($nom, $valeur){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("INSERT INTO ".Options::$nomTable." VALUES(?, ?, ?)");
-				
-				$req->execute(
-					Array(
-						"",
-						$nom, 
-						$valeur
-					)
-				);
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
-		public static function modifier_Options($nom, $valeur){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("UPDATE ".Options::$nomTable." SET valeur=? WHERE nom=?;");
-				$req->execute(
-					Array(
-						$valeur,
-						$nom
-					)
-				);
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
 		public static function formulaire_modification_Options_style_typeCours($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
-			echo "$tab<h1>Gestion d'affichage</h1>\n";
 			echo "$tab<h2>Gestion des couleurs de type de cours</h2>\n";
 			echo "$tab<form id=\"administration_stype_typeCours\" method=\"post\">\n";
 			echo "$tab\t<table id=\"administration_style_typesCours\">\n";
@@ -163,6 +162,11 @@
 			echo "$tab\t\t</tr>\n";
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
+			Options::afficher_apercu_style($nombreTabulations);
+		}
+		
+		public static function afficher_apercu_style($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			echo "$tab<table id=\"edt_semaine\">\n";
 			foreach(Type_Cours::liste_nom_type_cours() as $nom){
 				echo "$tab\t\t<tr>\n";
@@ -173,8 +177,10 @@
 		}
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if(isset($_POST[$name_formulaire])){
+				// Formulaire de modification (seul possible)
 				foreach(Options::generer_array_Options_style() as $nom){
 					if(PregMatch::est_couleur_avec_diez($_POST[$nom])){
 						if(Options::existe_Options($nom)){
@@ -184,12 +190,8 @@
 							Options::ajouter_Options($nom, strtoupper($_POST[$nom]));
 						}
 					}
-					$location = "index.php?page=styleTypeCours";
-					if(isset($_GET['idPromotion'])){
-						$location .= "&idPromotion={$_GET['idPromotion']}";
-					}
-					header("Location: $location");
 				}
+				array_push($messages_notifications, "Les couleurs ont bien étes appliquées");
 			}
 		}
 	}

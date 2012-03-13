@@ -1,6 +1,8 @@
 <?php
 	// Informations de base de données
 	include_once('../includes/infos_bdd.php');
+	$messages_notifications = Array();
+	$messages_erreurs = Array();
 	
 	// Importation des classes
 	$repertoire = opendir("../classes/");
@@ -40,6 +42,32 @@
 			if(!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo)){
 				header('Location: ./index.php');
 			}
+		}
+	}
+	
+	function afficher_notifications($nombreTabulations = 0){
+		$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		
+		global $messages_notifications;
+		if(!empty($messages_notifications)){
+			echo "$tab<ul class=\"messages_notifications\">\n";
+			foreach($messages_notifications as $mess){
+				echo "$tab\t<li>$mess</li>\n";
+			}
+			echo "$tab</ul>\n";
+		}
+	}
+	
+	function afficher_erreurs($nombreTabulations = 0){
+		$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		
+		global $messages_erreurs;
+		if(!empty($messages_erreurs)){
+			echo "$tab<ul class=\"messages_erreurs\">\n";
+			foreach($messages_erreurs as $mess){
+				echo "$tab\t<li>$mess</li>\n";
+			}
+			echo "$tab</ul>\n";
 		}
 	}
 	

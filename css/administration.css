@@ -78,6 +78,10 @@ div#page_administration section ul{
 	margin: 0px 0px 10px 0px;
 }
 
+div#page_administration section form{
+	margin: 0px 0px 10px 0px;
+}
+
 div#page_administration div#page_administration_bas{
 	width:100%;
 	text-align:center;
