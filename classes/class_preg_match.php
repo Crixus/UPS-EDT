@@ -16,5 +16,10 @@
 			$regexNombre = '`^([0-9]+)$`';
 			return preg_match($regexNombre, $string);
 		}
+		
+		public static function est_mail($string){
+			$regexMail = '`^([a-zA-Z0-9]+(([\.\-\_]?[a-zA-Z0-9]+)+)?)\@(([a-zA-Z0-9]+[\.\-\_])+[a-zA-Z]{2,4})$`';
+			return preg_match($regexMail, $string);
+		}
 	}
 

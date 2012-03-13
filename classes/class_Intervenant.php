@@ -222,6 +222,25 @@
 			}
 		}
 		
+		public static function existe_intervenant($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Intervenant::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+					);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public function liste_id_UE() {
 			$listeIdUE = Array();
 			try{
@@ -266,7 +285,7 @@
 		
 		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0){
 			$liste_intervenant = Intervenant::liste_intervenant();
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
 			
@@ -336,8 +355,8 @@
 			echo "$tab</table>\n";
 		}
 		
-		public function formulaireAjoutIntervenant($nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutIntervenant($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			if(isset($_GET['modifier_intervenant'])){ 
 				$titre = "Modifier un intervenant";
@@ -346,6 +365,13 @@
 				$prenomModif = "value=\"{$Intervenant->getPrenom()}\"";
 				$emailModif = "value=\"{$Intervenant->getEmail()}\"";
 				$telephoneModif = "value=\"{$Intervenant->getTelephone()}\"";
+				$valueSubmit = "Modifier l'intervenant"; 
+				$nameSubmit = "validerModificationIntervenant";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_intervenant']}\" />";
+				$lienAnnulation = "index.php?page=ajoutBatiment";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un intervenant";
@@ -353,9 +379,12 @@
 				$prenomModif = "";
 				$emailModif = "";
 				$telephoneModif = "";
+				$valueSubmit = "Ajouter l'intervenant"; 
+				$nameSubmit = "validerAjoutIntervenant";
+				$hidden = "";
 			}		
 		
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -388,8 +417,7 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_intervenant'])){ $valueSubmit = "Modifier l'intervenant"; }else{ $valueSubmit = "Ajouter l'intervenant"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutIntervenant\" value=\"{$valueSubmit}\" style=\"cursor:pointer;\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
@@ -397,54 +425,59 @@
 		}		
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutIntervenant'])){
 				$nom = $_POST['nom'];
 				$prenom = $_POST['prenom'];
 				$email = $_POST['email'];
 				$telephone = $_POST['telephone'];
-				if(true){ // Test de saisie				
-					if(isset($_GET['modifier_intervenant'])){
-						Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
-						$pageDestination = "./index.php?page=ajoutIntervenant&modification_intervenant=1";
-					}
-					else{
-						// C'est un nouveau intervenant
-						Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
-						$pageDestination = "./index.php?page=ajoutIntervenant&ajout_intervenant=1";
-					}
-					if(isset($_GET['idPromotion'])){
-						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
-					}
-					header("Location: $pageDestination");
+				$nom_correct = true;
+				$prenom_correct = true;
+				$email_correct = PregMatch::est_mail($email);
+				$telephone_correct = true;
+				if($nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+					Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
+					array_push($messages_notifications, "L'intervenant a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationIntervenant'])){
+				$id = $_POST['id']; $id_correct = Intervenant::existe_intervenant($id);
+				$nom = $_POST['nom']; $nom_correct = true;
+				$prenom = $_POST['prenom']; $prenom_correct = true;
+				$email = $_POST['email']; $email_correct = PregMatch::est_mail($email);
+				$telephone = $_POST['telephone']; $telephone_correct = true;
+				if($id_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){	
+					Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
+					array_push($messages_notifications, "L'intervenant a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_intervenant'])){	
-				if(true){ // Test de saisie
+				if(Intervenant::existe_intervenant($_GET['supprimer_intervenant'])){
+					// L'intervenant existe
 					Intervenant::supprimer_intervenant($_GET['supprimer_intervenant']);
-					$pageDestination = "./index.php?page=ajoutIntervenant&suppression_intervenant=1";
-					if(isset($_GET['idPromotion'])){
-						$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
-					}
+					array_push($messages_notifications, "L'intervenant à bien été supprimé");
+				}
+				else{
+					// Le batiment n'existe pas
+					array_push($messages_erreurs, "L'intervenant n'existe pas");
 				}
 			}
 		}		
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_intervenant'])){
-				echo "$tab<p class=\"notificationAdministration\">L'intervenant a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_intervenant'])){
-				echo "$tab<p class=\"notificationAdministration\">L'intervenant a bien été modifié</p>";
-			}
-			if(isset($_GET['suppression_intervenant'])){
-				echo "$tab<p class=\"notificationAdministration\">L'intervenant a bien été supprimé</p>";
-			}
-			Intervenant::formulaireAjoutIntervenant($nombreTabulations + 1);
-			echo "$tab<h1>Liste des intervenants</h1>\n";
-			Intervenant::liste_Intervenant_to_table($nombreTabulations + 1);
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			Intervenant::formulaireAjoutIntervenant($nombreTabulations);
+			echo "$tab<h2>Liste des intervenants</h2>\n";
+			Intervenant::liste_Intervenant_to_table($nombreTabulations);
 		}
 	}

@@ -342,7 +342,7 @@
 				else{
 					// Le batiment n'existe pas
 					array_push($messages_erreurs, "Le bâtiment n'existe pas");
-				}	
+				}
 			}
 		}
 		
