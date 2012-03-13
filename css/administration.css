@@ -92,6 +92,17 @@ div#page_administration section ul{
 	margin: 0px 0px 10px 0px;
 }
 
+div#page_administration section table.table_liste_administration{
+	border:solid 1px black;
+	border-collapse:collapse;
+}
+
+div#page_administration section table.table_liste_administration th,
+div#page_administration section table.table_liste_administration td{
+	border:solid 1px black;
+	padding:5px;
+}
+
 div#page_administration section form{
 	margin: 0px 0px 10px 0px;
 }

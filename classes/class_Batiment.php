@@ -92,7 +92,7 @@
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
 				$req->execute(
-					Array($this->nomBatiment)
+					Array($this->nom)
 					);
 				while($ligne = $req->fetch()){
 					array_push($listeSalle, new Salle($ligne['id']));
@@ -103,6 +103,29 @@
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeSalle;
+		}
+		
+		public function table_salles($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			$liste_salles = $this->liste_salles();
+			
+			echo "$tab<table class=\"table_liste_administration\">\n";			
+			echo "$tab\t<tr class=\"fondGrisFonce\">\n";			
+			echo "$tab\t\t<th>Nom</th>\n";
+			echo "$tab\t\t<th>Capacite</th>\n";
+			echo "$tab\t</tr>\n";
+			
+			$cpt = 0;
+			foreach($liste_salles as $Salle){
+				$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
+				$cpt++; $cpt %= 2;
+				
+				echo "$tab\t<tr class=\"$couleurFond\">\n";
+				echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
+				echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
+				echo "$tab\t</tr>\n";
+			}
+			echo "$tab</table>\n";
 		}
 		
 		public static function existe_batiment($id){
@@ -166,7 +189,7 @@
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_batiment = Batiment::liste_batiment();
 			
-			echo "$tab<table class=\"listeCours\">\n";			
+			echo "$tab<table class=\"table_liste_administration\">\n";			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";			
 			echo "$tab\t\t<th>Nom</th>\n";
 			echo "$tab\t\t<th>Latitude</th>\n";
@@ -179,9 +202,15 @@
 				$Batiment = new Batiment($idBatiment);
 				$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
 				$cpt++; $cpt %= 2;
+				$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$Batiment->getId()}";
+				if(isset($_GET['idPromotion'])){
+					$lienInfosBatiment .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 				
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				echo "$tab\t\t<td>{$Batiment->getNom()}</td>\n";
+				echo "$tab\t\t<td>";
+				echo "<a href=\"$lienInfosBatiment\">{$Batiment->getNom()}</a>";
+				echo "</td>\n";
 				echo "$tab\t\t<td>{$Batiment->getLat()}</td>\n";
 				echo "$tab\t\t<td>{$Batiment->getLon()}</td>\n";
 

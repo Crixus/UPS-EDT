@@ -23,7 +23,7 @@
 				$req = $bdd->prepare("SELECT * FROM ".Salle::$nomTable." WHERE id=?");
 				$req->execute(
 					Array($id)
-					);
+				);
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
@@ -287,7 +287,7 @@
 			$liste_type_salle = Type_Salle::liste_type_salle();
 			$nbre_type_salle = Type_Salle::getNbreTypeSalle();
 			
-			echo "$tab<table class=\"listeCours\">\n";
+			echo "$tab<table class=\"table_liste_administration\">\n";
 			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 			echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
