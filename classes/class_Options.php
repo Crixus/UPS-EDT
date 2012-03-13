@@ -182,13 +182,18 @@
 			if(isset($_POST[$name_formulaire])){
 				// Formulaire de modification (seul possible)
 				foreach(Options::generer_array_Options_style() as $nom){
+					$_POST[$nom] = strtoupper($_POST[$nom]);
 					if(PregMatch::est_couleur_avec_diez($_POST[$nom])){
 						if(Options::existe_Options($nom)){
-							Options::modifier_Options($nom, strtoupper($_POST[$nom]));
+							Options::modifier_Options($nom, $_POST[$nom]);
 						}
 						else{
-							Options::ajouter_Options($nom, strtoupper($_POST[$nom]));
+							Options::ajouter_Options($nom, $_POST[$nom]);
 						}
+					}
+					else{
+						// La couleur est incorrecte
+						array_push($messages_erreurs, "{$_POST[$nom]} n'est pas une couleur valide");
 					}
 				}
 				array_push($messages_notifications, "Les couleurs ont bien étes appliquées");

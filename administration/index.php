@@ -52,7 +52,7 @@
 		if(!empty($messages_notifications)){
 			echo "$tab<ul class=\"messages_notifications\">\n";
 			foreach($messages_notifications as $mess){
-				echo "$tab\t<li>$mess</li>\n";
+				echo "$tab\t<li>Notification : $mess</li>\n";
 			}
 			echo "$tab</ul>\n";
 		}
@@ -65,12 +65,13 @@
 		if(!empty($messages_erreurs)){
 			echo "$tab<ul class=\"messages_erreurs\">\n";
 			foreach($messages_erreurs as $mess){
-				echo "$tab\t<li>$mess</li>\n";
+				echo "$tab\t<li>Erreur : $mess</li>\n";
 			}
 			echo "$tab</ul>\n";
 		}
 	}
 	
+	// Prise en compte des formulaires et suppression avant l'envoi de code HTML (gestion erreurs, sécurité...)
 	Batiment::prise_en_compte_formulaire();
 	Batiment::prise_en_compte_suppression();	
 	Intervenant::prise_en_compte_formulaire();

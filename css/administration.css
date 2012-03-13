@@ -73,6 +73,20 @@ div#page_administration section h2{
 	font-size:18px;
 }
 
+div#page_administration section ul.messages_notifications,
+div#page_administration section ul.messages_erreurs{
+	list-style-type:none;
+	font-weight:bold;
+}
+
+div#page_administration section ul.messages_notifications{
+	color:green;
+}
+
+div#page_administration section ul.messages_erreurs{
+	color:red;
+}
+
 div#page_administration section ul{
 	padding-left:20px;
 	margin: 0px 0px 10px 0px;

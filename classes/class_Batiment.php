@@ -65,17 +65,22 @@
 		}
 		
 		public static function supprimer_batiment($idBatiment){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Batiment::$nomTable." WHERE id=?;");
-				$req->execute(
-					Array($idBatiment)
-				);
+			if($idBatiment != 0){
+				try{
+					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					$bdd->query("SET NAMES utf8");
+					$req = $bdd->prepare("DELETE FROM ".Batiment::$nomTable." WHERE id=?;");
+					$req->execute(
+						Array($idBatiment)
+					);
+				}
+				catch(Exception $e){
+					echo "Erreur : ".$e->getMessage()."<br />";
+				}
 			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
+			else{
+				echo "Erreur : Impossible de supprimer le batiment par défaut<br />";
 			}
 		}
 		
