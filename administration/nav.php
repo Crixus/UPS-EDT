@@ -48,17 +48,12 @@
 							<a href="?page=ajoutSpecialite&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Ajout d'une spécialité</a>
 						</li>
 					</ul>
-<?php
-	}
-?>			
+							
 					<h1>Gestion des UE</h1>
 					<ul>
 						<li>
 							<a href="?page=ajoutUE<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>">Ajout d'une UE</a>
 						</li>
-<?php
-	if(isset($_GET['idPromotion'])){
-?>	
 						<li>
 							<a href="?page=listeInscriptionsUE&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Inscriptions des étudiants aux UE</a>
 						</li>

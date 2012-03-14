@@ -21,5 +21,18 @@
 			$regexMail = '`^([a-zA-Z0-9]+(([\.\-\_]?[a-zA-Z0-9]+)+)?)\@(([a-zA-Z0-9]+[\.\-\_])+[a-zA-Z]{2,4})$`';
 			return preg_match($regexMail, $string);
 		}
+		
+		public static function est_telephone($string){
+			$regexTelephone = '`^0([0-9]{9})$`';
+			return preg_match($regexTelephone, $string);
+		}
+		
+		public static function est_prenom($string){
+			return true;
+		}
+		
+		public static function est_nom($string){
+			return true;
+		}
 	}
 
