@@ -36,6 +36,27 @@
 			}
 		}
 		
+		public static function liste_id_salles(){
+			$listeIdSalle = Array();
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." ORDER BY nomBatiment, nom");
+				$req->execute(
+					Array()
+					);
+				while($ligne = $req->fetch()){
+					array_push($listeIdSalle, $ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeIdSalle;
+		}
+		
 		public static function existe_salle($id){
 			try{
 				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -175,7 +196,7 @@
 			}		
 		}
 		
-		public function formulaireAjoutSalle($nombreTabulations = 0){
+		public function formulaireAjoutModificationSalle($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_nom_batiment = Salle::listeNomBatiment();
 			
@@ -185,12 +206,22 @@
 				$nomModif = "value=\"{$Salle->getNom()}\"";
 				$nomBatimentModif = $Salle->getNomBatiment();
 				$capaciteModif = "value=\"{$Salle->getCapacite()}\"";
+				$valueSubmit = "Modifier la salle";
+				$nameSubmit = "validerModificationSalle";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_salle']}\" />";
+				$lienAnnulation = "index.php?page=ajoutSalle";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter une salle";
-				$nomModif = "";
-				$nomBatimentModif = "";
-				$capaciteModif = "";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"{$_POST['nom']}\"" : "value=\"\"";
+				$nomBatimentModif = (isset($_POST['nomBatiment'])) ? "value=\"{$_POST['nomBatiment']}\"" : "value=\"\"";
+				$capaciteModif = (isset($_POST['capacite'])) ? "value=\"{$_POST['capacite']}\"" : "";
+				$valueSubmit = "Ajouter la salle";
+				$nameSubmit = "validerAjoutSalle";
+				$hidden = "";
 			}
 			
 			echo "$tab<h2>$titre</h2>\n";
@@ -224,8 +255,7 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_salle'])){ $valueSubmit = "Modifier la salle"; }else{ $valueSubmit = "Ajouter la salle"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutSalle\" value=\"{$valueSubmit}\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"$valueSubmit\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
@@ -233,6 +263,7 @@
 		}	
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutSalle'])){
 				$nom = $_POST['nom'];
 				$capacite = $_POST['capacite'];
@@ -241,62 +272,60 @@
 				$capacite_correct = PregMatch::est_nombre($capacite);
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
 				$salle_inexistante = !Salle::existe_salle_nomSalle_nomBatiment($nom, $nomBatiment);
-				if($nom_correct && $capacite_correct && $nomBatiment_correct && $salle_inexistante){	
-					if(isset($_GET['modifier_salle'])){
-						// C'est une modification de salle
-						Salle::modifier_salle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
-						$pageDestination = "./index.php?page=ajoutSalle&modification_salle=1";
-					}
-					else{
-						// C'est une nouveau salle
-						Salle::ajouter_salle($nom, $nomBatiment, $capacite);
-						$pageDestination = "./index.php?page=ajoutSalle&ajout_salle=1";
-					}
+				if($nom_correct && $capacite_correct && $nomBatiment_correct && $salle_inexistante){
+					Salle::ajouter_salle($nom, $nomBatiment, $capacite);
+					array_push($messages_notifications, "La salle a bien été ajouté");
 				}
 				else{
-					// Traitement des erreurs
-					$pageDestination = "./index.php?page=ajoutSalle";
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
-				if(isset($_GET['idPromotion'])){
-					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
+			}
+			else if(isset($_POST['validerModificationSalle'])){
+				$id = $_POST['id'];
+				$nom = $_POST['nom'];
+				$capacite = $_POST['capacite'];
+				$nomBatiment = $_POST['nomBatiment'];
+				$id_correct = Salle::existe_salle($id);
+				$nom_correct = true; 
+				$capacite_correct = PregMatch::est_nombre($capacite);
+				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
+				if($id_correct && $nom_correct && $capacite_correct && $nomBatiment_correct){
+					Salle::modifier_salle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
+					array_push($messages_notifications, "La salle a bien étée modifiée");
 				}
-				header("Location: $pageDestination");
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_salle'])){
 				if(Salle::existe_salle($_GET['supprimer_salle'])){ // Test de saisie
 					Salle::supprimer_salle($_GET['supprimer_salle']);
-					$pageDestination = "./index.php?page=ajoutSalle&suppression_salle=1";	
+					array_push($messages_notifications, "La salle à bien été supprimée");
 				}
 				else{
-					$pageDestination = "./index.php?page=ajoutSalle";
+					array_push($messages_erreurs, "La salle n'existe pas");
 				}
-				if(isset($_GET['idPromotion'])){
-					$pageDestination .= "&idPromotion={$_GET['idPromotion']}";
-				}
-				header("Location : $pageDestination"); // Ne fonctionne pas ??
 			}
 		}
 		
-		public static function liste_salle_to_table($administration, $nombreTabulations = 0){
+		public static function table_administration_batiments($administration, $nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
-			$liste_salles = V_Liste_Salles::liste_salles();
+			$liste_id_salles = Salle::liste_id_salles();
 			$liste_type_salle = Type_Salle::liste_type_salle();
-			$nbre_type_salle = Type_Salle::getNbreTypeSalle();
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
 			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+			echo "$tab\t\t<th rowspan=\"2\">Nom</th>\n";
 			echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
 			echo "$tab\t\t<th rowspan=\"2\">Salle</th>\n";
 			echo "$tab\t\t<th rowspan=\"2\">Capacité</th>\n";
-			echo "$tab\t\t<th rowspan=\"2\">Latitude</th>\n";
-			echo "$tab\t\t<th rowspan=\"2\">Longitude</th>\n";
-
-			echo "$tab\t\t<th colspan='{$nbre_type_salle}'>Type de salles</th>\n";
+			echo "$tab\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
 			if($administration){
 				echo "$tab\t\t<th rowspan=\"2\">Actions</th>\n";
 			}
@@ -311,18 +340,22 @@
 			echo "$tab\t</tr>\n";
 			
 			$cpt = 0;
-			foreach($liste_salles as $idSalle){
-				$Salle = new V_Liste_Salles($idSalle);
-				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
-				$cpt++; $cpt %= 2;
-				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				foreach(V_Liste_Salles::$attributs as $att){
-					echo "$tab\t\t<td>".$Salle->$att."</td>\n";
+			foreach($liste_id_salles as $idSalle){
+				$Salle = new Salle($idSalle);
+				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+				$lienInfosSalle = "./index.php?page=infosSalle&amp;idSalle={$Salle->getId()}";
+				if(isset($_GET['idPromotion'])){
+					$lienInfosSalle .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 				
+				echo "$tab\t<tr class=\"$couleurFond\">\n";
+				echo "$tab\t\t<td>";
+				echo "<a href=\"$lienInfosSalle\">{$Salle->getNomBatiment()} - {$Salle->getNom()}</a>";
+				echo "</td>\n";
+				echo "$tab\t\t<td>{$Salle->getNomBatiment()}</td>\n";
+				echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
+				echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
+								
 				foreach($liste_type_salle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
@@ -354,18 +387,21 @@
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			if(isset($_GET['ajout_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">La salle a bien été ajoutée</p>";
-			}
-			else if(isset($_GET['modification_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">La salle a bien été modifiée</p>";
-			}
-			else if(isset($_GET['suppression_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">La salle a bien été supprimée</p>";
-			}
-			echo "$tab<h1>Gestion des salles</h1>\n";
-			Salle::formulaireAjoutSalle($nombreTabulations + 1);
+			Salle::formulaireAjoutModificationSalle($nombreTabulations);
 			echo "$tab<h2>Liste des salles</h2>\n";
-			Salle::liste_Salle_to_table($nombreTabulations + 1);
+			Salle::table_administration_batiments($nombreTabulations);
+		}
+		
+		public function page_informations($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			$Batiment = Batiment::Batiment_from_nom($this->getNomBatiment());
+			echo "$tab<h2>Salle {$this->getNomBatiment()} - {$this->getNom()}</h2>\n";
+			echo "$tab<h3>Informations</h3>\n";
+			echo "$tab<ul>\n";
+			echo "$tab\t<li>Nom : {$this->getNom()}</li>\n";
+			echo "$tab\t<li>Batiment : {$this->getNomBatiment()}</li>\n";
+			echo "$tab\t<li>Capacite : {$this->getCapacite()}</li>\n";
+			echo "$tab</ul>\n";
+			$Batiment->page_informations($nombreTabulations);
 		}
 	}

@@ -33,6 +33,25 @@
 			}
 		}
 		
+		public static function Batiment_from_nom($nom){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".Batiment::$nomTable." WHERE nom=?");
+				$req->execute(
+					Array($nom)
+					);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return new Batiment($ligne['id']);
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function ajouter_batiment($nom, $lat, $lon){
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -78,9 +97,6 @@
 				catch(Exception $e){
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
-			}
-			else{
-				echo "Erreur : Impossible de supprimer le batiment par défaut<br />";
 			}
 		}
 		
@@ -200,8 +216,7 @@
 			$cpt = 0;
 			foreach($liste_batiment as $idBatiment){
 				$Batiment = new Batiment($idBatiment);
-				$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
-				$cpt++; $cpt %= 2;
+				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 				$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$Batiment->getId()}";
 				if(isset($_GET['idPromotion'])){
 					$lienInfosBatiment .= "&amp;idPromotion={$_GET['idPromotion']}";
@@ -238,12 +253,22 @@
 				$nomModif = "value=\"{$Batiment->getNom()}\"";
 				$latModif = "value=\"{$Batiment->getLat()}\"";
 				$lonModif = "value=\"{$Batiment->getLon()}\"";
+				$valueSubmit = "Modifier le batiment"; 
+				$nameSubmit = "validerModificationBatiment";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_batiment']}\" />";
+				$lienAnnulation = "index.php?page=ajoutBatiment";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un batiment";
-				$nomModif = "value=\"\"";
-				$latModif = "value=\"\"";
-				$lonModif = "value=\"\"";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"{$_POST['nom']}\"" : "value=\"\"";
+				$latModif = (isset($_POST['lat'])) ? "value=\"{$_POST['lat']}\"" : "value=\"\"";
+				$lonModif = (isset($_POST['lon'])) ? "value=\"{$_POST['lon']}\"" : "value=\"\"";
+				$valueSubmit = "Ajouter le batiment"; 
+				$nameSubmit = "validerAjoutBatiment";
+				$hidden = "";
 			}
 			
 			echo "$tab<h2>$titre</h2>\n";
@@ -272,21 +297,7 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_batiment'])){ 
-				$valueSubmit = "Modifier le batiment"; 
-				$nameSubmit = "validerModificationBatiment";
-				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_batiment']}\" />";
-				$lienAnnulation = "index.php?page=ajoutBatiment";
-				if(isset($_GET['idPromotion'])){
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
-				}
-			}
-			else{ 
-				$valueSubmit = "Ajouter le batiment"; 
-				$nameSubmit = "validerAjoutBatiment";
-				$hidden = "";
-			}
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"$valueSubmit\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
@@ -327,7 +338,6 @@
 				else{
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
-				
 			}
 		}
 		
@@ -351,5 +361,20 @@
 			Batiment::formulaireAjoutBatiment($nombreTabulations);
 			echo "$tab<h2>Liste des bâtiments</h2>\n";
 			Batiment::table_administration_batiments($nombreTabulations);
+		}
+		
+		public function page_informations($nombreTabulations = 0){
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			echo "$tab<h2>Bâtiment {$this->getNom()}</h2>\n";
+			echo "$tab<h3>Informations</h3>\n";
+			echo "$tab<ul>\n";
+			echo "$tab\t<li>Nom : {$this->getNom()}</li>\n";
+			echo "$tab\t<li>Latitude : {$this->getLat()}</li>\n";
+			echo "$tab\t<li>Longitude : {$this->getLon()}</li>\n";
+			echo "$tab</ul>\n";
+			echo "$tab<h3>Liste des salles du bâtiment</h3>\n";
+			$this->table_salles($nombreTabulations);
+			echo "$tab<h3>Plan Google Maps</h3>\n";
+			echo "$tab<iframe width=\"700\" height=\"500\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?q={$this->getLat()},+{$this->getLon()}+(Bâtiment {$this->getNom()})&amp;z=16&amp;output=embed\"></iframe>";
 		}
 	}
