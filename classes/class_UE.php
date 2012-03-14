@@ -184,7 +184,7 @@
 			}
 			else {
 			
-				echo "$tab<table class=\"listeCours\">\n";
+				echo "$tab<table class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				

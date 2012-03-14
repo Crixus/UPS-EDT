@@ -140,7 +140,7 @@
 				echo "$tab<h2>Aucun groupe d'étudiants n'a été créés pour cette promotion</h2>\n";
 			}
 			else {			
-				echo "$tab<table class=\"listeCours\">\n";
+				echo "$tab<table class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				echo "$tab\t\t<th>Nom</th>\n";

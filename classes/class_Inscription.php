@@ -41,7 +41,7 @@
 				echo "$tab<h2>Aucun étudiant n'a été inscrit et/ou aucune UE n'a été créé pour cette promotion</h2>\n";
 			}
 			else {
-				echo "$tab<table name=\"tabInscription\" class=\"listeCours\">\n";
+				echo "$tab<table name=\"tabInscription\" class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";

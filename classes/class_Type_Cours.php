@@ -91,7 +91,7 @@
 			$nbre_type_salle = Type_Salle::getNbreTypeSalle();
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
-			echo "$tab<table class=\"listeCours\">\n";
+			echo "$tab<table class=\"table_liste_administration\">\n";
 			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 			echo "$tab\t\t<th rowspan='2'>Nom</th>\n";

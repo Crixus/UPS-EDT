@@ -41,7 +41,7 @@
 				echo "$tab<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion et aucun etudiants n'y a été inscrits</h2>\n";
 			}
 			else {
-				echo "$tab<table name=\"tabGestionGroupeEtudiants\" class=\"listeCours\">\n";
+				echo "$tab<table name=\"tabGestionGroupeEtudiants\" class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";
