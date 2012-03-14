@@ -122,3 +122,8 @@ div#page_administration section .notificationAdministration{
 	color:green;
 	font-weight:bold;
 	}
+
+.erreur{
+	color:red;
+	font-weight:bold;
+}

@@ -125,23 +125,28 @@
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_salles = $this->liste_salles();
 			
-			echo "$tab<table class=\"table_liste_administration\">\n";			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";			
-			echo "$tab\t\t<th>Nom</th>\n";
-			echo "$tab\t\t<th>Capacite</th>\n";
-			echo "$tab\t</tr>\n";
-			
-			$cpt = 0;
-			foreach($liste_salles as $Salle){
-				$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
-				$cpt++; $cpt %= 2;
-				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
-				echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
-				echo "$tab\t</tr>\n";
+			if(sizeof($liste_salles) == 0){
+				echo "$tab<p class=\"erreur\">Pas de salles</p>\n";	
 			}
-			echo "$tab</table>\n";
+			else{
+				echo "$tab<table class=\"table_liste_administration\">\n";			
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";			
+				echo "$tab\t\t<th>Nom</th>\n";
+				echo "$tab\t\t<th>Capacite</th>\n";
+				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach($liste_salles as $Salle){
+					$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
+					$cpt++; $cpt %= 2;
+					
+					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
+					echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
+					echo "$tab\t</tr>\n";
+				}
+				echo "$tab</table>\n";
+			}
 		}
 		
 		public static function existe_batiment($id){
@@ -365,12 +370,14 @@
 		
 		public function page_informations($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			$latitude = ($this->getLat() == NULL) ? "<span class=\"erreur\">Pas de latitude saisie</span>" : $this->getLat();
+			$longitude = ($this->getLon() == NULL) ? "<span class=\"erreur\">Pas de longitude saisie</span>" : $this->getLon();
 			echo "$tab<h2>Bâtiment {$this->getNom()}</h2>\n";
 			echo "$tab<h3>Informations</h3>\n";
 			echo "$tab<ul>\n";
 			echo "$tab\t<li>Nom : {$this->getNom()}</li>\n";
-			echo "$tab\t<li>Latitude : {$this->getLat()}</li>\n";
-			echo "$tab\t<li>Longitude : {$this->getLon()}</li>\n";
+			echo "$tab\t<li>Latitude : $latitude</li>\n";
+			echo "$tab\t<li>Longitude : $longitude</li>\n";
 			echo "$tab</ul>\n";
 			echo "$tab<h3>Liste des salles du bâtiment</h3>\n";
 			$this->table_salles($nombreTabulations);
