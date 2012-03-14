@@ -87,8 +87,8 @@
 		
 		public static function liste_type_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
-			$liste_type_salle = Type_Salle::liste_type_salle();
-			$nbre_type_salle = Type_Salle::getNbreTypeSalle();
+			$liste_type_salle = Type_Salle::liste_id_type_salle();
+			$nbre_type_salle = sizeof($liste_type_salle);
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
