@@ -63,8 +63,14 @@
 			
 			foreach($listeCoursSemaine as $idCours){
 				$Cours = new Cours($idCours);
-				$jour = date("D", strtotime($Cours->getTsDebut()));
-				array_push($joursDeLaSemaine[$jour], $Cours->getId());
+				$jourDebut = date("D", strtotime($Cours->getTsDebut()));
+				$jourFin = date("D", strtotime($Cours->getTsFin()));
+				if($jourDebut == $jourFin){
+					array_push($joursDeLaSemaine[$jourDebut], $Cours->getId());
+				}
+				else{
+					// Gerer les cours sur plusieurs jours (les diviser)
+				}
 			}
 			return $joursDeLaSemaine;
 		}
@@ -90,44 +96,55 @@
 	$cptStyle = 0;
 	foreach($jours as $j => $t){
 		$coursDuJours = $cours_etudiants_semaine[$t];
-		echo "<tr>\n";
-		echo "<th>$j</th>\n";
-		$nbQuartsHeure = 0;
-		while($nbQuartsHeure < (14*4)) { 
-			$heure = 7 + ((int)($nbQuartsHeure / 4));
-			if($heure < 10){ $heure = "0$heure"; }else{$heure = "$heure";}
-			$quart = $nbQuartsHeure % 4;
-			switch($quart){
-				case 0: $quart = "00"; break;
-				case 1: $quart = "15"; break;
-				case 2: $quart = "30"; break;
-				case 3: $quart = "45"; break;
-			}
-			$boolCours = false;
-			foreach($coursDuJours as $idCours){
-				$Cours = new V_Infos_Cours($idCours);
-				if($Cours->commence_a_heure("$heure:$quart:00")){
-					$nbQuartsCours = $Cours->nbQuartsHeure();
-					
-					echo "<td class=\"{$Cours->getNomTypeCours()}\" colspan=\"$nbQuartsCours\">";
-					echo "{$Cours->getHeureDebut()} - {$Cours->getHeureFin()}<br />{$Cours->getNomUE()} - ".strtoupper($Cours->getNomTypeCours())."<br />{$Cours->getNomBatiment()} - {$Cours->getNomSalle()}";
-					echo "</td>"; 
-					$boolCours = true;
-					$nbQuartsHeure += $nbQuartsCours;
+		$nombresCours = sizeof($coursDuJours);
+		$premierParcours = true;
+		while($premierParcours || sizeof($coursDuJours) > 0){
+			echo "<tr>\n";
+			echo "<th>$j</th>\n";
+			$nbQuartsHeure = 0;
+			while($nbQuartsHeure < (14*4)) { 
+				$heure = 7 + ((int)($nbQuartsHeure / 4));
+				$heure = ($heure < 10) ? "0$heure" : "$heure";
+				$quart = $nbQuartsHeure % 4;
+				switch($quart){
+					case 0: $quart = "00"; break;
+					case 1: $quart = "15"; break;
+					case 2: $quart = "30"; break;
+					case 3: $quart = "45"; break;
 				}
-			}
-			if(!$boolCours){
-				$style = intval($heure)%2;
-				if($style == 0){
-					$style = "heurePaire";
+				$boolCours = false;
+				for($i = 0 ; $i < $nombresCours ; $i++){
+					if(isset($coursDuJours[$i])){
+						$idCours = $coursDuJours[$i];
+						$Cours = new V_Infos_Cours($idCours);
+						// Je regarde pour chaque cours si il commence à cette heure
+						if($Cours->commence_a_heure("$heure:$quart:00")){
+							$nbQuartsCours = $Cours->nbQuartsHeure();
+							
+							echo "<td class=\"{$Cours->getNomTypeCours()}\" colspan=\"$nbQuartsCours\">";
+							echo "{$Cours->getHeureDebut()} - {$Cours->getHeureFin()}<br />{$Cours->getNomUE()} - ".strtoupper($Cours->getNomTypeCours())."<br />{$Cours->getNomBatiment()} - {$Cours->getNomSalle()}";
+							echo "</td>"; 
+							$boolCours = true;
+							$nbQuartsHeure += $nbQuartsCours;
+							unset($coursDuJours[$i]); // Je supprime l'id du tableau
+							break; // On sort de la boucle
+						}
+					}
 				}
-				else{
-					$style = "heureImpaire";
+				if(!$boolCours){
+					$style = intval($heure)%2;
+					if($style == 0){
+						$style = "heurePaire";
+					}
+					else{
+						$style = "heureImpaire";
+					}
+					echo "<td class=\"$style\"></td>"; 
+					$nbQuartsHeure ++;
 				}
-				echo "<td class=\"$style\"></td>"; 
-				$nbQuartsHeure ++;
-			}
-		} 
+			} 
+			$premierParcours = false;
+		}
 	}
 ?>
 		</tr>
