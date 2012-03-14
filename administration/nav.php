@@ -66,7 +66,9 @@
 	}
 ?>
 					</ul>
-
+<?php
+	if(isset($_GET['idPromotion'])){
+?>	
 					<h1>Gestions des étudiants</h1>
 					<ul>
 						<li>
@@ -100,3 +102,6 @@
 							<a href="?page=gestionPublication&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Gestion de la publication</a>
 						</li>
 					</ul>
+<?php
+	}
+?>
