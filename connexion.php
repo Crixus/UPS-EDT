@@ -13,7 +13,7 @@
 		
 		if($idUtilisateur = Utilisateur::identification($login, $motDePasse)){
 			$Utilisateur = new Utilisateur($idUtilisateur);
-			$_SESSION['idUtilisateur'] = $idUtilisateur;
+			$_SESSION['idUtilisateur'] = $Utilisateur->getIdCorrespondant();
 			$_SESSION['Type'] = $Utilisateur->getType();
 			header('Location: ./index.php');
 		}

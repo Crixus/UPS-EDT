@@ -49,6 +49,8 @@
 	Options::prise_en_compte_formulaire();
 	Salle::prise_en_compte_formulaire();
 	Salle::prise_en_compte_suppression();
+	Type_Cours::prise_en_compte_formulaire();
+	Type_Cours::prise_en_compte_suppression();
 	Type_Salle::prise_en_compte_formulaire();
 	Type_Salle::prise_en_compte_suppression();
 ?>
