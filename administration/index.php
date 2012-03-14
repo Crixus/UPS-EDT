@@ -12,38 +12,8 @@
 		}
 	}
 	
-	// Test sur la promotion (voir si la promotion est choisie et sécurité)
-	if(isset($_GET['idPromotion'])){
-		$promotion_choisie = true;
-		$idPromotion = $_GET['idPromotion'];
-		if(!Promotion::existe_promotion($idPromotion)){ 
-			header('Location: ./index.php');
-		}
-	}
-	else{
-		$promotion_choisie = false;
-	}
-	
-	// Test sur la page (voir si page choisie et sécurité)
-	$listePagesAdminPromo = Array(
-		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", "ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php", "gestionGroupeCours.php"
-	);
-	$listePagesAdminHorsPromo = Array(
-		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php", "infosBatiment.php", "infosSalle.php"
-	);
-	
-	if(isset($_GET['page'])){
-		if(isset($_GET['idPromotion'])){
-			if(!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo) && !in_array("{$_GET['page']}.php", $listePagesAdminPromo)){
-				header('Location: ./index.php');
-			}
-		}
-		else{
-			if(!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo)){
-				header('Location: ./index.php');
-			}
-		}
-	}
+	// Test de sécurité
+	include_once("./securite.php");
 	
 	function afficher_notifications($nombreTabulations = 0){
 		$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
@@ -102,7 +72,7 @@
 		<div id="page_administration">
 			<div id="page_administration_haut">
 				<div id="page_administration_titre">
-					<h1><a href="./index.php<?php if($promotion_choisie){ echo "?idPromotion=$idPromotion"; } ?>">Administration</a></h1>
+					<h1><a href="./index.php<?php if(isset($_GET['idPromotion'])){ echo "?idPromotion={$_GET['idPromotion']}"; } ?>">Administration</a></h1>
 				</div>
 				<div id="barre_selection_promotion">
 					<table>
@@ -110,8 +80,8 @@
 							<td>Selection d'une promotion</td>
 							<td>
 <?php 
-	if($promotion_choisie){
-		echo Promotion::liste_promotion_for_select($idPromotion, 8); 
+	if(isset($_GET['idPromotion'])){
+		echo Promotion::liste_promotion_for_select($_GET['idPromotion'], 8); 
 	}
 	else{
 		echo Promotion::liste_promotion_for_select(null, 8); 
