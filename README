@@ -1,0 +1,28 @@
+AFFICHAGE EMPLOI DU TEMPS ETUDIANT :
+	_ Affichage de l'emploi du temps sans gestion de conflits
+	_ Choix de la semaine
+	
+ADMINISTRATION :
+	_ Terminé :
+		_ Gestion affichage
+			_ Gestion des couleurs de type de cours
+		_ Gestion des salles
+			_ Gestion des batiments
+			_ Gestion des salles
+	_ A Faire :
+		_ Gestion des salles
+			_ Gestion des types de salles
+		_ Gestion des intervenants
+			_ Gestion des intervenants
+		_ Gestion des cours
+		_ Gestion des spécialités
+		_ Gestion des UE
+		_ Gestion des étudiants
+		_ Gestion des groupes de cours
+		_ Gestion des groupes d'etudiants
+		_ Gestion des publications
+		_ Bilan
+			
+AUTRE :
+	_ A faire:
+		_ Creation d'une classe d'envoi de mail

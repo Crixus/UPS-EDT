@@ -374,7 +374,9 @@
 			echo "$tab</ul>\n";
 			echo "$tab<h3>Liste des salles du bâtiment</h3>\n";
 			$this->table_salles($nombreTabulations);
-			echo "$tab<h3>Plan Google Maps</h3>\n";
-			echo "$tab<iframe width=\"700\" height=\"500\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?q={$this->getLat()},+{$this->getLon()}+(Bâtiment {$this->getNom()})&amp;z=16&amp;output=embed\"></iframe>";
+			if($this->getLat() != NULL && $this->getLon() != NULL){
+				echo "$tab<h3>Plan Google Maps</h3>\n";
+				echo "$tab<iframe width=\"700\" height=\"500\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?q={$this->getLat()},+{$this->getLon()}+(Bâtiment {$this->getNom()})&amp;z=16&amp;output=embed\"></iframe>";
+			}
 		}
 	}
