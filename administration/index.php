@@ -125,10 +125,7 @@
 			</div>
 			<div id="page_administration_milieu">
 				<nav>
-<?php 
-	include_once('./nav_hors_promo.php');
-	if(isset($_GET['idPromotion'])){ include_once('./nav_promo.php'); }
-?>
+<?php include_once('./nav.php'); ?>
 				</nav>
 				<section>
 <?php 
