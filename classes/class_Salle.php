@@ -36,6 +36,65 @@
 			}
 		}
 		
+		public static function ajouter_salle($nom, $nomBatiment, $capacite){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("INSERT INTO ".Salle::$nomTable." VALUES(?, ?, ?, ?)");
+				
+				$req->execute(
+					Array(
+						"",
+						$nom,
+						$nomBatiment, 
+						$capacite
+					)
+				);			
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
+		public static function modifier_salle($idSalle, $nom, $nomBatiment, $capacite){
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("UPDATE ".Salle::$nomTable." SET nom=?, nomBatiment=?, capacite=? WHERE id=?;");
+				$req->execute(
+					Array(
+						$nom, 
+						$nomBatiment, 
+						$capacite, 
+						$idSalle
+					)
+				);
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
+		public static function supprimer_salle($idSalle){
+			if($idSalle != 0){
+				Cours::modifier_salle_tout_cours($idSalle, 0);
+				try{
+					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					$bdd->query("SET NAMES utf8");
+					$req = $bdd->prepare("DELETE FROM ".Salle::$nomTable." WHERE id=?;");
+					$req->execute(
+						Array($idSalle)
+					);
+				}
+				catch(Exception $e){
+					echo "Erreur : ".$e->getMessage()."<br />";
+				}	
+			}	
+		}
+		
 		public static function liste_id_salles(){
 			$listeIdSalle = Array();
 			try{
@@ -70,6 +129,25 @@
 				$req->closeCursor();
 				
 				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
+		public static function existe_nom_salle($nom){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Salle::$nomTable." WHERE nom=?");
+				$req->execute(
+					Array($nom)
+					);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] >= 1;
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -135,65 +213,6 @@
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeNom;
-		}
-		
-		public static function ajouter_salle($nom, $nomBatiment, $capacite){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("INSERT INTO ".Salle::$nomTable." VALUES(?, ?, ?, ?)");
-				
-				$req->execute(
-					Array(
-						"",
-						$nom,
-						$nomBatiment, 
-						$capacite
-					)
-				);			
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
-		public static function modifier_salle($idSalle, $nom, $nomBatiment, $capacite){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("UPDATE ".Salle::$nomTable." SET nom=?, nomBatiment=?, capacite=? WHERE id=?;");
-				$req->execute(
-					Array(
-						$nom, 
-						$nomBatiment, 
-						$capacite, 
-						$idSalle
-					)
-				);
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
-		public static function supprimer_salle($idSalle){
-			//MAJ de la table "Cours" on met idSalle à 0 pour l'idSalle correspondant
-			// Se fera tout seul avec la Base de données (quand on aura trouvé)
-			Cours::modifier_salle_tout_cours($idSalle, 0);
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Salle::$nomTable." WHERE id=?;");
-				$req->execute(
-					Array($idSalle)
-				);
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}		
 		}
 		
 		public function formulaireAjoutModificationSalle($nombreTabulations = 0){
@@ -268,7 +287,7 @@
 				$nom = $_POST['nom'];
 				$capacite = $_POST['capacite'];
 				$nomBatiment = $_POST['nomBatiment'];
-				$nom_correct = true; // Pas de vérifications spéciales pour un nom de salle
+				$nom_correct = true;
 				$capacite_correct = PregMatch::est_nombre($capacite);
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
 				$salle_inexistante = !Salle::existe_salle_nomSalle_nomBatiment($nom, $nomBatiment);
@@ -306,9 +325,6 @@
 					Salle::supprimer_salle($_GET['supprimer_salle']);
 					array_push($messages_notifications, "La salle à bien été supprimée");
 				}
-				else{
-					array_push($messages_erreurs, "La salle n'existe pas");
-				}
 			}
 		}
 		
@@ -316,7 +332,7 @@
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			$liste_id_salles = Salle::liste_id_salles();
-			$liste_type_salle = Type_Salle::liste_type_salle();
+			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
 			
@@ -387,7 +403,14 @@
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			Salle::formulaireAjoutModificationSalle($nombreTabulations);
+			if(!isset($_GET['supprimer_salle'])){
+				Salle::formulaireAjoutModificationSalle($nombreTabulations);
+				}
+			else{
+				$lien = "./index.php?page=ajoutSalle";
+				if(isset($_GET['idPromotion'])){ $lien .= "&amp;idPromotion={$_GET['idPromotion']}"; }
+				echo "$tab<p><a href=\"$lien\" />Fin de suppression</a></p>\n";
+			}
 			echo "$tab<h2>Liste des salles</h2>\n";
 			Salle::table_administration_batiments($nombreTabulations);
 		}

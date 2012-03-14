@@ -100,7 +100,7 @@
 		$premierParcours = true;
 		while($premierParcours || sizeof($coursDuJours) > 0){
 			echo "<tr>\n";
-			echo "<th>$j</th>\n";
+			echo ($premierParcours) ? "<th>$j</th>\n" : "<th></th>\n";
 			$nbQuartsHeure = 0;
 			while($nbQuartsHeure < (14*4)) { 
 				$heure = 7 + ((int)($nbQuartsHeure / 4));
@@ -122,7 +122,8 @@
 							$nbQuartsCours = $Cours->nbQuartsHeure();
 							
 							echo "<td class=\"{$Cours->getNomTypeCours()}\" colspan=\"$nbQuartsCours\">";
-							echo "{$Cours->getHeureDebut()} - {$Cours->getHeureFin()}<br />{$Cours->getNomUE()} - ".strtoupper($Cours->getNomTypeCours())."<br />{$Cours->getNomBatiment()} - {$Cours->getNomSalle()}";
+							$prenom = $Cours->getprenomIntervenant();
+							echo "{$Cours->getHeureDebut()} - {$Cours->getHeureFin()}<br />{$Cours->getNomUE()} - ".strtoupper($Cours->getNomTypeCours())."<br />{$Cours->getNomBatiment()} - {$Cours->getNomSalle()}<br />{$prenom[0]} {$Cours->getNomIntervenant()}";
 							echo "</td>"; 
 							$boolCours = true;
 							$nbQuartsHeure += $nbQuartsCours;

@@ -180,7 +180,8 @@ INSERT INTO `Batiment` (`id`, `nom`, `lat`, `lon`) VALUES
 CREATE TABLE IF NOT EXISTS `Type_Salle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`nom`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Salle` (
@@ -292,11 +293,11 @@ CREATE TABLE IF NOT EXISTS `Options` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 INSERT INTO `Options` (`nom`, `valeur`) VALUES
-("background_color_Cours", "#96C8FF"),
-("background_color_TD", "#FFFFFF"),
-("background_color_TP", "#FFFFFF"),
+("background_color_Cours", "#FFFF00"),
+("background_color_TD", "#99D9EA"),
+("background_color_TP", "#7092BE"),
 ("background_color_Examen", "#FF3333"),
-("background_color_Reunion", "#FFFFFF"),
+("background_color_Reunion", "#FF7F27"),
 ("background_color_Autre", "#FFFFFF"),
 ("color_Cours", "#000000"),
 ("color_TD", "#000000"),

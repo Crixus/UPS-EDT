@@ -25,10 +25,40 @@
 				header('Location: ./index.php');
 			}
 		}
-		if(($_GET['page'] == "infosBatiment" && !isset($_GET['idBatiment'])) || ($_GET['page'] == "infosBatiment" && isset($_GET['idBatiment']) && !Batiment::existe_batiment($_GET['idBatiment']))){
-			header('Location: ./index.php');
-		}
-		if(($_GET['page'] == "infosSalle" && !isset($_GET['idSalle'])) || ($_GET['page'] == "infosSalle" && isset($_GET['idSalle']) && !Batiment::existe_batiment($_GET['idSalle']))){
-			header('Location: ./index.php');
+		switch($_GET['page']){
+			case "ajoutBatiment":
+				if(isset($_GET['supprimer_batiment']) && !Batiment::existe_batiment($_GET['supprimer_batiment'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_batiment']) && !Batiment::existe_batiment($_GET['modifier_batiment'])){
+					header('Location: ./index.php');
+				}
+				break;
+			case "ajoutSalle":
+				if(isset($_GET['supprimer_salle']) && !Salle::existe_salle($_GET['supprimer_salle'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_salle']) && !Salle::existe_salle($_GET['modifier_salle'])){
+					header('Location: ./index.php');
+				}
+				break;
+			case "ajoutTypeSalle":
+				if(isset($_GET['supprimer_type_salle']) && !Type_Salle::existe_type_salle($_GET['supprimer_type_salle'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_type_salle']) && !Type_Salle::existe_type_salle($_GET['modifier_type_salle'])){
+					header('Location: ./index.php');
+				}
+				break;
+			case "infosBatiment":
+				if(!isset($_GET['idBatiment']) || (isset($_GET['idBatiment']) && !Batiment::existe_batiment($_GET['idBatiment']))){
+					header('Location: ./index.php');
+				}
+				break;	
+			case "infosSalle":
+				if(!isset($_GET['idSalle']) || (isset($_GET['idSalle']) && !Batiment::existe_batiment($_GET['idSalle']))){
+					header('Location: ./index.php');
+				}
+				break;
 		}
 	}

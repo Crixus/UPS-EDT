@@ -281,12 +281,6 @@
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_type_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">Le type de cours a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_type_salle'])){
-				echo "$tab<p class=\"notificationAdministration\">Le type de cours a bien été modifié</p>";
-			}
 			Type_Cours::formulaireAjoutTypeCours($nombreTabulations + 1);
 			echo "$tab<h1>Liste des types de cours</h1>\n";
 			Type_Cours::liste_type_cours_to_table($_GET['idPromotion'], $nombreTabulations + 1);

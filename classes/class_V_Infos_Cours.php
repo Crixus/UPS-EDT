@@ -17,6 +17,8 @@
 		public function getId(){return $this->id;}
 		public function getNomUE(){return $this->nomUE;}
 		public function getNomSalle(){return $this->nomSalle;}
+		public function getPrenomIntervenant(){return $this->prenomIntervenant;}
+		public function getNomIntervenant(){return $this->nomIntervenant;}
 		public function getNomTypeCours(){return $this->nomTypeCours;}
 		public function getNomBatiment(){return $this->nomBatiment;}
 		

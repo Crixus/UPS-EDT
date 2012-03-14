@@ -85,6 +85,10 @@
 		
 		public static function supprimer_batiment($idBatiment){
 			if($idBatiment != 0){
+				$Batiment = new Batiment($idBatiment);
+				foreach($Batiment->liste_salles() as $Salle){
+					Cours::modifier_salle_tout_cours($Salle->getId(), 0);
+				}
 				try{
 					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
@@ -354,16 +358,19 @@
 					Batiment::supprimer_batiment($_GET['supprimer_batiment']);
 					array_push($messages_notifications, "Le bâtiment à bien été supprimé");
 				}
-				else{
-					// Le batiment n'existe pas
-					array_push($messages_erreurs, "Le bâtiment n'existe pas");
-				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			Batiment::formulaireAjoutBatiment($nombreTabulations);
+			if(!isset($_GET['supprimer_batiment'])){
+				Batiment::formulaireAjoutBatiment($nombreTabulations);
+			}
+			else{
+				$lien = "./index.php?page=ajoutBatiment";
+				if(isset($_GET['idPromotion'])){ $lien .= "&amp;idPromotion={$_GET['idPromotion']}"; }
+				echo "$tab<p><a href=\"$lien\" />Fin de suppression</a></p>\n";
+			}
 			echo "$tab<h2>Liste des bâtiments</h2>\n";
 			Batiment::table_administration_batiments($nombreTabulations);
 		}
