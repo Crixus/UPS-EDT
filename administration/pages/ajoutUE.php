@@ -1,5 +1,5 @@
+					<h1>Gestion des UE</h1>
 <?php
-	UE::prise_en_compte_formulaire();
-	UE::prise_en_compte_suppression();
-	UE::page_administration(1); 
-?>
+	afficher_notifications(5);
+	afficher_erreurs(5);
+	UE::page_administration(5); 

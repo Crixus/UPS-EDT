@@ -1,4 +1,5 @@
+					<h1>Gestion des étudiants</h1>
 <?php
-	Etudiant::prise_en_compte_formulaire();
-	Etudiant::prise_en_compte_suppression();
+	afficher_notifications(5);
+	afficher_erreurs(5);
 	Etudiant::page_administration(1); 

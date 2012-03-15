@@ -1,4 +1,5 @@
+					<h1>Gestion des promotions</h1>
 <?php
-	Promotion::prise_en_compte_formulaire();
+	afficher_notifications(5);
+	afficher_erreurs(5);
 	Promotion::page_administration(1); 
-?>

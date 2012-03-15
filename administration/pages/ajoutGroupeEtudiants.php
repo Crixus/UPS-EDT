@@ -1,5 +1,5 @@
+					<h1>Gestion des groupes d'étudiants</h1>
 <?php
-	Groupe_Etudiants::prise_en_compte_formulaire();
-	Groupe_Etudiants::prise_en_compte_suppression();
+	afficher_notifications(5);
+	afficher_erreurs(5);
 	Groupe_Etudiants::page_administration(1); 
-?>

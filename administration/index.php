@@ -43,16 +43,29 @@
 	
 	// Prise en compte des formulaires et suppression avant l'envoi de code HTML (gestion erreurs, sécurité...)
 	Batiment::prise_en_compte_formulaire();
-	Batiment::prise_en_compte_suppression();	
+	Batiment::prise_en_compte_suppression();
+	Cours::prise_en_compte_formulaire();
+	Cours::prise_en_compte_suppression();
+	Etudiant::prise_en_compte_formulaire();
+	Etudiant::prise_en_compte_suppression();
+	Groupe_Cours::prise_en_compte_formulaire();
+	Groupe_Cours::prise_en_compte_suppression();
+	Groupe_Etudiants::prise_en_compte_formulaire();
+	Groupe_Etudiants::prise_en_compte_suppression();	
 	Intervenant::prise_en_compte_formulaire();
 	Intervenant::prise_en_compte_suppression();
 	Options::prise_en_compte_formulaire();
+	Promotion::prise_en_compte_formulaire();
 	Salle::prise_en_compte_formulaire();
 	Salle::prise_en_compte_suppression();
+	Specialite::prise_en_compte_formulaire();
+	Specialite::prise_en_compte_suppression();
 	Type_Cours::prise_en_compte_formulaire();
 	Type_Cours::prise_en_compte_suppression();
 	Type_Salle::prise_en_compte_formulaire();
 	Type_Salle::prise_en_compte_suppression();
+	UE::prise_en_compte_formulaire();
+	UE::prise_en_compte_suppression();
 ?>
 <!DOCTYPE html>
 	<head>
