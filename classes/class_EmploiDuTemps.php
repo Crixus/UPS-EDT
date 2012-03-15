@@ -193,12 +193,7 @@
 				}
 				if(!$boolCours){
 					$style = intval($heure)%2;
-					if($style == 0){
-						$style = "heurePaire";
-					}
-					else{
-						$style = "heureImpaire";
-					}
+					$style = ($style == 0) ? "heurePaire" : "heureImpaire";
 					echo "<td class=\"$style\"></td>"; 
 					$nbQuartsHeure ++;
 				}
@@ -271,12 +266,7 @@
 				}
 				if(!$boolCours){
 					$style = intval($heure)%2;
-					if($style == 0){
-						$style = "heurePaire";
-					}
-					else{
-						$style = "heureImpaire";
-					}
+					$style = ($style == 0) ? "heurePaire" : "heureImpaire";
 					echo "<td class=\"$style\"></td>"; 
 					$nbQuartsHeure ++;
 				}
