@@ -1,5 +1,9 @@
 AFFICHAGE EMPLOI DU TEMPS ETUDIANT :
-	_ Affichage de l'emploi du temps sans gestion de conflits
+	_ Affichage de l'emploi du temps étudiant avec gestion de conflits
+	_ Choix de la semaine
+	
+AFFICHAGE EMPLOI DU TEMPS INTERVENANT :
+	_ Affichage de l'emploi du temps intervenant avec gestion de conflits
 	_ Choix de la semaine
 	
 ADMINISTRATION :
@@ -25,3 +29,5 @@ ADMINISTRATION :
 AUTRE :
 	_ A faire:
 		_ Creation d'une classe d'envoi de mail
+		_ Creation d'une classe pour exportation PDF
+		_ Creation d'une classe pour exportation Google Agenda

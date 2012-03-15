@@ -73,12 +73,7 @@
 			</table>
 			<section>
 <?php
-	if($_SESSION['Type'] == "Etudiant"){
-		EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
-	}
-	else if($_SESSION['Type'] == "Intervenant"){
-		EmploiDuTemps::affichage_edt_semaine_intervenant_table($_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));
-	}
+	EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Type'], $_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
 ?>
 			</section>
 			<footer>
