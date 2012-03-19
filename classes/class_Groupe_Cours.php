@@ -33,6 +33,25 @@
 			}
 		}
 		
+		public static function existe_groupeCours($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Groupe_Cours::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public function getNbreGroupeCours($idPromotion){ 
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -166,9 +185,16 @@
 					}
 					
 					if($administration){
-						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeCours&amp;modifier_groupeCours=$idGroupeCours";
-						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutGroupeCours&amp;supprimer_groupeCours=$idGroupeCours";
-						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce groupe de cours ?') ? '{$pageSuppression}' : ''\"/>\n";
+						$pageModification = "./index.php?page=ajoutGroupeCours&amp;modifier_groupeCours=$idGroupeCours";
+						$pageSuppression = "./index.php?page=ajoutGroupeCours&amp;supprimer_groupeCours=$idGroupeCours";
+						if(isset($_GET['idPromotion'])){
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le groupe de cours ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
 					}
 					echo "$tab\t</tr>\n";
 				}
@@ -185,6 +211,13 @@
 				$Groupe_Cours = new Groupe_Cours($_GET['modifier_groupeCours']);
 				$nomModif = "value=\"{$Groupe_Cours->getNom()}\"";
 				$identifiantModif = "value=\"{$Groupe_Cours->getIdentifiant()}\"";
+				$valueSubmit = "Modifier le groupe de cours"; 
+				$nameSubmit = "validerModificationGroupeCours";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeCours']}\" />";
+				$lienAnnulation = "index.php?page=ajoutGroupeCours";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un groupe de cours";
@@ -193,9 +226,12 @@
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$identifiantModif = "value=\"{$annee_promotion}-{$nom_promotion}-\"";
+				$valueSubmit = "Ajouter le groupe de cours"; 
+				$nameSubmit = "validerAjoutGroupeCours";
+				$hidden = "";
 			}		
 		
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -214,56 +250,67 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_groupeCours'])){ $valueSubmit = "Modifier le groupe de cours"; }else{ $valueSubmit = "Ajouter le groupe de cours"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutGroupeCours\" value=\"{$valueSubmit}\" style=\"cursor:pointer;\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";			
+			echo "$tab</form>\n";
+			
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}				
 		}		
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutGroupeCours'])){
-				$nom = $_POST['nom'];
+				$nom = $_POST['nom'];				
+				$nom_correct = true;
 				$identifiant = $_POST['identifiant'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];					
-					if(isset($_GET['modifier_groupeCours'])){
-						Groupe_Cours::modifier_groupeCours($_GET['modifier_groupeCours'], $idPromotion, $nom, $identifiant);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutGroupeCours&modification_groupeCours=1";
-					} 
-					else{
-						// C'est un nouveau groupe de cours
-						Groupe_Cours::ajouter_groupeCours($idPromotion, $nom, $identifiant);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutGroupeCours&ajout_groupeCours=1";
-					}
-					header("Location: $pageDestination");
+				$identifiant_correct = true;
+				if($nom_correct && $identifiant_correct){		
+					Groupe_Cours::ajouter_groupeCours($_GET['idPromotion'], $nom, $identifiant);
+					array_push($messages_notifications, "Le groupe de cours a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationGroupeCours'])){
+				$id = $_POST['id']; 
+				$id_correct = Groupe_Cours::existe_groupeCours($id);
+				$nom = $_POST['nom'];				
+				$nom_correct = true;
+				$identifiant = $_POST['identifiant'];
+				$identifiant_correct = true;
+				if($nom_correct && $identifiant_correct){	
+					Groupe_Cours::modifier_groupeCours($_GET['modifier_groupeCours'], $_GET['idPromotion'], $nom, $identifiant);
+					array_push($messages_notifications, "Le groupe de cours a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_groupeCours'])){	
-				$idPromotion = $_GET['idPromotion'];	
-				if(true){ // Test de saisie
+				if(Groupe_Cours::existe_groupeCours($_GET['supprimer_groupeCours'])){
+					// Le groupe de cours existe
 					Groupe_Cours::supprimer_groupeCours($_GET['supprimer_groupeCours']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutGroupeCours&supprimer_groupeCours=1";	
+					array_push($messages_notifications, "Le groupe de cours à bien été supprimé");
+				}
+				else{
+					// Le groupe de cours n'existe pas
+					array_push($messages_erreurs, "Le groupe de cours n'existe pas");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }	
-			$idPromotion = $_GET['idPromotion'];
-			if(isset($_GET['ajout_groupeCours'])){
-				echo "$tab<p class=\"notificationAdministration\">Le groupe de cours a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_groupeCours'])){
-				echo "$tab<p class=\"notificationAdministration\">Le groupe de cours a bien été modifié</p>";
-			}
-			Groupe_Cours::formulaireAjoutGroupeCours($idPromotion, $nombreTabulations + 1);
-			echo "$tab<h1>Liste des groupes de cours</h1>\n";
-			Groupe_Cours::liste_groupeCours_to_table($idPromotion, $nombreTabulations + 1);
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			Groupe_Cours::formulaireAjoutGroupeCours($_GET['idPromotion'], $nombreTabulations + 1);
+			echo "$tab<h2>Liste des groupes de cours</h2>\n";
+			Groupe_Cours::liste_groupeCours_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}	
 		
 		public function toString(){
