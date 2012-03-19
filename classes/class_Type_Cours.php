@@ -47,6 +47,25 @@
 			}
 		}
 		
+		public static function existe_typeCours($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Type_Cours::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public function liste_id_type_cours(){
 			$listeId = Array();
 			try{
@@ -85,7 +104,7 @@
 			return $listeNom;
 		}
 		
-		public static function liste_type_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_type_cours_to_table($administration, $nombreTabulations = 0){
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			$nbre_type_salle = sizeof($liste_type_salle);
@@ -114,9 +133,7 @@
 			foreach($liste_type_cours as $idTypeCours){
 				$Type_Cours = new Type_Cours($idTypeCours);
 				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
-				$cpt++; $cpt %= 2;
+				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 				
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
 				foreach(Type_Cours::$attributs as $att){
@@ -135,9 +152,15 @@
 				}
 				
 				if($administration){
-					$pageModification = "./index.php?idPromotion=$idPromotion&amp;page=ajoutTypeCours&amp;modifier_type_cours=$idTypeCours";
-					$pageSuppression = "./index.php?idPromotion=$idPromotion&amp;page=ajoutTypeCours&amp;supprimer_type_cours=$idTypeCours";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce type de cours ?') ? '{$pageSuppression}' : ''\"/>\n";
+					$pageModification = "./index.php?page=ajoutTypeCours&amp;modifier_type_cours=$idTypeCours";
+					$pageSuppression = "./index.php?page=ajoutTypeCours&amp;supprimer_type_cours=$idTypeCours";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" style=\"cursor:pointer;\" alt=\"icone de modification\" /></a>";
+					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le type de cours ?')\"><img src=\"../images/delete.png\" style=\"cursor:pointer;\" alt=\"icone de suppression\" /></a>";
 				}
 				echo "$tab\t</tr>\n";
 			}
@@ -184,7 +207,7 @@
 		}
 		
 		public static function supprimer_type_cours($idTypeCours){
-			//Suppression des entr�es de la table "Appartient_TypeSalle_TypeCours
+			//Suppression des entrées de la table "Appartient_TypeSalle_TypeCours
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
@@ -224,13 +247,23 @@
 				$titre = "Modifier un type de cours";
 				$Type_Cours = new Type_Cours($_GET['modifier_type_cours']);
 				$nomModif = "value=\"{$Type_Cours->getNom()}\"";
+				$valueSubmit = "Modifier le type de cours";
+				$nameSubmit = "validerModificationTypeCours";				
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_type_cours']}\" />";
+				$lienAnnulation = "index.php?page=ajoutTypeCours";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un type de cours";
-				$nomModif = "value=\"\"";
+				$nomModif = "";
+				$valueSubmit = "Ajouter le type de cours";
+				$nameSubmit = "validerAjoutTypeCours";
+				$hidden = "";
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -242,39 +275,54 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_type_cours'])){ $valueSubmit = "Modifier le type de cours"; }else{ $valueSubmit = "Ajouter le type de cours"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutTypeCours\" value=\"{$valueSubmit}\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";			
+			echo "$tab</form>\n";		
+
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}				
 		}	
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutTypeCours'])){
 				$nom = $_POST['nom'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];	
-					if(isset($_GET['modifier_type_cours'])){
-						Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeCours&modification_type_cours=1";
-					}
-					else{
-						// C'est un nouveau type de cours
-						Type_Cours::ajouter_type_cours($nom);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeCours&modification_type_cours=1";
-					}
-					header("Location: $pageDestination");
+				$nom_correct = true;
+				if($nom_correct){		
+					Type_Cours::ajouter_type_cours($nom);
+					array_push($messages_notifications, "Le type de cours a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationTypeCours'])){			
+				$id = $_POST['id']; 
+				$id_correct = Type_Cours::existe_typeCours($id);
+				$nom = $_POST['nom']; 
+				$nom_correct = true;
+				if($nom_correct){
+					Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
+					array_push($messages_notifications, "Le type de cours a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_type_cours'])){	
-				$idPromotion = $_GET['idPromotion'];		
-				if(true){ // Test de saisie
+				if(Type_Cours::existe_typeCours($_GET['supprimer_type_cours'])){
+					// Le type de cours existe
 					Type_Cours::supprimer_type_cours($_GET['supprimer_type_cours']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutTypeCours&supprimer_type_cours=1";	
+					array_push($messages_notifications, "Le type de cours a bien été supprimé");
+				}
+				else{
+					// Le type de cours n'existe pas
+					array_push($messages_erreurs, "Le type de cours n'existe pas");
 				}
 			}
 		}
@@ -282,8 +330,8 @@
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			Type_Cours::formulaireAjoutTypeCours($nombreTabulations + 1);
-			echo "$tab<h1>Liste des types de cours</h1>\n";
-			Type_Cours::liste_type_cours_to_table($_GET['idPromotion'], $nombreTabulations + 1);
+			echo "$tab<h2>Liste des types de cours</h2>\n";
+			Type_Cours::liste_type_cours_to_table($nombreTabulations + 1);
 		}
 		
 		public function appartenance_typeSalle_typeCours($idType_Cours, $idType_Salle) {
