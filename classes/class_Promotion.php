@@ -104,7 +104,7 @@
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Promotion::$nomTable." ORDER BY nom");
+				$req = $bdd->prepare("SELECT * FROM ".Promotion::$nomTable." WHERE id!=0 ORDER BY nom");
 				$req->execute();
 				while($ligne = $req->fetch()){
 					array_push($listeId, $ligne['id']);
