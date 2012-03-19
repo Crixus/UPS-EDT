@@ -317,7 +317,7 @@
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutBatiment'])){
-				$nom = $_POST['nom'];
+				$nom = htmlentities($_POST['nom']);
 				$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
 				$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
 				$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
@@ -332,7 +332,7 @@
 				}
 			}
 			if(isset($_POST['validerModificationBatiment'])){
-				$nom = $_POST['nom'];
+				$nom = htmlentities($_POST['nom']);
 				$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
 				$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
 				$id = $_POST['id'];

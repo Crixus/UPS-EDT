@@ -252,7 +252,7 @@
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutTypeSalle'])){
-				$nom = $_POST['nom'];
+				$nom = htmlentities($_POST['nom']);
 				$nom_correct = !Type_Salle::existe_nom_type_salle($nom);
 				if($nom_correct){ // Test de saisie	
 					Type_Salle::ajouter_type_salle($nom);
@@ -264,8 +264,8 @@
 				}
 			}
 			else if(isset($_POST['validerModificationTypeSalle'])){
-				$id = $_POST['id'];
-				$nom = $_POST['nom'];
+				$id = htmlentities($_POST['id']);
+				$nom = htmlentities($_POST['nom']);
 				$nom_correct = true;
 				if($nom_correct){ // Test de saisie	
 					Type_Salle::modifier_type_salle($id, $nom);
