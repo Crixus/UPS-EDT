@@ -139,7 +139,7 @@
 		
 		public static function liste_promotion_to_table($administration, $nombreTabulations = 0){
 			$liste_promotion = Promotion::liste_promotion();
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
 			
