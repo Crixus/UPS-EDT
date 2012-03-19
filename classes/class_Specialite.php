@@ -33,6 +33,25 @@
 			}
 		}
 		
+		public static function existe_specialite($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Specialite::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function ajouter_specialite($nom, $intitule, $idPromotion){
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -117,14 +136,24 @@
 				$Specialite = new Specialite($_GET['modifier_specialite']);
 				$nomModif = "value=\"{$Specialite->getNom()}\"";
 				$intituleModif = "value=\"{$Specialite->getIntitule()}\"";
+				$valueSubmit = "Modifier la spécialité"; 
+				$nameSubmit = "validerModificationSpecialite";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_specialite']}\" />";
+				$lienAnnulation = "index.php?page=ajoutSpecialite";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter une spécialité";
 				$nomModif = "value=\"\"";
 				$intituleModif = "value=\"\"";
+				$valueSubmit = "Ajouter la spécialité"; 
+				$nameSubmit = "validerAjoutSpecialite";
+				$hidden = "";
 			}
 		
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -143,54 +172,66 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_specialite'])){ $valueSubmit = "Modifier la spécialité"; }else{ $valueSubmit = "Ajouter la spécialité"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutSpecialite\" value=\"{$valueSubmit}\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";			
+			echo "$tab</form>\n";	
+
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}				
 		}	
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutSpecialite'])){
 				$nom = $_POST['nom'];
 				$intitule = $_POST['intitule'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];
-					if(isset($_GET['modifier_specialite'])){
-						Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $idPromotion);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSpecialite&modification_specialite=1";
-					}
-					else{
-						// C'est une nouvelle spécialité
-						Specialite::ajouter_specialite($nom, $intitule, $idPromotion);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSpecialite&ajout_specialite=1";
-					}
-					header("Location: $pageDestination");
+				$nom_correct = true;
+				$intitule_correct = true;
+				if($nom_correct && $intitule_correct) {
+					Specialite::ajouter_specialite($nom, $intitule, $_GET['idPromotion']);
+					array_push($messages_notifications, "La spécialité a bien été ajouté");
 				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationSpecialite'])){
+				$id = $_POST['id']; 
+				$id_correct = Specialite::existe_specialite($id);
+				$nom = $_POST['nom']; 
+				$nom_correct = true;
+				$intitule = $_POST['intitule'];
+				$intitule_correct = true;
+				if($nom_correct && $intitule_correct) {
+					Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $_GET['idPromotion']);
+					array_push($messages_notifications, "L'intervenant a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}				
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_specialite'])){	
-				$idPromotion = $_GET['idPromotion'];	
-				if(true){ // Test de saisie
+				if(Specialite::existe_specialite($_GET['supprimer_specialite'])){
+					// La spécialité existe
 					Specialite::supprimer_specialite($_GET['supprimer_specialite']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutSpecialite&supprimer_specialite=1";	
+					array_push($messages_notifications, "La spécialité à bien été supprimé");
+				}
+				else{
+					// La spécialité n'existe pas
+					array_push($messages_erreurs, "La spécialité n'existe pas");
 				}
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_specialite'])){
-				echo "$tab<p class=\"notificationAdministration\">La spécialité a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_specialite'])){
-				echo "$tab<p class=\"notificationAdministration\">La spécialité a bien été modifié</p>";
-			}
+		public static function page_administration($nombreTabulations = 0){			
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			Specialite::formulaireAjoutSpecialite($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h1>Liste des spécialités</h1>\n";
+			echo "$tab<h2>Liste des spécialités</h2>\n";
 			Specialite::liste_specialite_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		
@@ -241,18 +282,24 @@
 				foreach($liste_specialite as $idSpecialite){
 					$Specialite = new Specialite($idSpecialite);
 					
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
-					$cpt++; $cpt %= 2;
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					foreach(Specialite::$attributs as $att){
 						echo "$tab\t\t<td>".$Specialite->$att."</td>\n";
 					}
 					if($administration){
-						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutSpecialite&amp;modifier_specialite=$idSpecialite";
-						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutSpecialite&amp;supprimer_specialite=$idSpecialite";
-						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette spécialité ?') ? '{$pageSuppression}' : ''\"/>\n";
+						$pageModification = "./index.php?page=ajoutSpecialite&amp;modifier_specialite=$idSpecialite";
+						$pageSuppression = "./index.php?page=ajoutSpecialite&amp;supprimer_specialite=$idSpecialite";
+						
+						if(isset($_GET['idPromotion'])){
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer la specialite ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
 					}
 					echo "$tab\t</tr>\n";
 				}
