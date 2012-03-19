@@ -472,7 +472,7 @@
 					array_push($messages_notifications, "L'intervenant à bien été supprimé");
 				}
 				else{
-					// Le batiment n'existe pas
+					// L'intervenant n'existe pas
 					array_push($messages_erreurs, "L'intervenant n'existe pas");
 				}
 			}
