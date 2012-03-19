@@ -153,12 +153,12 @@
 		}
 		
 		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
-			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
+			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbCours = sizeof($liste_cours);
 			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCours == 0) {
-				echo "$tab<b>Aucun cours n'est enregistré pour cette promotion</b>\n";
+				echo "$tab<b>Aucun cours à venir n'est enregistré pour cette promotion</b>\n";
 			}
 			else {
 			
@@ -322,7 +322,7 @@
 				$idSalleModif = 0;
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -361,10 +361,12 @@
 			if(isset($idIntervenantModif) && ($idIntervenantModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach($liste_intervenant as $idIntervenant){
-				$Intervenant = new Intervenant($idIntervenant);
-				$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-				if(isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+				if ($idIntervenant != 0) {
+					$Intervenant = new Intervenant($idIntervenant);
+					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+					if(isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+				}
 			}
 			echo "$tab\t\t\t\t</select>\n";
 			echo "$tab\t\t\t</td>\n";
@@ -565,7 +567,7 @@
 				echo "$tab<p class=\"notificationAdministration\">Le cours a bien été modifié</p>";
 			}
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h1>Liste des cours</h1>\n";
+			echo "$tab<h2>Liste des cours à venir</h2>\n";
 			Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}		
 		

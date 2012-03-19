@@ -64,6 +64,28 @@
 			return $listeId;
 		}
 		
+		public static function liste_cours_futur($idPromotion){
+			$listeId = Array();
+			$date_now = date('Y-m-d 00:00:00');
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? AND tsDebut > '".$date_now."' ORDER BY tsDebut");
+				$req->execute(
+					Array($idPromotion)
+				);
+				while($ligne = $req->fetch()){
+					array_push($listeId, $ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeId;
+		}
+		
 		public function getNbreCours($idPromotion) { 
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
