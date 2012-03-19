@@ -61,6 +61,9 @@ CREATE TABLE IF NOT EXISTS `Promotion` (
   UNIQUE KEY `nom` (`nom`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+INSERT INTO `Promotion` (`id`, `nom`, `annee`, `tsDebut`, `tsFin`) VALUES
+(0, 'DEFAULT', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
 CREATE TABLE IF NOT EXISTS `Specialite` (
   -- Si la Promotion est supprimée, alors la spécialité est supprimée
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -71,6 +74,9 @@ CREATE TABLE IF NOT EXISTS `Specialite` (
   UNIQUE (`nom`,`idPromotion`),
   FOREIGN KEY (idPromotion) REFERENCES Promotion(id) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+INSERT INTO `Specialite` (`id`, `idPromotion`, `nom`, `intitule`) VALUES
+(0, 0, 'DEFAULT', 'DEFAULT');
 
 CREATE TABLE IF NOT EXISTS `Groupe_Administratif` (
   -- Si la Promotion est supprimée, alors le groupe administratif est supprimé
