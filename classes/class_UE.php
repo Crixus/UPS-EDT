@@ -44,6 +44,25 @@
 		public function getECTS(){ return $this->ECTS; }
 		public function getIdResponsable(){ return $this->idResponsable; }
 		
+		public static function existe_UE($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".UE::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion){
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -232,9 +251,16 @@
 					echo "$tab\t\t<td>".$nbreUE."</td>\n";
 					
 					if($administration){
-						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutUE&amp;modifier_UE=$idUE";
-						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutUE&amp;supprimer_UE=$idUE";
-						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cette UE ?') ? '{$pageSuppression}' : ''\"/>\n";
+						$pageModification = "./index.php?page=ajoutUE&amp;modifier_UE=$idUE";
+						$pageSuppression = "./index.php?page=ajoutUE&amp;supprimer_UE=$idUE";
+						if(isset($_GET['idPromotion'])){
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer l\'UE ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
 				}
 					echo "$tab\t</tr>\n";
 				}
@@ -258,6 +284,13 @@
 				$nbHeuresTPModif = "value=\"{$UE->getNbHeuresTP()}\"";
 				$ectsModif = "value=\"{$UE->getECTS()}\"";
 				$idResponsableModif = $UE->getIdResponsable();
+				$valueSubmit = "Modifier l'UE"; 
+				$nameSubmit = "validerModificationUE";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_UE']}\" />";
+				$lienAnnulation = "index.php?page=ajoutUE";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter une UE";
@@ -268,9 +301,12 @@
 				$nbHeuresTPModif = "";
 				$ectsModif = "";
 				$idResponsableModif = "";
+				$valueSubmit = "Ajouter l'UE"; 
+				$nameSubmit = "validerAjoutUE";
+				$hidden = "";
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -336,59 +372,84 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_UE'])){ $valueSubmit = "Modifier l'UE"; }else{ $valueSubmit = "Ajouter l'UE"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutUE\" value=\"$valueSubmit\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
+			
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
 		}
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutUE'])){
 				$nom = $_POST['nom'];
+				$nom_correct = true;
 				$intitule = $_POST['intitule'];
+				$intitule_correct = true;
 				$nbHeuresCours = $_POST['nbHeuresCours'];
+				$nbHeuresCours_correct = true;
 				$nbHeuresTD = $_POST['nbHeuresTD'];
+				$nbHeuresTD_correct = true;
 				$nbHeuresTP = $_POST['nbHeuresTP'];
+				$nbHeuresTP_correct = true;
 				$ects = $_POST['ects'];
+				$ects_correct = true;
 				$idIntervenant = $_POST['idIntervenant'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];
-					if(isset($_GET['modifier_UE'])){
-						UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $idPromotion);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutUE&modification_UE=1";
-					}
-					else{
-						// C'est une nouvelle UE
-						UE::ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $idPromotion);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutUE&ajout_UE=1";
-					}
-					header("Location: $pageDestination");
+				if($nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){		
+					UE::ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
+					array_push($messages_notifications, "L'UE a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
+			else if(isset($_POST['validerModificationUE'])){
+				$id = $_POST['id']; 
+				$id_correct = UE::existe_UE($id);
+				$nom = $_POST['nom']; 
+				$nom_correct = true;
+				$intitule = $_POST['intitule'];
+				$intitule_correct = true;
+				$nbHeuresCours = $_POST['nbHeuresCours'];
+				$nbHeuresCours_correct = true;
+				$nbHeuresTD = $_POST['nbHeuresTD'];
+				$nbHeuresTD_correct = true;
+				$nbHeuresTP = $_POST['nbHeuresTP'];
+				$nbHeuresTP_correct = true;
+				$ects = $_POST['ects'];
+				$ects_correct = true;
+				$idIntervenant = $_POST['idIntervenant'];
+				if($nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){			
+					UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
+					array_push($messages_notifications, "L'UE a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}	
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_UE'])){	
-				$idPromotion = $_GET['idPromotion'];	
-				if(true){ // Test de saisie
+				if(UE::existe_UE($_GET['supprimer_UE'])){
+					// L'UE existe
 					UE::supprimer_UE($_GET['supprimer_UE']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutUE&supprimer_UE=1";	
+					array_push($messages_notifications, "L'UE à bien été supprimé");
+				}
+				else{
+					// L'UE n'existe pas
+					array_push($messages_erreurs, "L'UE n'existe pas");
 				}
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_UE'])){
-				echo "$tab<p class=\"notificationAdministration\">L'UE a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_UE'])){
-				echo "$tab<p class=\"notificationAdministration\">L'UE a bien été modifié</p>";
-			}
+		public static function page_administration($nombreTabulations = 0){			
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			UE::formulaireAjoutUE($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h1>Liste des UE</h1>\n";
+			echo "$tab<h2>Liste des UE</h2>\n";
 			UE::liste_UE_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}	
 		
