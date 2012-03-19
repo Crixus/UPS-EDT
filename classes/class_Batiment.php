@@ -224,31 +224,33 @@
 			
 			$cpt = 0;
 			foreach($liste_batiment as $idBatiment){
-				$Batiment = new Batiment($idBatiment);
-				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-				$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$Batiment->getId()}";
-				if(isset($_GET['idPromotion'])){
-					$lienInfosBatiment .= "&amp;idPromotion={$_GET['idPromotion']}";
-				}
-				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				echo "$tab\t\t<td>";
-				echo "<a href=\"$lienInfosBatiment\">{$Batiment->getNom()}</a>";
-				echo "</td>\n";
-				echo "$tab\t\t<td>{$Batiment->getLat()}</td>\n";
-				echo "$tab\t\t<td>{$Batiment->getLon()}</td>\n";
+				if ($idBatiment != 0) {
+					$Batiment = new Batiment($idBatiment);
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+					$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$Batiment->getId()}";
+					if(isset($_GET['idPromotion'])){
+						$lienInfosBatiment .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					
+					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$lienInfosBatiment\">{$Batiment->getNom()}</a>";
+					echo "</td>\n";
+					echo "$tab\t\t<td>{$Batiment->getLat()}</td>\n";
+					echo "$tab\t\t<td>{$Batiment->getLon()}</td>\n";
 
-				$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
-				$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
-				if(isset($_GET['idPromotion'])){
-					$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-					$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
+					$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
+					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le bâtiment ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+					echo "</td>\n";
+					echo "$tab\t</tr>\n";
 				}
-				echo "$tab\t\t<td>";
-				echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
-				echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le bâtiment ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
-				echo "</td>\n";
-				echo "$tab\t</tr>\n";
 			}
 			echo "$tab</table>\n";
 		}
