@@ -271,6 +271,13 @@
 				$emailModif = "value=\"{$Etudiant->getEmail()}\"";
 				$telephoneModif = "value=\"{$Etudiant->getTelephone()}\"";
 				$idSpecialiteModif = $Etudiant->getIdSpecialite();
+				$valueSubmit = "Modifier l'étudiant"; 
+				$nameSubmit = "validerModificationEtudiant";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_etudiant']}\" />";
+				$lienAnnulation = "index.php?page=ajoutEtudiant";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un étudiant";
@@ -279,9 +286,12 @@
 				$prenomModif = "";
 				$emailModif = "";
 				$telephoneModif = "";
+				$valueSubmit = "Ajouter l'étudiant"; 
+				$nameSubmit = "validerAjoutEtudiant";
+				$hidden = "";
 			}
 		
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -338,58 +348,80 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_etudiant'])){ $valueSubmit = "Modifier l'étudiant"; }else{ $valueSubmit = "Ajouter l'étudiant"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutEtudiant\" value=\"{$valueSubmit}\" style=\"cursor:pointer;\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";			
+			echo "$tab</form>\n";
+			
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}			
 		}		
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutEtudiant'])){
 				$numeroEtudiant = $_POST['numeroEtudiant'];
+				$numeroEtudiant_correct = true;
 				$nom = $_POST['nom'];
+				$nom_correct = true;
 				$prenom = $_POST['prenom'];
+				$prenom_correct = true;
 				$email = $_POST['email'];
+				$email_correct = PregMatch::est_mail($email);
 				$telephone = $_POST['telephone'];
+				$telephone_correct = true;
 				$idSpecialite = $_POST['idSpecialite'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];
-					if(isset($_GET['modifier_etudiant'])){
-						Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutEtudiant&modification_etudiant=1";
-					}
-					else{
-						// C'est un nouveau étudiant
-						Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $idPromotion, $idSpecialite);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutEtudiant&ajout_etudiant=1";
-					}
-					header("Location: $pageDestination");
+				if($numeroEtudiant && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+					Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $_GET['idPromotion'], $idSpecialite);
+					array_push($messages_notifications, "L'étudiant a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationEtudiant'])){
+				$id = $_POST['id']; 
+				$id_correct = V_Infos_Etudiant::existe_etudiant($id);
+				$numeroEtudiant = $_POST['numeroEtudiant'];
+				$numeroEtudiant_correct = true;
+				$nom = $_POST['nom'];
+				$nom_correct = true;
+				$prenom = $_POST['prenom'];
+				$prenom_correct = true;
+				$email = $_POST['email'];
+				$email_correct = PregMatch::est_mail($email);
+				$telephone = $_POST['telephone'];
+				$telephone_correct = true;
+				$idSpecialite = $_POST['idSpecialite'];
+				if($numeroEtudiant && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+					Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
+					array_push($messages_notifications, "L'étudiant a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_etudiant'])){	
-				$idPromotion = $_GET['idPromotion'];	
-				if(true){ // Test de saisie
+				if(V_Infos_Etudiant::existe_etudiant($_GET['supprimer_etudiant'])){
+					// L'étudiant existe
 					Etudiant::supprimer_etudiant($_GET['supprimer_etudiant']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutEtudiant&supprimer_etudiant=1";	
+					array_push($messages_notifications, "L'étudiant à bien été supprimé");
+				}
+				else{
+					// L'étudiant n'existe pas
+					array_push($messages_erreurs, "L'étudiant n'existe pas");
 				}
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_etudiant'])){
-				echo "$tab<p class=\"notificationAdministration\">L'étudiant a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_etudiant'])){
-				echo "$tab<p class=\"notificationAdministration\">L'étudiant a bien été modifié</p>";
-			}
+		public static function page_administration($nombreTabulations = 0){			
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			Etudiant::formulaireAjoutEtudiant($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h1>Liste des étudiants</h1>\n";
+			echo "$tab<h2>Liste des étudiants</h2>\n";
 			V_Infos_Etudiant::liste_etudiant_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		

@@ -55,6 +55,25 @@
 			}
 		}
 		
+		public static function existe_etudiant($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Etudiant::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public static function liste_etudiant($idPromotion){
 			$listeId = Array();
 			try{
@@ -89,11 +108,6 @@
 				echo "$tab<table class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				/*
-				foreach(V_Infos_Etudiant::$attributs as $att){
-					echo "$tab\t\t<th>$att</th>\n";
-				}
-				*/
 				echo "$tab\t\t<th>Nom</th>\n";
 				echo "$tab\t\t<th>Prénom</th>\n";
 				echo "$tab\t\t<th>Numéro de l'étudiant</th>\n";
@@ -111,9 +125,7 @@
 				foreach($liste_etudiant as $idEtudiant){
 					$Etudiant = new V_Infos_Etudiant($idEtudiant);
 					
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
-					$cpt++; $cpt %= 2;
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					foreach(V_Infos_Etudiant::$attributs as $att){
@@ -129,9 +141,16 @@
 							echo "$tab\t\t<td>".$Etudiant->$att."</td>\n";
 					}
 					if($administration){
-						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutEtudiant&amp;modifier_etudiant=$idEtudiant";
-						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutEtudiant&amp;supprimer_etudiant=$idEtudiant";
-						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer cet étudiant ?') ? '{$pageSuppression}' : ''\"/>\n";
+						$pageModification = "./index.php?page=ajoutEtudiant&amp;modifier_etudiant=$idEtudiant";
+						$pageSuppression = "./index.php?page=ajoutEtudiant&amp;supprimer_etudiant=$idEtudiant";
+						if(isset($_GET['idPromotion'])){
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer l\'étudiant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
 					}
 					echo "$tab\t</tr>\n";
 				}
