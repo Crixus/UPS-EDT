@@ -118,9 +118,8 @@
 		}
 		
 		public function liste_promotion_for_select($idPromotion = null, $nombreTabulations = 0) {
-			$tab="";
-			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			$liste_promotion = Promotion::liste_promotion();
+			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			echo "$tab<select onChange='selection_promotion(this)'>\n";
 			
 			echo "$tab\t<option value=0>--</option>\n";
@@ -138,11 +137,11 @@
 			echo "$tab</select>\n";
 		}
 		
-		public static function liste_promotion_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_promotion_to_table($administration, $nombreTabulations = 0){
 			$liste_promotion = Promotion::liste_promotion();
-			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
 			
-			echo "$tab<table class=\"listeCours\">\n";
+			echo "$tab<table class=\"table_liste_administration\">\n";
 			
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 			
@@ -159,9 +158,7 @@
 			foreach($liste_promotion as $idPromo){
 				$Promotion = new Promotion($idPromo);
 				
-				if($cpt == 0){ $couleurFond="fondBlanc"; }
-				else{ $couleurFond="fondGris"; }
-				$cpt++; $cpt %= 2;
+				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 				
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
 				$cptBoucle=0;
@@ -182,8 +179,13 @@
 					$cptBoucle++;
 				}
 				if($administration){
-					$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&amp;page=ajoutPromotion&amp;modifier_promotion=$idPromo";
-					echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\"></td>\n";
+					$pageModification = "./index.php?page=ajoutPromotion&amp;modifier_promotion=$idPromo";
+					if(isset($_GET['idPromotion'])){
+						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+					}
+					echo "$tab\t\t<td>";
+					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+					echo "</td>\n";
 				}
 				echo "$tab\t</tr>\n";
 			}
@@ -261,7 +263,7 @@
 		}		
 		
 		// Formulaire
-		public function formulaireAjoutPromotion($idPromotion, $nombresTabulations = 0){
+		public function formulaireAjoutPromotion($idPromotion, $nombreTabulations = 0){
 			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			if(isset($_GET['modifier_promotion'])){ 
 				$titre = "Modifier une promotion";
@@ -270,14 +272,24 @@
 				$anneeModif = "value=\"{$Promotion->getAnnee()}\"";
 				$tsDebutModif = $Promotion->getTsDebut();
 				$tsFinModif = $Promotion->getTsFin();
+				$valueSubmit = "Modifier la promotion"; 
+				$nameSubmit = "validerModificationPromotion";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_promotion']}\" />";
+				$lienAnnulation = "index.php?page=ajoutPromotion";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter une promotion";
 				$nomModif = "";
 				$anneeModif = "";
+				$valueSubmit = "Ajouter la promotion"; 
+				$nameSubmit = "validerAjoutPromotion";
+				$hidden = "";
 			}
 			
-			echo "$tab<h1>$titre</h1>\n";
+			echo "$tab<h2>$titre</h2>\n";
 			echo "$tab<form method=\"post\">\n";
 			echo "$tab\t<table>\n";
 			echo "$tab\t\t<tr>\n";
@@ -330,47 +342,60 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_promotion'])){ $valueSubmit = "Modifier la promotion"; }else{ $valueSubmit = "Ajouter la promotion"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutPromotion\" value=\"{$valueSubmit}\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
+			echo "$tab</form>\n";	
+
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutPromotion'])){
 				$nom = $_POST['nom'];
+				$nom_correct = true;
 				$annee = $_POST['annee'];
+				$annee_correct = true;
 				$tsDebut = $_POST['tsDebut'];
+				$tsDebut_correct = true;
 				$tsFin = $_POST['tsFin'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];					
-					if(isset($_GET['modifier_promotion'])){
-						Promotion::modifier_promotion($_GET['modifier_promotion'], $nom, $annee, $tsDebut, $tsFin);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutPromotion&modification_promotion=1";
-					}
-					else{
-						// C'est une nouvelle promotion
-						Promotion::ajouter_promotion($nom, $annee, $tsDebut, $tsFin);
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutPromotion&ajout_promotion=1";
-					}
-					header("Location: $pageDestination");
+				$tsFin_correct = true;
+				if($nom_correct && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+					Promotion::ajouter_promotion($nom, $annee, $tsDebut, $tsFin);
+					array_push($messages_notifications, "La promotion a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationPromotion'])){
+				$id = $_POST['id']; 
+				$id_correct = Promotion::existe_promotion($id);
+				$nom = $_POST['nom'];
+				$nom_correct = true;
+				$annee = $_POST['annee'];
+				$annee_correct = true;
+				$tsDebut = $_POST['tsDebut'];
+				$tsDebut_correct = true;
+				$tsFin = $_POST['tsFin'];
+				$tsFin_correct = true;
+				if($id_correct && $nom_correct && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+					Promotion::modifier_promotion($_GET['modifier_promotion'], $nom, $annee, $tsDebut, $tsFin);
+					array_push($messages_notifications, "La promotion a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; for($i = 0; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			if(isset($_GET['ajout_promotion'])){
-				echo "$tab<p class=\"notificationAdministration\">La promotion a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_promotion'])){
-				echo "$tab<p class=\"notificationAdministration\">La promotion a bien été modifié</p>";
-			}
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			Promotion::formulaireAjoutPromotion($nombreTabulations + 1);
-			echo "$tab<h1>Liste des promotions</h1>\n";
-			Promotion::liste_promotion_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
+			echo "$tab<h2>Liste des promotions</h2>\n";
+			Promotion::liste_promotion_to_table(true, $nombreTabulations + 1);
 		}
 		
 		public function toString(){
