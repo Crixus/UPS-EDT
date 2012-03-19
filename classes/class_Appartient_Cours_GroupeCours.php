@@ -35,8 +35,6 @@
 			$nbre_cours = V_Infos_Cours::getNbreCours($idPromotion);
 			$tab="";
 			
-			echo "$tab<h1>Gestion des groupes de cours</h1>\n";
-			
 			if ( ($nbre_cours == 0) || ($nbreGroupeCours == 0) ) {
 				echo "$tab<h2>Aucun groupe de cours et/ou aucun cours n'a été créé pour cette promotion</h2>\n";
 			}

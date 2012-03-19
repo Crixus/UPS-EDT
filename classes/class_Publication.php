@@ -35,7 +35,6 @@
 			$nbre_groupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab="";
 			
-			echo "$tab<h1>Gestion de la publication</h1>\n";
 			if ( ($nbre_groupeCours == 0) || ($nbre_groupeEtudiants == 0) ) {
 				echo "$tab<h2>Aucun groupe de cours et/ou aucun groupe d'étudiants n'a été crées pour cette promotion</h2>\n";
 			}
