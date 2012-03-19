@@ -302,7 +302,7 @@
 				$id_correct = Type_Cours::existe_typeCours($id);
 				$nom = $_POST['nom']; 
 				$nom_correct = true;
-				if($nom_correct){
+				if($id_correct && $nom_correct){
 					Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
 					array_push($messages_notifications, "Le type de cours a bien été modifié");
 				}

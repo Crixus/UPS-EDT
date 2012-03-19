@@ -175,9 +175,7 @@
 				foreach($liste_groupeCours as $idGroupeCours){
 					$Groupe_Cours = new Groupe_Cours($idGroupeCours);
 					
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
-					$cpt++; $cpt %= 2;
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					foreach(Groupe_Cours::$attributs as $att){
@@ -281,7 +279,7 @@
 				$nom_correct = true;
 				$identifiant = $_POST['identifiant'];
 				$identifiant_correct = true;
-				if($nom_correct && $identifiant_correct){	
+				if($id_correct && $nom_correct && $identifiant_correct){	
 					Groupe_Cours::modifier_groupeCours($_GET['modifier_groupeCours'], $_GET['idPromotion'], $nom, $identifiant);
 					array_push($messages_notifications, "Le groupe de cours a bien été modifié");
 				}

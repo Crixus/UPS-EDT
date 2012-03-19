@@ -230,9 +230,7 @@
 				foreach($liste_UE as $idUE){
 					$UE = new V_Infos_UE($idUE);
 					
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
-					$cpt++; $cpt %= 2;
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					$cptBoucle=0;
@@ -421,7 +419,7 @@
 				$ects = $_POST['ects'];
 				$ects_correct = true;
 				$idIntervenant = $_POST['idIntervenant'];
-				if($nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){			
+				if($id_correct && $nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){			
 					UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
 					array_push($messages_notifications, "L'UE a bien été modifié");
 				}

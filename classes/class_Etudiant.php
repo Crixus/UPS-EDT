@@ -393,7 +393,7 @@
 				$telephone = $_POST['telephone'];
 				$telephone_correct = true;
 				$idSpecialite = $_POST['idSpecialite'];
-				if($numeroEtudiant && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+				if($id_correct && $$numeroEtudiant_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
 					Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
 					array_push($messages_notifications, "L'étudiant a bien été modifié");
 				}

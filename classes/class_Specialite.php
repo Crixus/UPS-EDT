@@ -203,7 +203,7 @@
 				$nom_correct = true;
 				$intitule = $_POST['intitule'];
 				$intitule_correct = true;
-				if($nom_correct && $intitule_correct) {
+				if($id_correct && $nom_correct && $intitule_correct) {
 					Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $_GET['idPromotion']);
 					array_push($messages_notifications, "L'intervenant a bien été modifié");
 				}
