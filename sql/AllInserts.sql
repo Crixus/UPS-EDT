@@ -81,13 +81,13 @@ INSERT INTO `Salle` (`nom`, `nomBatiment`, `capacite`) VALUES
 ('302', 'U4', 30),
 ('312', 'U4', 30);
 
-INSERT INTO `Type_Cours` (`nom`, `idStyle`) VALUES
-('Cours', 0),
-('TD', 0),
-('TP', 0),
-('Examen', 0),
-('Reunion', 0),
-('Autre', 0);
+INSERT INTO `Type_Cours` (`nom`) VALUES
+('Cours'),
+('TD'),
+('TP'),
+('Examen'),
+('Reunion'),
+('Autre');
 
 INSERT INTO `Type_Salle` (`nom`) VALUES
 ('Amphi'),
