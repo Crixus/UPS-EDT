@@ -165,15 +165,12 @@
 				echo "$tab<table class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				/*
-				foreach(V_Infos_Cours::$attributs as $att){
-					echo "$tab\t\t<th>$att</th>\n";
-				}*/
-					echo "$tab\t\t<th>UE</th>\n";
-					echo "$tab\t\t<th>Intervenant</th>\n";
-					echo "$tab\t\t<th>Type</th>\n";
-					echo "$tab\t\t<th>Date</th>\n";
-					echo "$tab\t\t<th>Salle</th>\n";
+				
+				echo "$tab\t\t<th>UE</th>\n";
+				echo "$tab\t\t<th>Intervenant</th>\n";
+				echo "$tab\t\t<th>Type</th>\n";
+				echo "$tab\t\t<th>Date</th>\n";
+				echo "$tab\t\t<th>Salle</th>\n";
 				
 				if($administration){
 					echo "$tab\t\t<th>Actions</th>\n";
@@ -184,9 +181,7 @@
 				foreach($liste_cours as $idCours){
 					$Cours = new V_Infos_Cours($idCours);
 					
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
-					$cpt++; $cpt %= 2;
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					$cptBoucle=0;
@@ -213,9 +208,17 @@
 						$cptBoucle++;
 					}
 					if($administration){
-						$pageModification = "./index.php?idPromotion={$_GET['idPromotion']}&page=ajoutCours&modifier_cours=$idCours";
-						$pageSuppression = "./index.php?idPromotion={$_GET['idPromotion']}&page=ajoutCours&supprimer_cours=$idCours";
-						echo "$tab\t\t<td><img src=\"../images/modify.png\" style=\"cursor:pointer;\" onClick=\"location.href='{$pageModification}'\">  <img src=\"../images/delete.png\" style=\"cursor:pointer;\" OnClick=\"location.href=confirm('Voulez vous vraiment supprimer ce cours ?') ? '{$pageSuppression}' : ''\"/>\n";
+						$pageModification = "./index.php?page=ajoutCours&modifier_cours=$idCours";
+						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours=$idCours";
+						if(isset($_GET['idPromotion'])){
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le cours ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
 					}
 					echo "$tab\t</tr>\n";
 				}
@@ -315,11 +318,21 @@
 				$idTypeCoursModif = $Cours->getIdTypeCours();
 				$tsDebutModif = $Cours->getTsDebut();
 				$tsFinModif = $Cours->getTsFin();
+				$valueSubmit = "Modifier le cours"; 
+				$nameSubmit = "validerModificationCours";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_cours']}\" />";
+				$lienAnnulation = "index.php?page=ajoutCours";
+				if(isset($_GET['idPromotion'])){
+					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+				}
 			}
 			else{
 				$titre = "Ajouter un cours";
 				$idTypeCoursModif = 1;
 				$idSalleModif = 0;
+				$valueSubmit = "Ajouter le cours"; 
+				$nameSubmit = "validerAjoutCours";
+				$hidden = "";
 			}
 			
 			echo "$tab<h2>$titre</h2>\n";
@@ -446,7 +459,6 @@
 			echo "$tab\t\t</tr>\n";
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td>Heure Fin</td>\n";
-			//echo "$tab\t\t\t<td><input name=\"heureFin\" type=\"time\" required $valueHeureFin/> hh:mm</td>\n";
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"heureFin\">\n";			
 			for ($cpt=0;$cpt<=23;$cpt++) {
@@ -497,12 +509,13 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
-			if(isset($_GET['modifier_cours'])){ $valueSubmit = "Modifier le cours"; }else{ $valueSubmit = "Ajouter le cours"; }
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"validerAjoutCours\" value=\"$valueSubmit\" style=\"cursor:pointer\"></td>\n";
+			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
+			
+			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		public static function liste_salle_suivant_typeCours($idSalleModif, $idTypeCours) {
@@ -521,51 +534,86 @@
 		}
 		
 		public static function prise_en_compte_formulaire(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutCours'])){
 				$idUE = $_POST['UE'];
+				$idUE_correct = true;
 				$idSalle = $_POST['salle'];
+				$idSalle_correct = true;
 				$idIntervenant = $_POST['intervenant'];
+				$idIntervenant_correct = true;
 				$typeCours = $_POST['typeCours'];
+				$typeCours_correct = true;
 				$dateDebut = $_POST['dateDebut'];
+				$dateDebut_correct = true;
 				$heureDebut = $_POST['heureDebut'];
+				$heureDebut_correct = true;
 				$minuteDebut = $_POST['minuteDebut'];
+				$minuteDebut_correct = true;
 				$dateFin = $_POST['dateFin'];
+				$dateFin_correct = true;
 				$heureFin = $_POST['heureFin'];
+				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
-				if(true){ // Test de saisie
-					$idPromotion = $_GET['idPromotion'];					
-					if(isset($_GET['modifier_cours'])){
-						Cours::modifier_cours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutCours&modification_cours=1";
-					}
-					else{
-						// C'est un nouveau cours
-						Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
-						$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutCours&ajout_cours=1";
-					}
-					header("Location: $pageDestination");
+				$minuteFin_correct = true;
+				if($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){	
+					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");				
+					array_push($messages_notifications, "Le cours a bien été ajouté");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				}
+			}
+			else if(isset($_POST['validerModificationCours'])){	
+				$id = $_POST['id']; 
+				$id_correct = V_Infos_Cours::existe_cours($id);			
+				$idUE = $_POST['UE'];
+				$idUE_correct = true;
+				$idSalle = $_POST['salle'];
+				$idSalle_correct = true;
+				$idIntervenant = $_POST['intervenant'];
+				$idIntervenant_correct = true;
+				$typeCours = $_POST['typeCours'];
+				$typeCours_correct = true;
+				$dateDebut = $_POST['dateDebut'];
+				$dateDebut_correct = true;
+				$heureDebut = $_POST['heureDebut'];
+				$heureDebut_correct = true;
+				$minuteDebut = $_POST['minuteDebut'];
+				$minuteDebut_correct = true;
+				$dateFin = $_POST['dateFin'];
+				$dateFin_correct = true;
+				$heureFin = $_POST['heureFin'];
+				$heureFin_correct = true;
+				$minuteFin = $_POST['minuteFin'];
+				$minuteFin_correct = true;
+				if($id_correct && $idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){
+					Cours::modifier_cours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
+					array_push($messages_notifications, "Le cours a bien été modifié");
+				}
+				else{
+					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression(){
+			global $messages_notifications, $messages_erreurs;
 			if(isset($_GET['supprimer_cours'])){	
-				$idPromotion = $_GET['idPromotion'];	
-				if(true){ // Test de saisie
+				if(V_Infos_Cours::existe_cours($_GET['supprimer_cours'])){
+					// Le cours existe
 					Cours::supprimer_cours($_GET['supprimer_cours']);
-					$pageDestination = "./index.php?idPromotion=$idPromotion&page=ajoutCours&supprimer_cours=1";	
+					array_push($messages_notifications, "Le cours à bien été supprimé");
+				}
+				else{
+					// Le cours n'existe pas
+					array_push($messages_erreurs, "Le cours n'existe pas");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
-			if(isset($_GET['ajout_cours'])){
-				echo "$tab<p class=\"notificationAdministration\">Le cours a bien été ajouté</p>";
-			}
-			if(isset($_GET['modification_cours'])){
-				echo "$tab<p class=\"notificationAdministration\">Le cours a bien été modifié</p>";
-			}
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo "$tab<h2>Liste des cours à venir</h2>\n";
 			Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
