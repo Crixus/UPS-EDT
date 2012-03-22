@@ -42,27 +42,45 @@
 			}
 		}
 		
-		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("INSERT INTO ".Cours::$nomTable." VALUES(?, ?, ?, ?, ?, ?, ?)");
-				$req->execute(
-					Array(
-						"",
-						$idUE,
-						$idSalle,
-						$idIntervenant,
-						$type,
-						$tsDebut,
-						$tsFin
-					)
-				);
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
+		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite){
+		
+			for ($i=0; $i<=$recursivite; $i++) {
+				try{
+					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					$bdd->query("SET NAMES utf8");
+					$req = $bdd->prepare("INSERT INTO ".Cours::$nomTable." VALUES(?, ?, ?, ?, ?, ?, ?)");
+					$req->execute(
+						Array(
+							"",
+							$idUE,
+							$idSalle,
+							$idIntervenant,
+							$type,
+							$tsDebut,
+							$tsFin
+						)
+					);
+				}
+				catch(Exception $e){
+					echo "Erreur : ".$e->getMessage()."<br />";
+				}
+				
+				$tsDebut = Cours::datePlusUneSemaine($tsDebut);
+				$tsFin = Cours::datePlusUneSemaine($tsFin);
+			}			
+		}
+		
+		public static function datePlusUneSemaine($tsDate){
+			$tsDate_explode = explode(' ',$tsDate);
+			$tsDate_jma = $tsDate_explode[0];
+			$tsDate_hms = $tsDate_explode[1];
+			$tsDate_jma_explode = explode('-',$tsDate_jma);
+			$timestamp = mktime(0, 0, 0, $tsDate_jma_explode[1],$tsDate_jma_explode[2],$tsDate_jma_explode[0]);
+			$timestamp_plus_une_semaine = $timestamp + (3600 * 24 * 7); //On ajoute une semaine
+			$date_jma = date('Y-m-d',$timestamp_plus_une_semaine);
+			$date = $date_jma." ".$tsDate_hms;
+			return $date;
 		}
 		
 		public static function modifier_cours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin){
@@ -507,6 +525,21 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
+			if(! isset($_GET['modifier_cours'])){ 
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
+				
+				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
+				for($i=1; $i<=10; $i++){
+					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+				}
+				echo "$tab\t\t\t\t</select> (en semaines)\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+			}			
+			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td></td>\n";
 			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
@@ -556,8 +589,10 @@
 				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
-				if($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){	
-					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");				
+				$recursivite = $_POST['recursivite'];
+				$recursivite_correct = true;
+				if($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct){	
+					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);				
 					array_push($messages_notifications, "Le cours a bien été ajouté");
 				}
 				else{
