@@ -95,32 +95,8 @@
 					)
 				);
 				
-				//Ajout de l'étudiant dans la table Utilisateur
-				$idEtudiant = $bdd->lastInsertId(); 
-				try{ // try dans un try de meme style
-					$idCorrespondant = $idEtudiant;
-					$type = "Etudiant";
-					$login = strtolower($prenom)."_".strtolower($nom); // Pas de gestion de conflit...
-					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72"; // Mot de passe pareil pour tlm...
-					
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Inutile
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options); // Nouvelle instance de BD dans une instance de BD
-					$bdd->query("SET NAMES utf8"); 
-					$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
-					
-					$req->execute(
-						Array(
-							"",
-							$login,
-							$motDePasse, 
-							$type, 
-							$idCorrespondant
-						)
-					);
-				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}				
+				//On créé maintenant l'Utilisateur associé
+				Utilisateur::creer_utilisateur($prenom, $nom, "Etudiant", $bdd->lastInsertId());
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -144,32 +120,6 @@
 						$idEtudiant
 					)
 				);
-				
-				//Modification de l'étudiant dans la table Utilisateur
-				try{				
-					$type = "Etudiant";					
-					$search  = array(' ', 'ê', 'è', 'é', 'à', 'â', 'î', 'ç', 'ù');
-					$replace = array('_', 'e', 'e', 'e', 'a', 'a', 'î', 'c', 'u');
-					// $login = strtolower(str_replace($search, $replace, $prenom))."_".strtolower(str_replace($search, $replace, $nom));
-					$login = strtolower($prenom).'_'.strtolower($nom);
-					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72";
-					
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("UPDATE ".Utilisateur::$nomTable." SET login=?, motDePasse=? WHERE idCorrespondant=? AND type='Etudiant'");
-					
-					$req->execute(
-						Array(
-							$login,
-							$motDePasse, 
-							$idEtudiant
-						)
-					);
-				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";

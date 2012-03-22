@@ -36,25 +36,17 @@
 			return mail($to, $subject, $message, $headers);
 		}
 		
-		public static function envoyer_creation_utilisateur($Utilisateur, $mot_de_passe){
-			switch($Utilisateur->getType()){
-				case "Etudiant":
-					$Destinataire = new Etudiant($Utilisateur->getIdCorrespondant());
-					break;
-				case "Intervenant":
-					$Destinataire = new Intervenant($Utilisateur->getIdCorrespondant());
-					break;
-			}
-			
+		public static function envoyer_creation_utilisateur($mail, $login, $mot_de_passe){
+
 			$sujet = "UPS-EDT - Connexion";
-			$destinataires = Array($Destinataire->getEmail());
+			$destinataires = Array($mail);
 			$cc_destinataires = Array();
 			$bcc_destinataires = Array();
 			$message = "Bonjour, \r\n\r\n".
 					   "Votre compte UPS-EDT à été créé / modifié\r\n".
-					   "Votre login : {$Destinataire->getLogin()}\r\n".
+					   "Votre login : $login\r\n".
 					   "Votre mot de passe : $mot_de_passe\r\n" ;
-			return envoyer_email($sujet, $message, $destinataires, $cc_destinataires, $bcc_destinataires);			
+			return Mail::envoyer_email($sujet, $message, "ups-edt@ups-tlse3.com", $destinataires, $cc_destinataires, $bcc_destinataires);			
 		}
 		
 		public static function envoyer_modification_motDePasse_utilisateur($Utilisateur, $mot_de_passe){
@@ -75,6 +67,6 @@
 					   "Votre mot de passe UPS-EDT à été modifié : \r\n".
 					   "Votre login : {$Destinataire->getLogin()}\r\n".
 					   "Votre mot de passe : $mot_de_passe\r\n";
-			return envoyer_email($sujet, $message, $destinataires, $cc_destinataires, $bcc_destinataires);			
+			return Mail::envoyer_email($sujet, $message, "ups-edt@ups-tlse3.com", $destinataires, $cc_destinataires, $bcc_destinataires);			
 		}
 	}

@@ -91,6 +91,22 @@
 			}
 		}
 		
+		public static function creer_utilisateur($prenom, $nom, $type, $idCorrespondant){
+			switch($type){
+				case "Etudiant":
+					$Destinataire = new Etudiant($idCorrespondant);
+					break;
+				case "Intervenant":
+					$Destinataire = new Intervenant($idCorrespondant);
+					break;
+			}
+			$login = Utilisateur::gererer_login($prenom, $nom);
+			$motDePasse = MotDePasse::genererMotDePasse();
+			Mail::envoyer_creation_utilisateur($Destinataire->getEmail(), $login, $motDePasse);
+			$motDePasse = MotDePasse::crypter_md5_motDePasse($motDePasse); 
+			Utilisateur::ajouter_Utilisateur($login, $motDePasse, $type, $idCorrespondant);
+		}
+		
 		public static function modifier_Utilisateur($id, $login, $motDePasse, $type, $idCorrespondant){
 			try{
 				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -129,5 +145,17 @@
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
+		}
+		
+		public static function gererer_login($prenom, $nom){
+			$login = strtolower($prenom)."_".strtolower($nom);
+			if(Utilisateur::existe_login($login)){
+				$count = 2;
+				while(Utilisateur::existe_login($login."_$count")){
+					$count++;
+				}
+				$login .= "_$count";
+			}
+			return $login;
 		}
 	}

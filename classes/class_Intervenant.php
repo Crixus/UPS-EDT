@@ -83,28 +83,7 @@
 				);
 				
 				//On créé maintenant l'Utilisateur associé
-				$idIntervenant = $bdd->lastInsertId(); 
-				$type = "Intervenant";
-				$login = strtolower($prenom)."_".strtolower($nom);
-				if(Utilisateur::existe_login($login)){
-					$count = 2;
-					while(Utilisateur::existe_login($login."_$count")){
-						$count++;
-					}
-					$login .= "_$count";
-				}
-				$motDePasse = md5("pass"); // Generer un mot de passe
-					
-				$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
-				$req->execute(
-					Array(
-						"",
-						$login,
-						$motDePasse, 
-						$type, 
-						$idIntervenant
-					)
-				);
+				Utilisateur::creer_utilisateur($prenom, $nom, "Intervenant", $bdd->lastInsertId());
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
