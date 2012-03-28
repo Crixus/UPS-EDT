@@ -18,7 +18,9 @@ var appartenance_cours_groupeCours = function (idCours, idGroupeCours ,element) 
 			idGroupeCours : idGroupeCours
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});
 }
@@ -48,7 +50,9 @@ var appartenance_promotion_groupeCours = function (idPromotion, idGroupeCours, n
 			idPromotion : idPromotion
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});	
 }
