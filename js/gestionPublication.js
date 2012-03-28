@@ -15,7 +15,9 @@ var appartenance_groupeCours_groupeEtudiants = function (idGroupeCours, idGroupe
 			idGroupeEtudiants : idGroupeEtudiants
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});
 }
