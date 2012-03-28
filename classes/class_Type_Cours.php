@@ -173,13 +173,12 @@
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("INSERT INTO ".Type_Cours::$nomTable." VALUES(?, ?, ?)");
+				$req = $bdd->prepare("INSERT INTO ".Type_Cours::$nomTable." VALUES(?, ?)");
 				
 				$req->execute(
 					Array(
 						"",
-						$nom,
-						"0"
+						$nom
 					)
 				);			
 			}
