@@ -18,7 +18,9 @@ var appartenance_etudiant_groupeEtudiants = function (idEtudiant, idGroupeEtudia
 			idGroupeEtudiants : idGroupeEtudiants
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});
 }
@@ -48,7 +50,9 @@ var appartenance_promotion_groupeEtudiants = function (idPromotion, idGroupeEtud
 			idPromotion : idPromotion
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});	
 }
