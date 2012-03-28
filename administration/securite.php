@@ -60,5 +60,77 @@
 					header('Location: ./index.php');
 				}
 				break;
+			
+			case "ajoutIntervenant":
+				if(isset($_GET['supprimer_intervenant']) && !Intervenant::existe_intervenant($_GET['supprimer_intervenant'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_intervenant']) && !Intervenant::existe_intervenant($_GET['modifier_intervenant'])){
+					header('Location: ./index.php');
+				}
+				break;
+			
+			case "ajoutTypeCours":
+				if(isset($_GET['supprimer_type_cours']) && !Type_Cours::existe_typeCours($_GET['supprimer_type_cours'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_type_cours']) && !Type_Cours::existe_typeCours($_GET['modifier_type_cours'])){
+					header('Location: ./index.php');
+				}
+				break;
+				
+			case "ajoutCours":
+				if(isset($_GET['supprimer_cours']) && !V_Infos_Cours::existe_cours($_GET['supprimer_cours'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_cours']) && !V_Infos_Cours::existe_cours($_GET['modifier_cours'])){
+					header('Location: ./index.php');
+				}
+				break;
+				
+			case "ajoutSpecialite":
+				if(isset($_GET['supprimer_specialite']) && !Specialite::existe_specialite($_GET['supprimer_specialite'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_specialite']) && !Specialite::existe_specialite($_GET['modifier_specialite'])){
+					header('Location: ./index.php');
+				}
+				break;
+				
+			case "ajoutUE":
+				if(isset($_GET['supprimer_UE']) && !UE::existe_UE($_GET['supprimer_UE'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_UE']) && !UE::existe_UE($_GET['modifier_UE'])){
+					header('Location: ./index.php');
+				}
+				break;
+			
+			case "ajoutEtudiant":
+				if(isset($_GET['supprimer_etudiant']) && !V_Infos_Etudiant::existe_etudiant($_GET['supprimer_etudiant'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_etudiant']) && !V_Infos_Etudiant::existe_etudiant($_GET['modifier_etudiant'])){
+					header('Location: ./index.php');
+				}
+				break;
+			
+			case "ajoutGroupeCours":
+				if(isset($_GET['supprimer_groupeCours']) && !Groupe_Cours::existe_groupeCours($_GET['supprimer_groupeCours'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_groupeCours']) && !Groupe_Cours::existe_groupeCours($_GET['modifier_groupeCours'])){
+					header('Location: ./index.php');
+				}
+				break;
+			
+			case "ajoutGroupeEtudiants":
+				if(isset($_GET['supprimer_groupeEtudiants']) && !Groupe_Etudiants::existe_groupeEtudiants($_GET['supprimer_groupeEtudiants'])){
+					header('Location: ./index.php');
+				}
+				if(isset($_GET['modifier_groupeEtudiants']) && !Groupe_Etudiants::existe_groupeEtudiants($_GET['modifier_groupeEtudiants'])){
+					header('Location: ./index.php');
+				}
+				break;
 		}
 	}
