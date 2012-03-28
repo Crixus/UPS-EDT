@@ -208,7 +208,13 @@
 				$titre = "Modifier un groupe de cours";
 				$Groupe_Cours = new Groupe_Cours($_GET['modifier_groupeCours']);
 				$nomModif = "value=\"{$Groupe_Cours->getNom()}\"";
-				$identifiantModif = "value=\"{$Groupe_Cours->getIdentifiant()}\"";
+				$Promotion = new Promotion($idPromotion);
+				$nom_promotion = $Promotion->getNom();
+				$annee_promotion = $Promotion->getAnnee();
+				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
+				$post_identifiant = explode($pre_identifiant, $Groupe_Cours->getIdentifiant());
+				$identifiant = $post_identifiant[1];
+				$identifiantModif = "value=\"{$identifiant}\"";
 				$valueSubmit = "Modifier le groupe de cours"; 
 				$nameSubmit = "validerModificationGroupeCours";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeCours']}\" />";
@@ -223,7 +229,8 @@
 				$Promotion = new Promotion($idPromotion);
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
-				$identifiantModif = "value=\"{$annee_promotion}-{$nom_promotion}-\"";
+				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
+				$identifiantModif = "value=\"\"";
 				$valueSubmit = "Ajouter le groupe de cours"; 
 				$nameSubmit = "validerAjoutGroupeCours";
 				$hidden = "";
@@ -241,8 +248,8 @@
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td><label>Identifiant</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"identifiant\" type=\"text\" required {$identifiantModif}/> \"Année Promotion\"-\"Nom Promotion\"-\"Nom d'identifiant\"\n";
+			echo "$tab\t\t\t<td><b>$pre_identifiant</b>\n";
+			echo "$tab\t\t\t\t<input name=\"identifiant\" type=\"text\" required {$identifiantModif}/>\n";
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
@@ -262,8 +269,15 @@
 			if(isset($_POST['validerAjoutGroupeCours'])){
 				$nom = $_POST['nom'];				
 				$nom_correct = true;
+				
+				$Promotion = new Promotion($_GET['idPromotion']);
+				$nom_promotion = $Promotion->getNom();
+				$annee_promotion = $Promotion->getAnnee();
+				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
 				$identifiant = $_POST['identifiant'];
+				$identifiant = $pre_identifiant.$identifiant;
 				$identifiant_correct = true;
+				
 				if($nom_correct && $identifiant_correct){		
 					Groupe_Cours::ajouter_groupeCours($_GET['idPromotion'], $nom, $identifiant);
 					array_push($messages_notifications, "Le groupe de cours a bien été ajouté");
@@ -277,8 +291,15 @@
 				$id_correct = Groupe_Cours::existe_groupeCours($id);
 				$nom = $_POST['nom'];				
 				$nom_correct = true;
+				
+				$Promotion = new Promotion($_GET['idPromotion']);
+				$nom_promotion = $Promotion->getNom();
+				$annee_promotion = $Promotion->getAnnee();
+				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
 				$identifiant = $_POST['identifiant'];
+				$identifiant = $pre_identifiant.$identifiant;
 				$identifiant_correct = true;
+				
 				if($id_correct && $nom_correct && $identifiant_correct){	
 					Groupe_Cours::modifier_groupeCours($_GET['modifier_groupeCours'], $_GET['idPromotion'], $nom, $identifiant);
 					array_push($messages_notifications, "Le groupe de cours a bien été modifié");
