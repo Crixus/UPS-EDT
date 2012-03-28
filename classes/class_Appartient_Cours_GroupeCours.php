@@ -31,8 +31,8 @@
 			$idPromotion = $_GET['idPromotion'];
 			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
 			$nbreGroupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
-			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
-			$nbre_cours = V_Infos_Cours::getNbreCours($idPromotion);
+			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
+			$nbre_cours = V_Infos_Cours::getNbreCoursFutur($idPromotion);
 			$tab="";
 			
 			if ( ($nbre_cours == 0) || ($nbreGroupeCours == 0) ) {

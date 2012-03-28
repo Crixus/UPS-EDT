@@ -124,6 +124,26 @@
 			}
 		}
 		
+		public function getNbreCoursFutur($idPromotion) { 
+			$date_now = date('Y-m-d 00:00:00');
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion = ? AND tsDebut > '".$date_now."'");
+				$req->execute(
+					Array($idPromotion)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne["nb"];
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public function getHeureDebut(){
 			$explode = explode(" ",$this->tsDebut);
 			$heureDebut = $explode[1];
