@@ -30,17 +30,20 @@
 							<a href="?page=ajoutTypeCours<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des types de cours</a>
 						</li>
 <?php 
-	if(isset($_GET['idPromotion'])){
+	if(isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)){
 ?>
 						<li>
 							<a href="?page=ajoutCours&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Ajout d'un cours</a>
+						</li>
+						<li>
+							<a href="?page=listeCoursParUE&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Liste des cours d'une UE</a>
 						</li>
 <?php
 	}
 ?>
 					</ul>
 <?php 
-	if(isset($_GET['idPromotion'])){
+	if(isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)){
 ?>				
 					<h1>Gestion des spécialités</h1>
 					<ul>
@@ -62,7 +65,7 @@
 ?>
 					</ul>
 <?php
-	if(isset($_GET['idPromotion'])){
+	if(isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)){
 ?>	
 					<h1>Gestions des étudiants</h1>
 					<ul>
