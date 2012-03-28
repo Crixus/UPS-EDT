@@ -22,7 +22,9 @@ var inscription_UE = function (idEtudiant, idUE ,element) {
 			idUE : idUE
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});
 }
@@ -72,7 +74,9 @@ var inscription_UE_promotion = function (idPromotion, idUE, nbre_etudiants, elem
 			idPromotion : idPromotion
 		},
 		onSuccess : function (transport) {
-			
+			var erreur = parseInt(transport.responseText);
+			if (erreur == 0)
+				window.location = "./index.php";
 		}
 	});	
 }
