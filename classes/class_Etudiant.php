@@ -22,37 +22,6 @@
 		public function getTelephone(){ return $this->telephone; }
 		public function getIdSpecialite(){ return $this->idSpecialite; }
 		
-		/**
-		 * Renvoi l'id de l'etudiant si le login et le motDePasse sont corrects, false sinon
-		 * */
-		public static function identification($login, $motDePasse){
-			$motDePasse = md5($motDePasse);
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$requete = "SELECT id FROM ".Etudiant::$nomTable." WHERE login='$login' AND motDePasse='$motDePasse'";
-				$req = $bdd->query($requete);
-				$nbResultat = $req->rowCount();
-				switch($nbResultat){
-					case 0:
-						return false;
-						break;
-					case 1:
-						$ligne = $req->fetch();
-						return $ligne['id'];
-						break;
-					default:
-						// Erreur dans BD
-						return false;
-						break;
-				}
-			}
-			catch(Exception $e){
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-		}
-		
 		public function Etudiant($id){
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;

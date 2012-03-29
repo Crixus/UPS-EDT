@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   `identifiant` varchar(100) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE ,
   UNIQUE (`identifiant`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `Groupe_Etudiants` (
   `identifiant` varchar(100) COLLATE utf8_bin NOT NULL,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE ,
   UNIQUE (`identifiant`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -131,8 +131,8 @@ CREATE TABLE IF NOT EXISTS `Etudiant` (
   `idPromotion` int(11) NOT NULL,
   `idSpecialite` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idSpecialite`) REFERENCES Specialite(`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ,
+  FOREIGN KEY (`idSpecialite`) REFERENCES Specialite(`id`), -- Suppression = remetre à 0
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`), -- Suppression = remetre à 0
   UNIQUE (`numeroEtudiant`),
   UNIQUE (`email`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
@@ -161,14 +161,13 @@ CREATE TABLE IF NOT EXISTS `UE` (
   `nbHeuresTD` double NOT NULL,
   `nbHeuresTP` double NOT NULL,
   `ECTS` double NOT NULL,
-  `idResponsable` int(11), -- DEFAULT idParDefaut
+  `idResponsable` int(11),
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`), -- ON DELETE SET idResponsable DEFAULT
+  FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`),
   FOREIGN KEY (`idPromotion`) REFERENCES Promotion (`id`) ,
   UNIQUE (`nom`, `idPromotion`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
 
 CREATE TABLE IF NOT EXISTS `Batiment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -223,10 +222,10 @@ CREATE TABLE IF NOT EXISTS `Cours` (
   `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`idUE`) REFERENCES UE(`id`),
+  FOREIGN KEY (`idUE`) REFERENCES UE(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
   FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`),
-  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`)
+  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Publication` (
@@ -243,24 +242,24 @@ CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
   `idCours` int(11) NOT NULL,
   `idGroupeCours` int(11) NOT NULL,
   PRIMARY KEY (`idCours`,`idGroupeCours`),
-  FOREIGN KEY (`idCours`) REFERENCES Cours(`id`),
-  FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`)
+  FOREIGN KEY (`idCours`) REFERENCES Cours(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
   `idEtudiant` int(11) NOT NULL,
   `idGroupeAdministratif` int(11) NOT NULL,
   PRIMARY KEY (`idEtudiant`,`idGroupeAdministratif`),
-  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`),
-  FOREIGN KEY (`idGroupeAdministratif`) REFERENCES Groupe_Administratif(`id`)
+  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idGroupeAdministratif`) REFERENCES Groupe_Administratif(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
   `idEtudiant` int(11) NOT NULL,
   `idGroupeEtudiants` int(11) NOT NULL,
   PRIMARY KEY (`idEtudiant`,`idGroupeEtudiants`),
-  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`),
-  FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`)
+  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idGroupeEtudiants`) REFERENCES Groupe_Etudiants(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
@@ -307,8 +306,8 @@ CREATE TABLE IF NOT EXISTS `Inscription` (
   `idUE` int(11) NOT NULL,
   `idEtudiant` int(11) NOT NULL,
   PRIMARY KEY (`idUE`,`idEtudiant`),
-  FOREIGN KEY (`idUE`) REFERENCES UE(`id`),
-  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`)
+  FOREIGN KEY (`idUE`) REFERENCES UE(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ;
 
 
