@@ -14,6 +14,7 @@
 		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php", "infosBatiment.php", "infosSalle.php"
 	);
 	
+	// Test des pages accessible : promotion choisie ou non
 	if (isset($_GET['page'])) {
 		if (isset($_GET['idPromotion'])) {
 			if (!in_array("{$_GET['page']}.php", $listePagesAdminHorsPromo) && !in_array("{$_GET['page']}.php", $listePagesAdminPromo)) {
@@ -37,7 +38,6 @@
 				$post_modifier = 'validerModificationBatiment';
 				$get_modifier = 'modifier_batiment';
 				$get_supprimer = 'supprimer_batiment';
-				$page = 'ajoutBatiment';
 				$methode_existe = 'existe_batiment';
 				break;
 				
@@ -48,7 +48,6 @@
 				$post_modifier = 'validerModificationSalle';
 				$get_modifier = 'modifier_salle';
 				$get_supprimer = 'supprimer_salle';
-				$page = 'ajoutSalle';
 				$methode_existe = 'existe_salle';
 				break;
 				
@@ -59,7 +58,6 @@
 				$post_modifier = 'validerModificationTypeSalle';
 				$get_modifier = 'modifier_type_salle';
 				$get_supprimer = 'supprimer_type_salle';
-				$page = 'ajoutTypeSalle';
 				$methode_existe = 'existe_type_salle';
 				break;
 			
@@ -79,11 +77,11 @@
 			if (isset($_GET[$get_supprimer]) && (isset($_POST[$post_ajouter]) || isset($_GET[$post_modifier]))) {
 				// Cas ou l'on ajoute ou modifie a partir d'une page ou l'on vient de supprimer
 				if (isset($_POST[$post_ajouter])) {
-					$dest = "index.php?page=$page";
+					$dest = "index.php?page={$_GET['page']}";
 				}
 				else {
 					// Redirection vers modifier_batiment avec post
-					$dest = "index.php?page=$page&modifier_batiment=".$_GET[$get_modifier];
+					$dest = "index.php?page={$_GET['page']}&modifier_batiment=".$_GET[$get_modifier];
 				}
 				if (isset($_GET['idPromotion'])) {
 					$dest .= "&idPromotion=".$_GET['idPromotion'];

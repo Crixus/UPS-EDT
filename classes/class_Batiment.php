@@ -47,12 +47,11 @@
 		 * Constructeur de la classe Batiment
 		 * Récupère les informations de Batiment dans la base de données depuis l'id
 		 * @param $id int id du Batiment
-		 *
 		 */
 		public function Batiment($id) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Batiment::$nomTable." WHERE id=?");
 				$req->execute(
@@ -64,8 +63,7 @@
 				foreach (Batiment::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -78,8 +76,8 @@
 		 */
 		public static function Batiment_from_nom($nom) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Batiment::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -103,16 +101,15 @@
 		 */
 		public static function ajouter_batiment($nom, $lat, $lon) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Batiment::$nomTable." VALUES(?, ?, ?, ?)");
 				
 				$req->execute(
 					Array("", $nom, $lat, $lon)
 				);			
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -126,15 +123,14 @@
 		 */
 		public static function modifier_batiment($idBatiment, $nom, $lat, $lon) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Batiment::$nomTable." SET nom=?, lat=?, lon=? WHERE id=?;");
 				$req->execute(
 					Array($nom, $lat, $lon, $idBatiment)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -150,25 +146,28 @@
 					Cours::modifier_salle_tout_cours($Salle->getId(), 0);
 				}
 				try {
-					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("DELETE FROM ".Batiment::$nomTable." WHERE id=?;");
 					$req->execute(
 						Array($idBatiment)
 					);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 			}
 		}
 		
+		/**
+		 * Renvoi la liste des salles du batiment
+		 * @return List<Salle> liste des salles du batiment
+		 */
 		public function liste_salles() {
 			$listeSalle = Array();
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
 				$req->execute(
@@ -187,8 +186,8 @@
 		
 		public static function existe_batiment($id) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Batiment::$nomTable." WHERE id=?");
 				$req->execute(
@@ -198,16 +197,15 @@
 				$req->closeCursor();
 				
 				return $ligne['nb'] == 1;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public static function existe_nom_batiment($nom) {
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Batiment::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -217,12 +215,10 @@
 				$req->closeCursor();
 				
 				return $ligne['nb'] == 1;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
-		
 		
 		public function table_salles($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
@@ -242,7 +238,6 @@
 				foreach ($liste_salles as $Salle) {
 					$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
 					$cpt++; $cpt %= 2;
-					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					echo $tab."\t\t<td>".$Salle->getNom()."</td>\n";
 					echo $tab."\t\t<td>".$Salle->getCapacite()."</td>\n";
@@ -255,8 +250,8 @@
 		public static function liste_batiment() {
 			$listeId = Array();
 			try {
-				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Batiment::$nomTable." ORDER BY UPPER(nom)");
 				$req->execute();
@@ -264,8 +259,7 @@
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
@@ -380,13 +374,13 @@
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutBatiment'])) {
-				if(!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])){
+				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])){
 					array_push($messages_erreurs, "Problème de formulaire");
 				}
 				else{
 					$nom = htmlentities($_POST['nom']);
-					$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
-					$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
+					$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
+					$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 					$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
 					$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
 					$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
@@ -396,13 +390,16 @@
 					}
 					else {
 						array_push($messages_erreurs, "La saisie n'est pas correcte");
+						$nom_correct ? true : array_push($messages_erreurs, "Le nom n'est pas correct") ;
+						$lat_correct ? true : array_push($messages_erreurs, "La latitude n'est pas correcte") ;
+						$lon_correct ? true : array_push($messages_erreurs, "La longitude n'est pas correcte") ;
 					}
 				}
 			}
 			if (isset($_POST['validerModificationBatiment'])) {
 				$nom = htmlentities($_POST['nom']);
-				$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
-				$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
+				$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
+				$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 				$id = $_POST['id'];
 				$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
 				$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
@@ -414,6 +411,10 @@
 				}
 				else {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					$id_correct  ? true : array_push($messages_erreurs, "id de modification n'est pas correct : Merci de contacter un administrateur");
+					$nom_correct ? true : array_push($messages_erreurs, "Le nom n'est pas correct") ;
+					$lat_correct ? true : array_push($messages_erreurs, "La latitude n'est pas correcte") ;
+					$lon_correct ? true : array_push($messages_erreurs, "La longitude n'est pas correcte") ;
 				}
 			}
 		}
@@ -424,6 +425,7 @@
 				if (Batiment::existe_batiment($_GET['supprimer_batiment'])) {
 					// Le batiment existe
 					Batiment::supprimer_batiment($_GET['supprimer_batiment']);
+					array_push($messages_notifications, "Le bâtiment a bien été supprimé");
 				}
 			}
 		}
