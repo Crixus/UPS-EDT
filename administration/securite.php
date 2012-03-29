@@ -32,20 +32,35 @@
 		switch($_GET['page']) {
 			case "ajoutBatiment" :
 				$implemented = true;
+				$class = get_class(new Batiment(0)); // A l'arrache...
 				$post_ajouter = 'validerAjoutBatiment';
 				$post_modifier = 'validerModificationBatiment';
 				$get_modifier = 'modifier_batiment';
 				$get_supprimer = 'supprimer_batiment';
 				$page = 'ajoutBatiment';
+				$methode_existe = 'existe_batiment';
 				break;
 				
 			case "ajoutSalle":
 				$implemented = true;
+				$class = get_class(new Salle(0));
 				$post_ajouter = 'validerAjoutSalle';
 				$post_modifier = 'validerModificationSalle';
 				$get_modifier = 'modifier_salle';
 				$get_supprimer = 'supprimer_salle';
 				$page = 'ajoutSalle';
+				$methode_existe = 'existe_salle';
+				break;
+				
+			case "ajoutTypeSalle":
+				$implemented = true;
+				$class = get_class(new Type_Salle(0));
+				$post_ajouter = 'validerAjoutTypeSalle';
+				$post_modifier = 'validerModificationTypeSalle';
+				$get_modifier = 'modifier_type_salle';
+				$get_supprimer = 'supprimer_type_salle';
+				$page = 'ajoutTypeSalle';
+				$methode_existe = 'existe_type_salle';
 				break;
 			
 			default:
@@ -76,6 +91,16 @@
 				unset($_GET[$get_supprimer]);
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); // A verifier
 				header('Location: '.$dest);
+			}
+			
+			// Si suppression d'un inexistant
+			if (isset($_GET[$get_supprimer]) && !$class::$methode_existe($_GET[$get_supprimer])){
+				header('Location: index.php');
+			}
+			
+			// Si modification d'un inexistant
+			if (isset($_GET[$get_modifier]) && !$class::$methode_existe($_GET[$get_modifier])){
+				header('Location: index.php');
 			}
 		}
 	}

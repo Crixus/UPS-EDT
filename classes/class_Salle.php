@@ -407,14 +407,7 @@
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			if(!isset($_GET['supprimer_salle'])){
-				Salle::formulaireAjoutModificationSalle($nombreTabulations);
-				}
-			else{
-				$lien = "./index.php?page=ajoutSalle";
-				if(isset($_GET['idPromotion'])){ $lien .= "&amp;idPromotion={$_GET['idPromotion']}"; }
-				echo "$tab<p><a href=\"$lien\" />Fin de suppression</a></p>\n";
-			}
+			Salle::formulaireAjoutModificationSalle($nombreTabulations);
 			echo "$tab<h2>Liste des salles</h2>\n";
 			Salle::table_administration_batiments($nombreTabulations);
 		}

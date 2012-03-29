@@ -289,14 +289,7 @@
 		
 		public static function page_administration($nombreTabulations = 0){
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
-			if(!isset($_GET['supprimer_type_salle'])){
-				Type_Salle::formulaireAjoutTypeSalle($nombreTabulations + 1);
-				}
-			else{
-				$lien = "./index.php?page=ajoutTypeSalle";
-				if(isset($_GET['idPromotion'])){ $lien .= "&amp;idPromotion={$_GET['idPromotion']}"; }
-				echo "$tab<p><a href=\"$lien\" />Fin de suppression</a></p>\n";
-			}
+			Type_Salle::formulaireAjoutTypeSalle($nombreTabulations + 1);
 			echo "$tab<h2>Liste des types de salles</h2>\n";
 			Type_Salle::liste_type_salle_to_table($nombreTabulations + 1, true);
 		}
