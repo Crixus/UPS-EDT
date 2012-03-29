@@ -1,5 +1,5 @@
 <?php
-	/**
+	/** doxygen
 	 * Classe Batiment - Permet de gerer les batiments
 	 * Page testée sur le checkstyle (pour apprendre à l'utiliser)
 	 */ 
@@ -380,18 +380,23 @@
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutBatiment'])) {
-				$nom = htmlentities($_POST['nom']);
-				$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
-				$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
-				$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
-				$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
-				$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
-				if ($nom_correct && $lat_correct && $lon_correct) {
-					Batiment::ajouter_batiment($nom, $lat, $lon);
-					array_push($messages_notifications, "Le bâtiment a bien été ajouté");
+				if(!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])){
+					array_push($messages_erreurs, "Problème de formulaire");
 				}
-				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+				else{
+					$nom = htmlentities($_POST['nom']);
+					$lat = ($_POST['lat'] == '') ? NULL : $_POST['lat'];
+					$lon = ($_POST['lon'] == '') ? NULL : $_POST['lon'];
+					$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
+					$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
+					$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
+					if ($nom_correct && $lat_correct && $lon_correct) {
+						Batiment::ajouter_batiment($nom, $lat, $lon);
+						array_push($messages_notifications, "Le bâtiment a bien été ajouté");
+					}
+					else {
+						array_push($messages_erreurs, "La saisie n'est pas correcte");
+					}
 				}
 			}
 			if (isset($_POST['validerModificationBatiment'])) {
