@@ -29,8 +29,13 @@
 		}
 	}
 	
+	$debutSemaine = $startTime = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - ((date('N')-1)*3600*24);
 	$semainePredente = $_GET['semaine'] - 604800;
 	$semaineSuivante = $_GET['semaine'] + 604800;
+	// Gestion heures d'été
+	if(date('H:i:s',$semaineSuivante) == "23:00:00"){
+		$semaineSuivante += 3600;
+	}
 	
 	// Serialisation / Unserialisation / Variable de Session Utilisateur (necessaire quand la variable de session est un objet
 	// ATTENTION SI MISE A JOUR D'ETUDIANT !!!
@@ -67,7 +72,7 @@
 			<table id="navigation_semaine">
 				<tr>
 					<td><a href="./index.php?semaine=<?php echo $semainePredente; ?>"><img src="./images/fleche_gauche.jpg" alt="fleche gauche" /></a></td>
-					<td>Semaine du <?php echo date('d/m/Y',$_GET['semaine']); ?> au <?php echo date('d/m/Y',$semaineSuivante-1); ?></td>
+					<td>Semaine du <?php echo date('d/m/Y - H:i:s',$_GET['semaine']); ?> au <?php echo date('d/m/Y - H:i:s',$semaineSuivante-1); ?></td>
 					<td><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>"><img src="./images/fleche_droite.jpg" alt="fleche droite" /></a></td>
 				</tr>
 			</table>

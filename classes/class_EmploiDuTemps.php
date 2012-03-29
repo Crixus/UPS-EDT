@@ -1,17 +1,6 @@
 <?php
 	class EmploiDuTemps{
 		
-		private $idEtudiant;
-		
-		private $dateDebut;
-		private $dateFin;
-		
-		private $listeCours = Array();
-		
-		public function EmploiDuTemps(){
-			
-		}
-		
 		public static function liste_id_cours_entre_dates($type, $id, $tsDebut, $tsFin){
 			$tsDebut = date('Y-m-d',$tsDebut);
 			$tsFin = date('Y-m-d',$tsFin);
@@ -45,8 +34,8 @@
 			return $listeId;
 		}
 		
-		public static function timestamp_debut_semaine($timestamp_actuel){
-			return mktime(0, 0, 0, date('n',$timestamp_actuel), date('j',$timestamp_actuel), date('Y',$timestamp_actuel)) - ((date('N',$timestamp_actuel)-1)*3600*24); 
+		public static function timestamp_debut_semaine($timestamp){
+			return mktime(0, 0, 0, date('n',$timestamp), date('j',$timestamp), date('Y',$timestamp)) - ((date('N',$timestamp)-1)*3600*24); 
 		}
 		
 		public static function cours_semaine($type, $id, $tsDebut){
