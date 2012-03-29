@@ -55,11 +55,11 @@
 				}
 				
 				// Si modification ou suppression d'un batiment inexistant...
-				if ((isset($_GET['supprimer_batiment']) || isset($_GET['modifier_batiment']))
-					&& !Batiment::existe_batiment($_GET['supprimer_batiment'])) {
-					header('Location: ./index.php');
+				if (
+					(isset($_GET['supprimer_batiment']) && !Batiment::existe_batiment($_GET['supprimer_batiment']))
+					|| (isset($_GET['modifier_batiment']) && !Batiment::existe_batiment($_GET['modifier_batiment']))){
+						header('Location: ./index.php');
 				}
-
 				break;
 				
 			case "ajoutSalle":
