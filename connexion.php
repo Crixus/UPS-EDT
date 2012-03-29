@@ -31,7 +31,8 @@
 	</head>
 	<body>	
 		<div id="pageConnexion">
-			<h1>Emploi du temps - Université Paul Sabatier</h1>
+			<img class="bandeau" src="./images/bandeau.png" alt="bandeau" />
+			<h1>Authentification - Emploi du temps UPS-EDT</h1>
 			<form id="formulaireConnexion" method="post">
 				<fieldset>
 					<legend>Connexion</legend>
@@ -58,7 +59,9 @@
 				</fieldset>
 			</form>
 			<div id="bas">
-				<p>Manuel Utilisateur</p>
+				<ul>
+					<li>Manuel Utilisateur</li>
+					<li><a href="./administration/">Administration</a></li>
 			</div>
 		</div>
 	</body>

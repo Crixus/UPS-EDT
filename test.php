@@ -3,7 +3,7 @@
 	include_once('./includes/infos_bdd.php');
 	
 	// Création des tables (phase de deploiement / tests)
-	define('CREER_BD', false);
+	define('CREER_BD', true);
 	
 	include_once('./classes/class_Utils_SQL.php');
 	

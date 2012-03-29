@@ -24,9 +24,22 @@ p, table, ul, input, select{
 	font-size:12px;
 }
 
+div#pageConnexion{
+	margin:10px auto 10px auto;
+	padding:5px;
+	background-color:#E6DFDC;
+	font-family: arial, sans-serif;
+	font-size: 0.8em;
+	width:665px;
+}
+
 div#pageConnexion h1{
-	color:blue;
-	border-bottom: blue 1px solid;
+	margin-top:10px;
+	margin-bottom:10px;
+	color:#194B69;
+	font-size: 1.5em;
+	text-align:center;
+	font-weight:normal;
 	}
 
 div#pageConnexion form#formulaireConnexion{
@@ -47,7 +60,7 @@ div#pageConnexion form#formulaireConnexion div#indications{
 }
 
 div#pageConnexion form#formulaireConnexion fieldset{
-	border-color:blue;
+	color:#194B69;
 }
 
 div#pageConnexion form#formulaireConnexion table{
@@ -57,6 +70,10 @@ div#pageConnexion form#formulaireConnexion table{
 
 div#pageConnexion div#bas{
 	text-align:center;
+	}
+	
+div#pageConnexion div#bas ul{
+	list-style-type:none;
 	}
 
 table#edt_semaine{
