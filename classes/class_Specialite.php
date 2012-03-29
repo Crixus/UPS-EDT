@@ -315,12 +315,4 @@
 			}
 			return $string;
 		}
-		
-		public static function creer_table(){
-			return Utils_SQL::sql_from_file("./sql/".Specialite::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table(){
-			return Utils_SQL::sql_supprimer_table(Specialite::$nomTable);
-		}
 	}

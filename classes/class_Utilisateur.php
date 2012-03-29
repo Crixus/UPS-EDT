@@ -77,13 +77,7 @@
 				$req = $bdd->prepare("INSERT INTO ".Utilisateur::$nomTable." VALUES(?, ?, ?, ?, ?)");
 				
 				$req->execute(
-					Array(
-						"",
-						$login, 
-						$motDePasse,
-						$type,
-						$idCorrespondant
-					)
+					Array("", $login, $motDePasse, $type, $idCorrespondant)
 				);
 			}
 			catch(Exception $e){

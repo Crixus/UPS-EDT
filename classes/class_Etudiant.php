@@ -280,7 +280,7 @@
 			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutEtudiant'])){
 				$numeroEtudiant = $_POST['numeroEtudiant'];
-				$numeroEtudiant_correct = true;
+				$numeroEtudiant_correct = PregMatch::est_nombre($numeroEtudiant);
 				$nom = $_POST['nom'];
 				$nom_correct = true;
 				$prenom = $_POST['prenom'];
@@ -290,6 +290,7 @@
 				$telephone = $_POST['telephone'];
 				$telephone_correct = true;
 				$idSpecialite = $_POST['idSpecialite'];
+				$idSpecialite_correct = Specialite::existe_specialite($idSpecialite);
 				if($numeroEtudiant && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
 					Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $_GET['idPromotion'], $idSpecialite);
 					array_push($messages_notifications, "L'étudiant a bien été ajouté");
