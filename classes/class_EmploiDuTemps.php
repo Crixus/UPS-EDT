@@ -1,27 +1,36 @@
 <?php
+	/** 
+	 * Classe EmploiDuTemps - Permet d'afficher l'emploi du temps et de les gérer
+	 */ 
 	class EmploiDuTemps{
 		
+		/**
+		 * Renvoi la liste des id de cours de l'utilisateur "$type" entre deux timestamp
+		 * @return List<Int> liste des id de cours
+		 * @param $type Type de l'utilisateur
+		 * @param $id ID de l'utilisateur
+		 * @param $tsDebut timestamp de début
+		 * @param $tsFin timestamp de fin
+		 */
 		public static function liste_id_cours_entre_dates($type, $id, $tsDebut, $tsFin){
+			$listeId = Array();
 			$tsDebut = date('Y-m-d',$tsDebut);
 			$tsFin = date('Y-m-d',$tsFin);
-			$listeId = Array();
 			try{
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
 				$bdd->query("SET NAMES utf8");
 				switch($type){
 					case "Etudiant":
-						$requete = "SELECT idCours AS id FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<?";
+						$requete = "SELECT idCours AS id FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<? ;";
 						break;
 					case "Intervenant":
-						$requete = "SELECT id AS id FROM Cours WHERE idIntervenant=? AND tsDebut>? AND tsFin<?";
+						$requete = "SELECT id AS id FROM Cours WHERE idIntervenant=? AND tsDebut>? AND tsFin<? ;";
 						break;
 				}
 				$req = $bdd->prepare($requete);
 				$req->execute(
-					Array(
-						$id, $tsDebut, $tsFin
-					)
+					Array($id, $tsDebut, $tsFin)
 				);
 				while($ligne = $req->fetch()){
 					array_push($listeId, $ligne['id']);
@@ -34,21 +43,27 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Renvoi le timestamp correspondant au lundi 00:00:00 (début de semaine) du timestamp en argument
+		 * @return int timestamp du debut de la semaine
+		 * @param $tsDebut timestamp date de la semaine dont on veut savoir le timestamp de début de semaine
+		 */
 		public static function timestamp_debut_semaine($timestamp){
 			return mktime(0, 0, 0, date('n',$timestamp), date('j',$timestamp), date('Y',$timestamp)) - ((date('N',$timestamp)-1)*3600*24); 
 		}
 		
+		/**
+		 * Renvoi les cours de la semaine d'un utilisateur
+		 * @return int timestamp du debut de la semaine
+		 * @param $type Type de l'utilisateur
+		 * @param $id ID de l'utilisateur
+		 * @param $tsDebut timestamp de début de la semaine
+		 */
 		public static function cours_semaine($type, $id, $tsDebut){
 			// DIVISER LES COURS DE PLUSIEURS JOURS !!!
 			$joursDeLaSemaine = 
 				Array(
-					"Mon" => Array(),
-					"Tue" => Array(),
-					"Wed" => Array(),
-					"Thu" => Array(),
-					"Fri" => Array(),
-					"Sat" => Array(),
-					"Sun" => Array(),
+					"Mon" => Array(), "Tue" => Array(), "Wed" => Array(), "Thu" => Array(), "Fri" => Array(), "Sat" => Array(), "Sun" => Array()
 				);
 			$listeIdCoursSemaine = EmploiDuTemps::liste_id_cours_entre_dates($type, $id, $tsDebut, $tsDebut + 604799);
 			
@@ -66,6 +81,10 @@
 			return $joursDeLaSemaine;
 		}
 		
+		/**
+		 * Affiche en HTML (emploi du temps) une liste de cours
+		 * @param $listeCoursSemaine : liste de cours d'une semaine
+		 */
 		public static function liste_cours_vers_affichage_semaine($listeCoursSemaine){
 			$jours = Array(
 				'Lundi' => 'Mon',
@@ -132,6 +151,12 @@
 <?php
 		}
 		
+		/**
+		 * Renvoi le code HTML correspondant à la transformation d'un cours en <td> (case de tableau HTML)
+		 * @param $Cours : Cours à transformer
+		 * @param $colspan : Taille de la case (colspan)
+		 * @return String Code html correspondant au <td> du cours
+		 */
 		public static function cours_to_td($Cours, $colspan){
 			$td = "";
 			$td .= "<td class=\"{$Cours->getNomTypeCours()}\" colspan=\"$colspan\">\n";
@@ -144,6 +169,12 @@
 			return $td;
 		}
 		
+		/**
+		 * Affiche en HTML (emploi du temps) d'une semaine à partir du timestamp de début de semaine
+		 * @param $type Type de l'utilisateur
+		 * @param $id ID de l'utilisateur
+		 * @param $tsDebut timestamp de début de la semaine
+		 */ 
 		public static function affichage_edt_semaine_table($type, $id, $tsDebut){
 			$cours_semaine = EmploiDuTemps::cours_semaine($type, $id, $tsDebut);
 			EmploiDuTemps::liste_cours_vers_affichage_semaine($cours_semaine);
