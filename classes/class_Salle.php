@@ -256,7 +256,7 @@
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td><label>Capacité</label></td>\n";
 			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"0\" max=\"999\" required {$capaciteModif}/>\n";
+			echo "$tab\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"1\" max=\"999\" required {$capaciteModif}/>\n";
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			

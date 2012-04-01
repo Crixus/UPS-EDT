@@ -42,26 +42,6 @@
 			}
 		}
 		
-		public static function getIntervenant($id) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT prenom, nom FROM ".Intervenant::$nomTable." WHERE id=?");
-				$req->execute(
-					Array($id)
-					);
-				$ligne = $req->fetch();
-				$req->closeCursor();
-				$nomIntervenant = $ligne['prenom'].' '.$ligne['nom'];
-			}
-			catch(Exception $e){
-				$nomIntervenant = "";
-				echo "Erreur : ".$e->getMessage()."<br />";
-			}
-			return $nomIntervenant;
-		}		
-		
 		public static function ajouter_intervenant($nom, $prenom, $email, $telephone){
 			try{
 				//On ajoute d'abord l'Intervenant
@@ -97,39 +77,19 @@
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Intervenant::$nomTable." SET nom=?, prenom=?, email=?, telephone=? WHERE id=?;");
 				$req->execute(
-					Array(
-						$nom,
-						$prenom, 
-						$email, 
-						$telephone,
-						$idIntervenant
-					)
+					Array($nom, $prenom, $email, $telephone, $idIntervenant)
 				);
 				
 				//Modification de l'intervenant dans la table Utilisateur
-				try{				
-					$type = "Etudiant";
-					$login = strtolower($prenom)."_".strtolower($nom);
-					$motDePasse = "1a1dc91c907325c69271ddf0c944bc72";
+				$type = "Etudiant";
+				$login = strtolower($prenom)."_".strtolower($nom);
+				$motDePasse = "1a1dc91c907325c69271ddf0c944bc72";
 					
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("UPDATE ".Utilisateur::$nomTable." SET login=?, motDePasse=? WHERE idCorrespondant=? AND type='Intervenant'");
-					
-					$req->execute(
-						Array(
-							$login,
-							$motDePasse, 
-							$idIntervenant
-						)
+				$req = $bdd->prepare("UPDATE ".Utilisateur::$nomTable." SET login=?, motDePasse=? WHERE idCorrespondant=? AND type='Intervenant'");
+				$req->execute(
+					Array($login, $motDePasse, $idIntervenant)
 					);
-				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
-			}
-			catch(Exception $e){
+			} catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -143,60 +103,24 @@
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idIntervenant = 0 WHERE idIntervenant=?;");
 				$req->execute(
-					Array(
-						$idIntervenant
-					)
+					Array($idIntervenant)
 				);
 		
 				//MAJ de la table "UE" on met idResponsable à 0 pour l'idResponsable correspondant
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("UPDATE ".UE::$nomTable." SET idResponsable = 0 WHERE idResponsable=?;");
-					$req->execute(
-						Array(
-							$idIntervenant
-						)
-					);
+				$req = $bdd->prepare("UPDATE ".UE::$nomTable." SET idResponsable = 0 WHERE idResponsable=?;");
+				$req->execute(
+					Array($idIntervenant)
+				);
 		
-					//Suppression de l'intervenant
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-						$bdd->query("SET NAMES utf8");
-						$req = $bdd->prepare("DELETE FROM ".Intervenant::$nomTable." WHERE id=?;");
-						$req->execute(
-							Array(
-								$idIntervenant
-							)
-						);
-						
-						//Suppression de l'intervenant dans la table Utilisateur
-						try{
-							$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-							$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
-							$bdd->query("SET NAMES utf8");
-							$req = $bdd->prepare("DELETE FROM ".Utilisateur::$nomTable." WHERE idCorrespondant=? AND type='Intervenant';");
-							$req->execute(
-								Array(
-									$idIntervenant
-								)
-							);
-						}
-						catch(Exception $e){
-							echo "Erreur : ".$e->getMessage()."<br />";
-						}
-					}
-					catch(Exception $e){
-						echo "Erreur : ".$e->getMessage()."<br />";
-					}
-				}
-				catch(Exception $e){
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
-			}
-			catch(Exception $e){
+				//Suppression de l'intervenant
+				$req = $bdd->prepare("DELETE FROM ".Intervenant::$nomTable." WHERE id=?;");
+				$req->execute(
+					Array($idIntervenant)
+				);
+				
+				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Intervenant", $idIntervenant);
+				Utilisateur::supprimer_utilisateur($idUtilisateur);
+			} catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -220,6 +144,27 @@
 			}
 		}
 		
+		// Methode à refaire car nom incorrect
+		public static function getIntervenant($id) {
+			try{
+				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT prenom, nom FROM ".Intervenant::$nomTable." WHERE id=?");
+				$req->execute(
+					Array($id)
+					);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				$nomIntervenant = $ligne['prenom'].' '.$ligne['nom'];
+			}
+			catch(Exception $e){
+				$nomIntervenant = "";
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $nomIntervenant;
+		}
+		
 		public function liste_id_UE() {
 			$listeIdUE = Array();
 			try{
@@ -228,16 +173,13 @@
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".UE::$nomTable." WHERE idResponsable = ? ORDER BY nom");
 				$req->execute(
-					array(
-						$this->id
-					)
+					array($this->id)
 				);
 				while($ligne = $req->fetch()){
 					array_push($listeIdUE, $ligne['id']);
 				}
 				$req->closeCursor();
-			}
-			catch(Exception $e){
+			} catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeIdUE;		
@@ -255,8 +197,7 @@
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
-			}
-			catch(Exception $e){
+			} catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
