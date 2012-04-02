@@ -24,8 +24,8 @@
 		
 		public static function est_telephone($string){
 			$regexTelephone = '`^0([0-9]{9})$`';
-			//return preg_match($regexTelephone, $string);
-			return true;
+			return preg_match($regexTelephone, $string);
+			//return true;
 		}
 		
 		public static function est_prenom($string){
