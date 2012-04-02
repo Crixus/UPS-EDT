@@ -297,10 +297,10 @@
 			}
 			else{
 				$titre = "Ajouter un intervenant";
-				$nomModif = "";
-				$prenomModif = "";
-				$emailModif = "";
-				$telephoneModif = "";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
+				$prenomModif = (isset($_POST['prenom'])) ? "value=\"".$_POST['prenom']."\"" : "value=\"\"";
+				$emailModif = (isset($_POST['email'])) ? "value=\"".$_POST['email']."\"" : "value=\"\"";
+				$telephoneModif = (isset($_POST['telephone'])) ? "value=\"".$_POST['telephone']."\"" : "value=\"\"";
 				$valueSubmit = "Ajouter l'intervenant"; 
 				$nameSubmit = "validerAjoutIntervenant";
 				$hidden = "";
@@ -350,35 +350,55 @@
 		
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutIntervenant'])){
-				$nom = $_POST['nom'];
-				$prenom = $_POST['prenom'];
+			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])){
+				// Vérification des champs			
+				$nom = htmlentities($_POST['nom']);
+				$nom_correct = PregMatch::est_nom($nom);
+				$prenom = htmlentities($_POST['prenom']);
+				$prenom_correct = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
-				$telephone = $_POST['telephone'];
-				$nom_correct = true;
-				$prenom_correct = true;
 				$email_correct = PregMatch::est_mail($email);
-				$telephone_correct = true;
-				if($nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
-					Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
-					array_push($messages_notifications, "L'intervenant a bien été ajouté");
+				$telephone = $_POST['telephone'];
+				$telephone_correct = PregMatch::est_telephone($telephone);
+			
+				$validation_ajout = false;
+				if(isset($_POST['validerAjoutIntervenant'])){
+					// Ajout d'un nouveau intervenant
+					if($nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+						Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
+						array_push($messages_notifications, "L'intervenant a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
 				else{
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					// Modification d'un intervenant
+					$id = htmlentities($_POST['id']); 
+					$id_correct = Intervenant::existe_intervenant($id);
+					if($id_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){	
+						Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
+						array_push($messages_notifications, "L'intervenant a bien été modifié");
+						$validation_ajout = true;
+					}
 				}
-			}
-			else if(isset($_POST['validerModificationIntervenant'])){
-				$id = $_POST['id']; $id_correct = Intervenant::existe_intervenant($id);
-				$nom = $_POST['nom']; $nom_correct = true;
-				$prenom = $_POST['prenom']; $prenom_correct = true;
-				$email = $_POST['email']; $email_correct = PregMatch::est_mail($email);
-				$telephone = $_POST['telephone']; $telephone_correct = true;
-				if($id_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){	
-					Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
-					array_push($messages_notifications, "L'intervenant a bien été modifié");
-				}
-				else{
+				
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id de l'intervenant n'est pas correct, contacter un administrateur");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
+					if(!$prenom_correct){
+						array_push($messages_erreurs, "Le prenom n'est pas correct");
+					}
+					if(!$email_correct){
+						array_push($messages_erreurs, "L'email n'est pas correct");
+					}
+					if(!$telephone_correct){
+						array_push($messages_erreurs, "Le téléphone n'est pas correct");
+					}
 				}
 			}
 		}
