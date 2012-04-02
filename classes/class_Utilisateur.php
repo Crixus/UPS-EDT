@@ -148,7 +148,7 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				return $ligne['nb'] == 1;
+				return $ligne['id'];
 			}
 			catch(Exception $e){
 				echo "Erreur : ".$e->getMessage()."<br />";

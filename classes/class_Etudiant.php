@@ -103,7 +103,7 @@
 					Array($idEtudiant)
 				);
 				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Etudiant",$idEtudiant);
-				Utilisateur::supprimer_etudiant($idUtilisateur);
+				Utilisateur::supprimer_utilisateur($idUtilisateur);
 			} catch(Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
