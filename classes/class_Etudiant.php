@@ -109,6 +109,25 @@
 			}
 		}
 		
+		public static function existe_etudiant($id){
+			try{
+				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM Etudiant WHERE id=?");
+				$req->execute(
+					Array($id)
+				);
+				$ligne = $req->fetch();
+				$req->closeCursor();
+				
+				return $ligne['nb'] == 1;
+			}
+			catch(Exception $e){
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+		}
+		
 		public function formulaireAjoutEtudiant($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_specialite = Specialite::liste_specialite($idPromotion);			
@@ -132,11 +151,11 @@
 			}
 			else {
 				$titre = "Ajouter un étudiant";
-				$numeroEtudiantModif = "";
-				$nomModif = "";
-				$prenomModif = "";
-				$emailModif = "";
-				$telephoneModif = "";
+				$numeroEtudiantModif = (isset($_POST['numeroEtudiant'])) ? "value=\"".$_POST['numeroEtudiant']."\"" : "value=\"\"";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
+				$prenomModif = (isset($_POST['prenom'])) ? "value=\"".$_POST['prenom']."\"" : "value=\"\"";
+				$emailModif = (isset($_POST['email'])) ? "value=\"".$_POST['email']."\"" : "value=\"\"";
+				$telephoneModif = (isset($_POST['telephone'])) ? "value=\"".$_POST['telephone']."\"" : "value=\"\"";
 				$valueSubmit = "Ajouter l'étudiant"; 
 				$nameSubmit = "validerAjoutEtudiant";
 				$hidden = "";
@@ -210,47 +229,65 @@
 		
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutEtudiant'])) {
+			if (isset($_POST['validerAjoutEtudiant']) || isset($_POST['validerModificationEtudiant'])){
+				// Vérification des champs
 				$numeroEtudiant = $_POST['numeroEtudiant'];
-				$numeroEtudiant_correct = PregMatch::est_nombre($numeroEtudiant);
+				$numeroEtudiant_correct = PregMatch::est_numero_etudiant($numeroEtudiant);
 				$nom = $_POST['nom'];
-				$nom_correct = true;
+				$nom_correct = PregMatch::est_nom($nom);
 				$prenom = $_POST['prenom'];
-				$prenom_correct = true;
+				$prenom_correct = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
 				$email_correct = PregMatch::est_mail($email);
 				$telephone = $_POST['telephone'];
-				$telephone_correct = true;
+				$telephone_correct = PregMatch::est_telephone($telephone);
 				$idSpecialite = $_POST['idSpecialite'];
-				$idSpecialite_correct = Specialite::existe_specialite($idSpecialite);
-				if ($numeroEtudiant && $nom_correct && $prenom_correct && $email_correct && $telephone_correct) {		
-					Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $_GET['idPromotion'], $idSpecialite);
-					array_push($messages_notifications, "L'étudiant a bien été ajouté");
+				$idSpecialiteCorrecte = Specialite::existe_specialite($idSpecialite);
+				
+				$validation_ajout = false;
+				if (isset($_POST['validerAjoutEtudiant'])) {
+					// Ajout d'un nouveau étudiant
+					if ($numeroEtudiant_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct && $idSpecialiteCorrecte) {		
+						Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $_GET['idPromotion'], $idSpecialite);
+						array_push($messages_notifications, "L'étudiant a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
-				else {
+				else  {
+					// Modification d'un etudiant
+					$id = htmlentities($_POST['id']); 
+					$id_correct = Etudiant::existe_etudiant($id);
+					if ($id_correct && $numeroEtudiant_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct && $idSpecialiteCorrecte) {		
+						Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
+						array_push($messages_notifications, "L'étudiant a bien été modifié");
+						$validation_ajout = true;
+					}
+				}
+				
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-				}
-			}
-			else if (isset($_POST['validerModificationEtudiant'])) {
-				$id = $_POST['id']; 
-				$id_correct = V_Infos_Etudiant::existe_etudiant($id);
-				$numeroEtudiant = $_POST['numeroEtudiant'];
-				$numeroEtudiant_correct = true;
-				$nom = $_POST['nom'];
-				$nom_correct = true;
-				$prenom = $_POST['prenom'];
-				$prenom_correct = true;
-				$email = $_POST['email'];
-				$email_correct = PregMatch::est_mail($email);
-				$telephone = $_POST['telephone'];
-				$telephone_correct = true;
-				$idSpecialite = $_POST['idSpecialite'];
-				if ($id_correct && $numeroEtudiant_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct) {		
-					Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
-					array_push($messages_notifications, "L'étudiant a bien été modifié");
-				}
-				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id de l'étudiant n'est pas correct, contacter un administrateur");
+					}
+					if(!$numeroEtudiant_correct){
+						array_push($messages_erreurs, "Le numéro d'étudiant n'est pas correct");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
+					if(!$prenom_correct){
+						array_push($messages_erreurs, "Le prenom n'est pas correct");
+					}
+					if(!$email_correct){
+						array_push($messages_erreurs, "L'email n'est pas correct");
+					}
+					if(!$telephone_correct){
+						array_push($messages_erreurs, "Le téléphone n'est pas correct");
+					}
+					if(!$idSpecialiteCorrecte){
+						array_push($messages_erreurs, "La spécialité n'est pas correcte");
+					}
 				}
 			}
 		}
@@ -258,13 +295,11 @@
 		public static function prise_en_compte_suppression() {
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_GET['supprimer_etudiant'])) {	
-				if (V_Infos_Etudiant::existe_etudiant($_GET['supprimer_etudiant'])) {
-					// L'étudiant existe
+				if (Etudiant::existe_etudiant($_GET['supprimer_etudiant'])) {
 					Etudiant::supprimer_etudiant($_GET['supprimer_etudiant']);
 					array_push($messages_notifications, "L'étudiant à bien été supprimé");
 				}
 				else {
-					// L'étudiant n'existe pas
 					array_push($messages_erreurs, "L'étudiant n'existe pas");
 				}
 			}

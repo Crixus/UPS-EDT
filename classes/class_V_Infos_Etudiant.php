@@ -130,10 +130,7 @@
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
 					foreach(V_Infos_Etudiant::$attributs as $att){
 						if ($att == "notificationsActives"){ 
-							if ($Etudiant->$att)
-								$checked = "checked = \"checked\"" ;
-							else
-								$checked = "";
+							$checked = ($Etudiant->$att) ? "checked = \"checked\"" : "" ;
 							$nomCheckbox = "{$idEtudiant}_notifications";
 							echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idEtudiant}_notifications\" value=\"{$idEtudiant}\" onclick=\"etudiant_notificationsActives({$idEtudiant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						}
