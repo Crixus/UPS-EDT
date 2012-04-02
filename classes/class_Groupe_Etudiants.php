@@ -223,7 +223,7 @@
 			}
 			else{
 				$titre = "Ajouter un groupe d'étudiant";
-				$nomModif = "";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
 				$Promotion = new Promotion($idPromotion);
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
@@ -262,44 +262,50 @@
 		
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutGroupeEtudiants'])){
-				$nom = $_POST['nom'];				
-				$nom_correct = true;
+			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])){
+				// Vérification des champs
+				$nom = htmlentities($_POST['nom']);
+				$nom_correct = PregMatch::est_nom($nom);
 				
 				$Promotion = new Promotion($_GET['idPromotion']);
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
 				$identifiant = $pre_identifiant.$nom;
-				$identifiant_correct = true;
+				$identifiant_correct = $nom_correct;
 				
-				if($nom_correct && $identifiant_correct){	
-					Groupe_Etudiants::ajouter_groupeEtudiants($_GET['idPromotion'], $nom, $identifiant);
-					array_push($messages_notifications, "Le groupe d'étudiant a bien été ajouté");
+				$validation_ajout = false;
+				if(isset($_POST['validerAjoutGroupeEtudiants'])){
+					// Ajout d'un nouveau groupe d'étudiants				
+					if($nom_correct && $identifiant_correct){	
+						Groupe_Etudiants::ajouter_groupeEtudiants($_GET['idPromotion'], $nom, $identifiant);
+						array_push($messages_notifications, "Le groupe d'étudiant a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
-				else{
+				else {
+					// Modification d'un groupe d'étudiants
+					$id = htmlentities($_POST['id']);
+					$id_correct = Groupe_Etudiants::existe_groupeEtudiants($id);
+					if($id_correct && $nom_correct && $identifiant_correct){	
+						Groupe_Etudiants::modifier_groupeEtudiants($_GET['modifier_groupeEtudiants'], $_GET['idPromotion'], $nom, $identifiant);
+						array_push($messages_notifications, "Le groupe d'étudiant a bien été modifié");
+						$validation_ajout = true;
+					}
+				}
+				
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-				}
-			}
-			else if(isset($_POST['validerModificationGroupeEtudiants'])){
-				$id = $_POST['id']; 
-				$id_correct = Groupe_Etudiants::existe_groupeEtudiants($id);
-				$nom = $_POST['nom'];				
-				$nom_correct = true;
-				
-				$Promotion = new Promotion($_GET['idPromotion']);
-				$nom_promotion = $Promotion->getNom();
-				$annee_promotion = $Promotion->getAnnee();
-				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiant = $pre_identifiant.$nom;
-				$identifiant_correct = true;
-				
-				if($id_correct && $nom_correct && $identifiant_correct){	
-					Groupe_Etudiants::modifier_groupeEtudiants($_GET['modifier_groupeEtudiants'], $_GET['idPromotion'], $nom, $identifiant);
-					array_push($messages_notifications, "Le groupe d'étudiant a bien été modifié");
-				}
-				else{
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id du groupe d'étudiants n'est pas correct, contacter un administrateur");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
+					if(!$identifiant_correct){
+						array_push($messages_erreurs, "L'identifiant n'est pas correct");
+					}
 				}
 			}
 		}
