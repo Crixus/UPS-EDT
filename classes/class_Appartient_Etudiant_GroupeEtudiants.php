@@ -42,7 +42,7 @@
 				echo "$tab<table name=\"tabGestionGroupeEtudiants\" class=\"table_liste_administration\">\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";
+				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2' style=\"border-top-color:white;border-left-color:white;border-top-style: solid;\"></th>\n";
 				echo "$tab\t\t<th colspan='{$nbreGroupeEtudiants}'>Nom des groupes d'étudiants</th>\n";
 				echo "$tab\t</tr>\n";
 				

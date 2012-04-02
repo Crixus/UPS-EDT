@@ -40,11 +40,10 @@
 			}
 			else {
 				echo "$tab<table name=\"tabGestionGroupeCours\" class=\"table_liste_administration\">\n";
-				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";
-				echo "$tab\t\t<th colspan='{$nbreGroupeCours}'>Nom des groupes de cours</th>\n";
-				echo "$tab\t</tr>\n";
+				echo "$tab\t\t<tr class=\"fondGrisFonce\">\n";
+				echo "$tab\t\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2' style=\"border-top-color:white;border-left-color:white;border-top-style: solid;\"></th>\n";
+				echo "$tab\t\t\t<th colspan='{$nbreGroupeCours}'>Nom des groupes de cours</th>\n";
+				echo "$tab\t\t</tr>\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				foreach($liste_groupeCours as $idGroupeCours){
@@ -54,7 +53,7 @@
 				echo "$tab\t</tr>\n";
 				
 				echo "$tab\t<tr>\n";
-				echo "$tab\t<th class=\"fondGrisFonce\" rowspan='{$nbre_cours}'>Cours</th>\n";
+				echo "$tab\t<td class=\"fondGrisFonce\" rowspan='{$nbre_cours}'>Cours</td>\n";
 				$cpt = 0;
 				foreach($liste_cours as $idCours){
 					if($cpt == 0){ $couleurFond="fondBlanc"; }
