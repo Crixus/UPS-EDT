@@ -233,9 +233,9 @@
 				// Vérification des champs
 				$numeroEtudiant = $_POST['numeroEtudiant'];
 				$numeroEtudiant_correct = PregMatch::est_numero_etudiant($numeroEtudiant);
-				$nom = $_POST['nom'];
+				$nom = htmlentities($_POST['nom']);
 				$nom_correct = PregMatch::est_nom($nom);
-				$prenom = $_POST['prenom'];
+				$prenom = htmlentities($_POST['prenom']);
 				$prenom_correct = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
 				$email_correct = PregMatch::est_mail($email);
