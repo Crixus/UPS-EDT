@@ -43,5 +43,9 @@
 		public static function est_numero_etudiant($string){
 			return PregMatch::est_nombre($string);
 		}
+		
+		public static function est_nbre_heures($string){
+			return PregMatch::est_nombre($string);
+		}
 	}
 

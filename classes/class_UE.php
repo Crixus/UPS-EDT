@@ -292,13 +292,12 @@
 			}
 			else{
 				$titre = "Ajouter une UE";
-				$nomModif = "";
-				$intituleModif = "";
-				$nbHeuresCoursModif = "";
-				$nbHeuresTDModif = "";
-				$nbHeuresTPModif = "";
-				$ectsModif = "";
-				$idResponsableModif = "";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
+				$intituleModif = (isset($_POST['intitule'])) ? "value=\"".$_POST['intitule']."\"" : "value=\"\"";
+				$nbHeuresCoursModif = (isset($_POST['nbHeuresCours'])) ? "value=\"".$_POST['nbHeuresCours']."\"" : "value=\"\"";
+				$nbHeuresTDModif = (isset($_POST['nbHeuresTD'])) ? "value=\"".$_POST['nbHeuresTD']."\"" : "value=\"\"";
+				$nbHeuresTPModif = (isset($_POST['nbHeuresTP'])) ? "value=\"".$_POST['nbHeuresTP']."\"" : "value=\"\"";
+				$ectsModif = (isset($_POST['ects'])) ? "value=\"".$_POST['ects']."\"" : "value=\"\"";
 				$valueSubmit = "Ajouter l'UE"; 
 				$nameSubmit = "validerAjoutUE";
 				$hidden = "";
@@ -381,52 +380,72 @@
 		
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutUE'])){
-				$nom = $_POST['nom'];
-				$nom_correct = true;
-				$intitule = $_POST['intitule'];
-				$intitule_correct = true;
+			if (isset($_POST['validerAjoutUE']) || isset($_POST['validerModificationUE'])){
+				// Vérification des champs
+				$nom = htmlentities($_POST['nom']);
+				$nom_correct = PregMatch::est_nom($nom);
+				$intitule = htmlentities($_POST['intitule']);
+				$intitule_correct = PregMatch::est_intitule($intitule);
 				$nbHeuresCours = $_POST['nbHeuresCours'];
-				$nbHeuresCours_correct = true;
+				$nbHeuresCours_correct = PregMatch::est_nbre_heures($nbHeuresCours);
 				$nbHeuresTD = $_POST['nbHeuresTD'];
-				$nbHeuresTD_correct = true;
+				$nbHeuresTD_correct = PregMatch::est_nbre_heures($nbHeuresTD);
 				$nbHeuresTP = $_POST['nbHeuresTP'];
-				$nbHeuresTP_correct = true;
+				$nbHeuresTP_correct = PregMatch::est_nbre_heures($nbHeuresTP);
 				$ects = $_POST['ects'];
-				$ects_correct = true;
+				$ects_correct = PregMatch::est_nbre_heures($ects);
 				$idIntervenant = $_POST['idIntervenant'];
-				if($nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){		
-					UE::ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
-					array_push($messages_notifications, "L'UE a bien été ajouté");
+				$idIntervenantCorrecte = Intervenant::existe_intervenant($idIntervenant);
+				
+				$validation_ajout = false;
+				if(isset($_POST['validerAjoutUE'])){				
+					// Ajout d'une nouvelle UE
+					if($nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct && $idIntervenantCorrecte){		
+						UE::ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
+						array_push($messages_notifications, "L'UE a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
-				else{
+				else {				
+					// Modification d'une nouvelle UE
+					$id = htmlentities($_POST['id']); 
+					$id_correct = UE::existe_UE($id);
+					if($id_correct && $nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct && $idIntervenantCorrecte){			
+						UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
+						array_push($messages_notifications, "L'UE a bien été modifié");
+						$validation_ajout = true;
+					}
+				}
+
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id de l'UE n'est pas correct, contacter un administrateur");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
+					if(!$intitule_correct){
+						array_push($messages_erreurs, "L'intitulé n'est pas correct");
+					}
+					if(!$nbHeuresCours_correct){
+						array_push($messages_erreurs, "Le nombre d'heures de cours n'est pas correct");
+					}
+					if(!$nbHeuresTD_correct){
+						array_push($messages_erreurs, "Le nombre d'heures de TD n'est pas correct");
+					}
+					if(!$nbHeuresTP_correct){
+						array_push($messages_erreurs, "Le nombre d'heures de TP n'est pas correct");
+					}
+					if(!$ects_correct){
+						array_push($messages_erreurs, "L'ECTS n'est pas correct");
+					}
+					if(!$idIntervenantCorrecte){
+						array_push($messages_erreurs, "L'intervenant n'est pas correcte");
+					}
 				}
 			}
-			else if(isset($_POST['validerModificationUE'])){
-				$id = $_POST['id']; 
-				$id_correct = UE::existe_UE($id);
-				$nom = $_POST['nom']; 
-				$nom_correct = true;
-				$intitule = $_POST['intitule'];
-				$intitule_correct = true;
-				$nbHeuresCours = $_POST['nbHeuresCours'];
-				$nbHeuresCours_correct = true;
-				$nbHeuresTD = $_POST['nbHeuresTD'];
-				$nbHeuresTD_correct = true;
-				$nbHeuresTP = $_POST['nbHeuresTP'];
-				$nbHeuresTP_correct = true;
-				$ects = $_POST['ects'];
-				$ects_correct = true;
-				$idIntervenant = $_POST['idIntervenant'];
-				if($id_correct && $nom_correct && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct){			
-					UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
-					array_push($messages_notifications, "L'UE a bien été modifié");
-				}
-				else{
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-				}
-			}	
 		}
 		
 		public static function prise_en_compte_suppression(){
