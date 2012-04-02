@@ -212,9 +212,7 @@
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$post_identifiant = explode($pre_identifiant, $Groupe_Cours->getIdentifiant());
-				$identifiant = $post_identifiant[1];
-				$identifiantModif = "value=\"{$identifiant}\"";
+				$identifiantModif = "value=\"{$Groupe_Cours->getIdentifiant()}\"";
 				$valueSubmit = "Modifier le groupe de cours"; 
 				$nameSubmit = "validerModificationGroupeCours";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeCours']}\" />";
@@ -230,7 +228,7 @@
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiantModif = "value=\"\"";
+				$identifiantModif = "value=\"{$pre_identifiant}\"";
 				$valueSubmit = "Ajouter le groupe de cours"; 
 				$nameSubmit = "validerAjoutGroupeCours";
 				$hidden = "";
@@ -242,15 +240,13 @@
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
 			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" onChange=\"modification_identifiant('{$pre_identifiant}')\" required {$nomModif}/>\n";
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t\t<tr>\n";
 			echo "$tab\t\t\t<td><label>Identifiant</label></td>\n";
-			echo "$tab\t\t\t<td><b>$pre_identifiant</b>\n";
-			echo "$tab\t\t\t\t<input name=\"identifiant\" type=\"text\" required {$identifiantModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
+			echo "$tab\t\t\t<td><input name=\"identifiant\" type=\"text\" disabled=\"disabled\" required {$identifiantModif}/></td>\n";
 			echo "$tab\t\t</tr>\n";
 			
 			echo "$tab\t\t<tr>\n";
@@ -274,8 +270,7 @@
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiant = $_POST['identifiant'];
-				$identifiant = $pre_identifiant.$identifiant;
+				$identifiant = $pre_identifiant.$nom;
 				$identifiant_correct = true;
 				
 				if($nom_correct && $identifiant_correct){		
@@ -296,8 +291,7 @@
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiant = $_POST['identifiant'];
-				$identifiant = $pre_identifiant.$identifiant;
+				$identifiant = $pre_identifiant.$nom;
 				$identifiant_correct = true;
 				
 				if($id_correct && $nom_correct && $identifiant_correct){	

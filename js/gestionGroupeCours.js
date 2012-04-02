@@ -58,3 +58,7 @@ var appartenance_promotion_groupeCours = function (idPromotion, idGroupeCours, n
 }
 
 
+var modification_identifiant = function(text) {
+	document.getElementsByName('identifiant')[0].value = text;
+	document.getElementsByName('identifiant')[0].value += document.getElementsByName('nom')[0].value;
+}
