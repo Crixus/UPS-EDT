@@ -256,7 +256,7 @@
 			}
 			else{
 				$titre = "Ajouter un type de cours";
-				$nomModif = "";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
 				$valueSubmit = "Ajouter le type de cours";
 				$nameSubmit = "validerAjoutTypeCours";
 				$hidden = "";
@@ -285,28 +285,40 @@
 		
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutTypeCours'])){
-				$nom = $_POST['nom'];
+			if (isset($_POST['validerAjoutTypeCours']) || isset($_POST['validerModificationTypeCours'])){
+				// Vérification des champs
+				$nom = htmlentities($_POST['nom']);
 				$nom_correct = true;
-				if($nom_correct){		
-					Type_Cours::ajouter_type_cours($nom);
-					array_push($messages_notifications, "Le type de cours a bien été ajouté");
+				
+				$validation_ajout = false;
+				if(isset($_POST['validerAjoutTypeCours'])){
+					// Ajout d'un nouveau type de cours					
+					if($nom_correct){		
+						Type_Cours::ajouter_type_cours($nom);
+						array_push($messages_notifications, "Le type de cours a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
-				else{
+				else {			
+					// Modification d'un type de cours	
+					$id = htmlentities($_POST['id']);
+					$id_correct = Type_Cours::existe_typeCours($id);
+					if($id_correct && $nom_correct){
+						Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
+						array_push($messages_notifications, "Le type de cours a bien été modifié");
+						$validation_ajout = true;
+					}
+				}
+				
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-				}
-			}
-			else if(isset($_POST['validerModificationTypeCours'])){			
-				$id = $_POST['id']; 
-				$id_correct = Type_Cours::existe_typeCours($id);
-				$nom = $_POST['nom']; 
-				$nom_correct = true;
-				if($id_correct && $nom_correct){
-					Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
-					array_push($messages_notifications, "Le type de cours a bien été modifié");
-				}
-				else{
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id du type de cours n'est pas correct, contacter un administrateur");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
 				}
 			}
 		}
