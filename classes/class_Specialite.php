@@ -146,8 +146,8 @@
 			}
 			else{
 				$titre = "Ajouter une spécialité";
-				$nomModif = "value=\"\"";
-				$intituleModif = "value=\"\"";
+				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
+				$intituleModif = (isset($_POST['intitule'])) ? "value=\"".$_POST['intitule']."\"" : "value=\"\"";
 				$valueSubmit = "Ajouter la spécialité"; 
 				$nameSubmit = "validerAjoutSpecialite";
 				$hidden = "";
@@ -183,34 +183,47 @@
 		
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutSpecialite'])){
-				$nom = $_POST['nom'];
-				$intitule = $_POST['intitule'];
-				$nom_correct = true;
-				$intitule_correct = true;
-				if($nom_correct && $intitule_correct) {
-					Specialite::ajouter_specialite($nom, $intitule, $_GET['idPromotion']);
-					array_push($messages_notifications, "La spécialité a bien été ajouté");
+			if (isset($_POST['validerAjoutSpecialite']) || isset($_POST['validerModificationSpecialite'])){
+				// Vérification des champs				
+				$nom = htmlentities($_POST['nom']);
+				$nom_correct = PregMatch::est_nom($nom);
+				$intitule = htmlentities($_POST['intitule']);
+				$intitule_correct = PregMatch::est_intitule($intitule);
+				
+				$validation_ajout = false;
+				if(isset($_POST['validerAjoutSpecialite'])){
+					// Ajout d'une nouvelle spécialité
+					if($nom_correct && $intitule_correct) {
+						Specialite::ajouter_specialite($nom, $intitule, $_GET['idPromotion']);
+						array_push($messages_notifications, "La spécialité a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
-				else{
+				else {
+					// Modification d'une nouvelle spécialité
+					$id = htmlentities($_POST['id']); 
+					$id_correct = Specialite::existe_specialite($id);
+					if($id_correct && $nom_correct && $intitule_correct) {
+						Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $_GET['idPromotion']);
+						array_push($messages_notifications, "La spécialité a bien été modifié");
+						$validation_ajout = true;
+					}				
+				}
+				
+				// Traitement des erreurs
+				if (!$validation_ajout){
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if(isset($id_correct) && !$id_correct){
+						array_push($messages_erreurs, "L'id de la spécialité n'est pas correct, contacter un administrateur");
+					}
+					if(!$nom_correct){
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
+					if(!$intitule_correct){
+						array_push($messages_erreurs, "L'intitulé n'est pas correct");
+					}
 				}
-			}
-			else if(isset($_POST['validerModificationSpecialite'])){
-				$id = $_POST['id']; 
-				$id_correct = Specialite::existe_specialite($id);
-				$nom = $_POST['nom']; 
-				$nom_correct = true;
-				$intitule = $_POST['intitule'];
-				$intitule_correct = true;
-				if($id_correct && $nom_correct && $intitule_correct) {
-					Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $_GET['idPromotion']);
-					array_push($messages_notifications, "L'intervenant a bien été modifié");
-				}
-				else{
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-				}				
-			}
+			}			
 		}
 		
 		public static function prise_en_compte_suppression(){

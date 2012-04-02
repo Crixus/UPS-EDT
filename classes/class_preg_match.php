@@ -36,6 +36,10 @@
 			return true;
 		}
 		
+		public static function est_intitule($string){
+			return true;
+		}
+		
 		public static function est_numero_etudiant($string){
 			return PregMatch::est_nombre($string);
 		}
