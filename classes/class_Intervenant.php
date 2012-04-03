@@ -352,9 +352,9 @@
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])){
 				// Vérification des champs			
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
-				$prenom = htmlentities($_POST['prenom']);
+				$prenom = htmlentities($_POST['prenom'],ENT_QUOTES,'UTF-8');
 				$prenom_correct = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
 				$email_correct = PregMatch::est_mail($email);
