@@ -21,9 +21,6 @@ DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeEtudiants`;
 DROP TABLE IF EXISTS `Groupe_Cours`;
 DROP TABLE IF EXISTS `Groupe_Etudiants`;
 
-DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeAdministratif`;
-DROP TABLE IF EXISTS `Groupe_Administratif`;
-
 DROP TABLE IF EXISTS `Cours`;
 DROP TABLE IF EXISTS `UE`;
 DROP TABLE IF EXISTS `Intervenant`;
@@ -77,16 +74,6 @@ CREATE TABLE IF NOT EXISTS `Specialite` (
 
 INSERT INTO `Specialite` (`id`, `idPromotion`, `nom`, `intitule`) VALUES
 (0, 0, 'DEFAULT', 'DEFAULT');
-
-CREATE TABLE IF NOT EXISTS `Groupe_Administratif` (
-  -- Si la Promotion est supprimée, alors le groupe administratif est supprimé
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) COLLATE utf8_bin NOT NULL,
-  `idPromotion` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE ,
-  UNIQUE (`nom`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -244,14 +231,6 @@ CREATE TABLE IF NOT EXISTS `Appartient_Cours_GroupeCours` (
   PRIMARY KEY (`idCours`,`idGroupeCours`),
   FOREIGN KEY (`idCours`) REFERENCES Cours(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`idGroupeCours`) REFERENCES Groupe_Cours(`id`) ON DELETE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeAdministratif` (
-  `idEtudiant` int(11) NOT NULL,
-  `idGroupeAdministratif` int(11) NOT NULL,
-  PRIMARY KEY (`idEtudiant`,`idGroupeAdministratif`),
-  FOREIGN KEY (`idEtudiant`) REFERENCES Etudiant(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`idGroupeAdministratif`) REFERENCES Groupe_Administratif(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Appartient_Etudiant_GroupeEtudiants` (
