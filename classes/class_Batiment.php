@@ -378,7 +378,7 @@
 					array_push($messages_erreurs, "Problème de formulaire");
 				}
 				else{
-					$nom = htmlentities($_POST['nom']);
+					$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 					$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 					$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 					$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
@@ -397,7 +397,7 @@
 				}
 			}
 			if (isset($_POST['validerModificationBatiment'])) {
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 				$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 				$id = $_POST['id'];
