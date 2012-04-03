@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `Appartient_TypeSalle_TypeCours`;
 DROP TABLE IF EXISTS `Type_Salle`;
 DROP TABLE IF EXISTS `Type_Cours`;
 
+DROP TABLE IF EXISTS `Creneau_Salle`;
 DROP TABLE IF EXISTS `Salle`;
 DROP TABLE IF EXISTS `Batiment`; 
 
@@ -201,6 +202,15 @@ CREATE TABLE IF NOT EXISTS `Salle` (
 
 INSERT INTO `Salle` (`id`, `nom`, `nomBatiment`, `capacite`) VALUES
 (0, 'Non assigné', 'DEFAULT', 999);
+
+CREATE TABLE IF NOT EXISTS `Creneau_Salle` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`idSalle` int(11) NOT NULL ,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Type_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
