@@ -382,9 +382,9 @@
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutUE']) || isset($_POST['validerModificationUE'])){
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
-				$intitule = htmlentities($_POST['intitule']);
+				$intitule = htmlentities($_POST['intitule'],ENT_QUOTES,'UTF-8');
 				$intitule_correct = PregMatch::est_intitule($intitule);
 				$nbHeuresCours = $_POST['nbHeuresCours'];
 				$nbHeuresCours_correct = PregMatch::est_nbre_heures($nbHeuresCours);
