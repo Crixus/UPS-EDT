@@ -23,6 +23,8 @@ DROP TABLE IF EXISTS `Groupe_Etudiants`;
 
 DROP TABLE IF EXISTS `Cours`;
 DROP TABLE IF EXISTS `UE`;
+
+DROP TABLE IF EXISTS `Creneau_Intervenant`;
 DROP TABLE IF EXISTS `Intervenant`;
 
 DROP TABLE IF EXISTS `Appartient_Salle_TypeSalle`;
@@ -138,6 +140,15 @@ CREATE TABLE IF NOT EXISTS `Intervenant` (
 
 INSERT INTO `Intervenant` (`id`, `nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `actif`) VALUES
 (0, 'DEFAULT', 'DEFAULT', 'DEFAULT@UPS-EDT.com', '', 0, 1);
+
+CREATE TABLE IF NOT EXISTS `Creneau_Intervenant` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`idIntervenant` int(11) NOT NULL ,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `UE` (
   -- Si l'intervenant est supprimé, alors l'id doit être mise à celle par defaut (a faire)
