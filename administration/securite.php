@@ -61,6 +61,76 @@
 				$methode_existe = 'existe_type_salle';
 				break;
 			
+			case "ajoutIntervenant":
+				$implemented = true;
+				$class = get_class(new Intervenant(0));
+				$post_ajouter = 'validerAjoutIntervenant';
+				$post_modifier = 'validerModificationIntervenant';
+				$get_modifier = 'modifier_intervenant';
+				$get_supprimer = 'supprimer_intervenant';
+				$methode_existe = 'existe_intervenant';
+				break;
+			
+			case "ajoutTypeCours":
+				$implemented = true;
+				$class = get_class(new Type_Cours(0));
+				$post_ajouter = 'validerAjoutTypeCours';
+				$post_modifier = 'validerModificationTypeCours';
+				$get_modifier = 'modifier_type_cours';
+				$get_supprimer = 'supprimer_type_cours';
+				$methode_existe = 'existe_typeCours';
+				break;
+			
+			case "ajoutSpecialite":
+				$implemented = true;
+				$class = get_class(new Specialite(0));
+				$post_ajouter = 'validerAjoutSpecialite';
+				$post_modifier = 'validerModificationSpecialite';
+				$get_modifier = 'modifier_specialite';
+				$get_supprimer = 'supprimer_specialite';
+				$methode_existe = 'existe_specialite';
+				break;
+			
+			case "ajoutUE":
+				$implemented = true;
+				$class = get_class(new UE(0));
+				$post_ajouter = 'validerAjoutUE';
+				$post_modifier = 'validerModificationUE';
+				$get_modifier = 'modifier_UE';
+				$get_supprimer = 'supprimer_UE';
+				$methode_existe = 'existe_UE';
+				break;
+			
+			case "ajoutEtudiant":
+				$implemented = true;
+				$class = get_class(new Etudiant(0));
+				$post_ajouter = 'validerAjoutEtudiant';
+				$post_modifier = 'validerModificationEtudiant';
+				$get_modifier = 'modifier_etudiant';
+				$get_supprimer = 'supprimer_etudiant';
+				$methode_existe = 'existe_etudiant';
+				break;
+			
+			case "ajoutGroupeCours":
+				$implemented = true;
+				$class = get_class(new Groupe_Cours(0));
+				$post_ajouter = 'validerAjoutGroupeCours';
+				$post_modifier = 'validerModificationGroupeCours';
+				$get_modifier = 'modifier_groupeCours';
+				$get_supprimer = 'supprimer_groupeCours';
+				$methode_existe = 'existe_groupeCours';
+				break;
+			
+			case "ajoutGroupeEtudiants":
+				$implemented = true;
+				$class = get_class(new Groupe_Etudiants(0));
+				$post_ajouter = 'validerAjoutGroupeEtudiants';
+				$post_modifier = 'validerModificationGroupeEtudiants';
+				$get_modifier = 'modifier_groupeEtudiants';
+				$get_supprimer = 'supprimer_groupeEtudiants';
+				$methode_existe = 'existe_groupeEtudiants';
+				break;
+				
 			default:
 				$implemented = false;
 				break;
