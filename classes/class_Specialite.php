@@ -185,9 +185,9 @@
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutSpecialite']) || isset($_POST['validerModificationSpecialite'])){
 				// Vérification des champs				
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
-				$intitule = htmlentities($_POST['intitule']);
+				$intitule = htmlentities($_POST['intitule'],ENT_QUOTES,'UTF-8');
 				$intitule_correct = PregMatch::est_intitule($intitule);
 				
 				$validation_ajout = false;
