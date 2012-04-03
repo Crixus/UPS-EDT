@@ -358,10 +358,12 @@
 			if(isset($idResponsableModif) && ($idResponsableModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach($liste_intervenant as $idIntervenant){
-				$Intervenant = new Intervenant($idIntervenant);
-				$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-				if(isset($idResponsableModif) && ($idResponsableModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant</option>\n";
+				if ($idIntervenant != 0) {
+					$Intervenant = new Intervenant($idIntervenant);
+					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+					if(isset($idResponsableModif) && ($idResponsableModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant</option>\n";
+				}
 			}
 			echo "$tab\t\t\t\t</select>\n";
 			echo "$tab\t\t\t</td>\n";
