@@ -286,7 +286,7 @@
 		public static function prise_en_compte_formulaire(){
 			global $messages_notifications, $messages_erreurs;
 			if(isset($_POST['validerAjoutSalle'])){
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
 				$nom_correct = true;
@@ -303,7 +303,7 @@
 			}
 			else if(isset($_POST['validerModificationSalle'])){
 				$id = htmlentities($_POST['id']);
-				$nom = htmlentities($_POST['nom']);
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
 				$id_correct = Salle::existe_salle($id);
