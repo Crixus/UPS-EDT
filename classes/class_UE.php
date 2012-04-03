@@ -472,6 +472,46 @@
 			UE::liste_UE_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}	
 		
+		public static function page_administration_listeCoursParUE($nombreTabulations = 0){	
+			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			UE::liste_UE_to_table_for_listeCoursParUE($_GET['idPromotion'], true, $nombreTabulations + 1);
+		}
+		
+		public static function liste_UE_to_table_for_listeCoursParUE($idPromotion, $administration, $nombreTabulations = 0){
+			$liste_UE = V_Infos_UE::liste_UE($idPromotion);
+			$nbUE = sizeof($liste_UE);
+			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			
+			if ($nbUE == 0) {
+				echo "$tab<h2>Aucune UE n'est enregistré pour cette promotion</h2>\n";
+			}
+			else {
+				echo "$tab<table class=\"table_liste_administration\">\n";
+				
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				
+				echo "$tab\t\t<th>Nom de l'UE</th>\n";
+				
+				echo "$tab\t\t<th>\n";
+				echo "$tab\t\t\t<select name=\"idUE\" id=\"idUE\" onChange='listeCoursParUE({$idPromotion})'>\n";
+				echo "$tab\t\t\t\t<option value=\"0\">----- Sélection de l'UE -----</option>\n";
+				foreach($liste_UE as $idUE){	
+					$UE = new UE($idUE);
+					echo "$tab\t\t\t\t<option value=\"$idUE\">{$UE->getNom()}</option>\n";
+				}
+				echo "$tab\t\t\t</select>\n";
+				echo "$tab\t\t</th>\n";
+				echo "$tab\t</tr>\n";	
+				echo "$tab</table>\n";				
+			}
+			
+			echo "$tab<div name='page_administration_listeCoursParUE' style='display: none;'>\n";
+			echo "$tab\t<h2>Liste des cours à venir</h2>\n";
+			echo "$tab\t<div name='page_administration_listeCoursParUE_coursFutur'>\n";
+			echo "$tab\t</div>\n";
+			echo "$tab</div>\n";
+		}
+		
 		public function toUl(){
 			$string = "<ul>\n";
 			foreach(UE::$attributs as $att){
