@@ -287,8 +287,8 @@
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutTypeCours']) || isset($_POST['validerModificationTypeCours'])){
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom']);
-				$nom_correct = true;
+				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom_correct = PregMatch::est_nom($nom);
 				
 				$validation_ajout = false;
 				if(isset($_POST['validerAjoutTypeCours'])){
