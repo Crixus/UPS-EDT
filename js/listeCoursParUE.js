@@ -14,7 +14,8 @@ var listeCoursParUE = function(idPromotion) {
 			encoding : 'iso-8859-1',
 			parameters : {
 				idPromotion : idPromotion,
-				nomUE : nomUE
+				nomUE : nomUE,
+				idUE : idUE
 			},
 			onSuccess : function (transport) {
 				document.getElementsByName("page_administration_listeCoursParUE_coursFutur")[0].innerHTML = transport.responseText;
