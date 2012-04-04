@@ -2,20 +2,65 @@
 
 // Informations de base de données
 include_once('../../includes/infos_bdd.php');
+include_once("../../classes/class_V_Infos_UE.php");
+include_once("../../classes/class_Inscription.php");
 include_once("../../classes/class_V_Infos_Cours.php");
 include_once("../../classes/class_Cours.php");
 
-if ( (isset($_POST['nomUE'])) && (isset($_POST['idPromotion'])) ) {
+if ( (isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idPromotion'])) ) {
 
+	$idUE = $_POST['idUE'];
 	$nomUE = $_POST['nomUE'];
 	$idPromotion = $_POST['idPromotion'];
+	$tab = "";
 	
+	echo "$tab\t<h2>Informations de l'UE</h2>\n";
+	echo "$tab<table class=\"table_liste_administration\" style=\"text-align:center;\">\n";	
+	
+	echo "$tab\t<tr class=\"fondGrisFonce\">\n";				
+	echo "$tab\t\t<th colspan='2'>UE</th>\n";
+	echo "$tab\t\t<th colspan='3'>Nombres d'heures</th>\n";
+	echo "$tab\t\t<th rowspan='2'>ECTS</th>\n";
+	echo "$tab\t\t<th rowspan='2'>Responsable</th>\n";
+	echo "$tab\t\t<th rowspan='2'>Nombre<br>d'élèves inscrits</th>\n";				
+	echo "$tab\t</tr>\n";	
+	
+	echo "$tab\t<tr class=\"fondGrisFonce\">\n";	
+	echo "$tab\t\t<th>Nom</th>\n";		
+	echo "$tab\t\t<th>Intitule</th>\n";		
+	echo "$tab\t\t<th>Cours</th>\n";
+	echo "$tab\t\t<th>TD</th>\n";
+	echo "$tab\t\t<th>TP</th>\n";
+	echo "$tab\t</tr>\n";
+	
+	echo "$tab\t<tr>\n";
+	$cptBoucle=0;
+	$val_temp = "";
+	$UE = new V_Infos_UE($idUE);
+	foreach(V_Infos_UE::$attributs as $att){
+		if ($cptBoucle == 6)
+			$val_temp = $UE->$att;
+		else if ($cptBoucle == 7)
+			echo "$tab\t\t<td>".$UE->$att." ".$val_temp."</td>\n";
+		else
+			echo "$tab\t\t<td>".$UE->$att."</td>\n";
+		$cptBoucle++;
+	}
+	$nbreUE = Inscription::nbre_etudiant_inscrit($idUE);
+	echo "$tab\t\t<td>".$nbreUE."</td>\n";
+	echo "$tab\t</tr>\n";
+	
+	echo "$tab</table>\n";
+	echo "$tab<br/>\n";
+	
+	
+	echo "$tab\t<h2>Liste des cours à venir</h2>\n";
 	$liste_cours = V_Infos_Cours::liste_cours_futur_par_UE($idPromotion, $nomUE);
 	$nbCours = sizeof($liste_cours);
 	$tab = "";
 	
 	if ($nbCours == 0) {
-		echo "$tab<b>Aucun cours à venir n'est enregistré pour cette promotion</b>\n";
+		echo "$tab<b>Aucun cours à venir n'est enregistré pour cette UE dans cette promotion</b>\n";
 	}
 	else {
 	
@@ -58,7 +103,7 @@ if ( (isset($_POST['nomUE'])) && (isset($_POST['idPromotion'])) ) {
 				$cptBoucle++;
 			}
 		}
-		
+		echo "$tab\t</tr>\n";
 		echo "$tab</table>\n";
 	}
 }
