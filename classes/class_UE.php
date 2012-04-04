@@ -506,7 +506,6 @@
 			}
 			
 			echo "$tab<div name='page_administration_listeCoursParUE' style='display: none;'>\n";
-			echo "$tab\t<h2>Liste des cours à venir</h2>\n";
 			echo "$tab\t<div name='page_administration_listeCoursParUE_coursFutur'>\n";
 			echo "$tab\t</div>\n";
 			echo "$tab</div>\n";
