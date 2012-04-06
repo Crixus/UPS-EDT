@@ -54,12 +54,62 @@ if ( (isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idPro
 	echo "$tab<br/>\n";
 	
 	
-	echo "$tab\t<h2>Liste des cours à venir</h2>\n";
-	$liste_cours = V_Infos_Cours::liste_cours_futur_par_UE($idPromotion, $nomUE);
-	$nbCours = sizeof($liste_cours);
-	$tab = "";
+	$liste_cours_passe = V_Infos_Cours::liste_cours_passe_par_UE($idPromotion, $nomUE);
+	$nbCoursPasse = sizeof($liste_cours_passe);
+	if ($nbCoursPasse != 0) {
+		echo "$tab\t<h2>Liste des cours terminés</h2>\n";
+		
+		echo "$tab<table class=\"table_liste_administration\">\n";		
+		echo "$tab\t<tr class=\"fondGrisFonce\">\n";		
+		echo "$tab\t\t<th>Intervenant</th>\n";
+		echo "$tab\t\t<th>Type</th>\n";
+		echo "$tab\t\t<th>Date</th>\n";
+		echo "$tab\t\t<th>Salle</th>\n";
+		echo "$tab\t</tr>\n";
+		
+		$cpt = 0;
+		foreach($liste_cours_passe as $idCours){
+			$Cours = new V_Infos_Cours($idCours);
+			
+			$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+			
+			echo "$tab\t<tr class=\"$couleurFond\">\n";
+			$cptBoucle=0;
+			$valTemp="";
+			$valTemp2="";
+			foreach(V_Infos_Cours::$attributs as $att){
+				if ( ($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6) )
+					$valTemp = $Cours->$att;
+				else if ( ($cptBoucle == 2) || ($cptBoucle == 7) ) {
+					$val = $Cours->$att." ".$valTemp;
+					$valTemp="";
+					echo "$tab\t\t<td>".$val."</td>\n";
+				}
+				else if ($cptBoucle == 5) {
+					$valTemp2 = $Cours->$att;
+					$val = "De ".$valTemp." à ".$valTemp2;
+					echo "$tab\t\t<td>";
+					Cours::dateCours($valTemp, $valTemp2);
+					echo "</td>\n";
+				}
+				else if ($cptBoucle != 0){
+					echo "$tab\t\t<td>".$Cours->$att."</td>\n";
+				}
+				$cptBoucle++;
+			}
+		}
+		echo "$tab\t</tr>\n";
+		echo "$tab</table>\n";
+		
+		echo "$tab<br/>\n";
+	}
 	
-	if ($nbCours == 0) {
+	
+	echo "$tab\t<h2>Liste des cours à venir</h2>\n";
+	$liste_cours_futur = V_Infos_Cours::liste_cours_futur_par_UE($idPromotion, $nomUE);
+	$nbCoursFutur = sizeof($liste_cours_futur);
+	
+	if ($nbCoursFutur == 0) {
 		echo "$tab<b>Aucun cours à venir n'est enregistré pour cette UE dans cette promotion</b>\n";
 	}
 	else {
@@ -73,7 +123,7 @@ if ( (isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idPro
 		echo "$tab\t</tr>\n";
 		
 		$cpt = 0;
-		foreach($liste_cours as $idCours){
+		foreach($liste_cours_futur as $idCours){
 			$Cours = new V_Infos_Cours($idCours);
 			
 			$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
