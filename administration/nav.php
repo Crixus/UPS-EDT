@@ -11,23 +11,29 @@
 							<a href="?page=ajoutBatiment<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des bâtiments</a>
 						</li>
 						<li>
+							<a href="?page=ajoutTypeSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Ajout d'un type de salles</a>
+						</li>
+						<li>
 							<a href="?page=ajoutSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des salles</a>
 						</li>
 						<li>
-							<a href="?page=ajoutTypeSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des types de salles</a>
+							<a href="?page=gestionCreneauSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des salles</a>
 						</li>
 					</ul>
 					
 					<h1>Gestion des intervenants</h1>
 					<ul>
 						<li>
-							<a href="?page=ajoutIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des intervenants</a>
+							<a href="?page=ajoutIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Ajout d'un intervenant</a>
+						</li>
+						<li>
+							<a href="?page=gestionCreneauIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des intervenants</a>
 						</li>
 					</ul>
 					<h1>Gestion des cours</h1>
 					<ul>
 						<li>
-							<a href="?page=ajoutTypeCours<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des types de cours</a>
+							<a href="?page=ajoutTypeCours<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Ajout d'un type de cours</a>
 						</li>
 <?php 
 	if(isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)){
@@ -57,9 +63,6 @@
 						<li>
 							<a href="?page=ajoutUE<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>">Ajout d'une UE</a>
 						</li>
-						<li>
-							<a href="?page=listeInscriptionsUE&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Inscriptions des étudiants aux UE</a>
-						</li>
 <?php
 	}
 ?>
@@ -71,6 +74,9 @@
 					<ul>
 						<li>
 							<a href="?page=ajoutEtudiant&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Ajout d'un étudiant</a>
+						</li>
+						<li>
+							<a href="?page=listeInscriptionsUE&amp;idPromotion=<?php echo $_GET['idPromotion']; ?>" >Inscriptions des étudiants aux UE</a>
 						</li>
 					</ul>
 						
