@@ -29,7 +29,7 @@
 		}
 	}
 	
-	$debutSemaine = $startTime = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - ((date('N')-1)*3600*24);
+	$debutSemaine = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - ((date('N')-1)*3600*24);
 	$semainePredente = $_GET['semaine'] - 604800;
 	$semaineSuivante = $_GET['semaine'] + 604800;
 	// Gestion heures d'été
@@ -82,7 +82,7 @@
 ?>
 			</section>
 			<footer>
-				<p><a href="#">Téléchargement PDF</a> - <a href="#">Téléchargement Google Agenda</a></p>
+				<p><a href="./export.php?semaine=<?php echo $_GET['semaine']; ?>">Téléchargement PDF</a> - <a href="#">Téléchargement Google Agenda</a></p>
 				<p><a href="#">Manuel Utilisateur</a></p>
 				<p><a href="./deconnexion.php">Deconnexion</a></p>
 			</footer>
