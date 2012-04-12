@@ -298,7 +298,7 @@
 			$liste_intervenant = Intervenant::liste_intervenant();
 			
 			if(isset($_GET['modifier_creneauIntervenant'])){ 
-				$titre = "Modifier un creneau intervenant";
+				$titre = "Modifier un creneau de disponibilité pour un intervenant";
 				$Creneau_Intervenant = new Creneau_Intervenant($_GET['modifier_creneauIntervenant']);
 				$idIntervenantModif = $Creneau_Intervenant->getIdIntervenant();
 				$tsDebutModif = $Creneau_Intervenant->getTsDebut();
@@ -312,7 +312,7 @@
 				}
 			}
 			else{
-				$titre = "Ajouter un creneau intervenant";
+				$titre = "Ajouter un creneau de disponibilité pour un intervenant";
 				$idTypeCoursModif = 1;
 				$idSalleModif = 0;
 				$valueSubmit = "Ajouter le creneau intervenant"; 
@@ -554,7 +554,7 @@
 		public static function page_administration($nombreTabulations = 0) {			
 			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Creneau_Intervenant::formulaireAjoutCreneauIntervenant($nombreTabulations + 1);
-			echo "$tab<h2>Liste des creneaux intervenant</h2>\n";
+			echo "$tab<h2>Liste des creneaux de disponibilités des intervenants</h2>\n";
 			Creneau_Intervenant::liste_creneauIntervenant_to_table($nombreTabulations + 1);
 		}
 	}
