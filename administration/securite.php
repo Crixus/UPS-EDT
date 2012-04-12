@@ -11,7 +11,7 @@
 		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", "ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php", "gestionGroupeCours.php", "listeCoursParUE.php"
 	);
 	$listePagesAdminHorsPromo = Array(
-		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php", "infosBatiment.php", "infosSalle.php", "gestionCreneauSalle.php", "gestionCreneauIntervenant.php"
+		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php", "ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php", "styleTypeCours.php", "infosBatiment.php", "infosSalle.php", "gestionCreneauSalle.php", "ajoutCreneauIntervenant.php"
 	);
 	
 	// Test des pages accessible : promotion choisie ou non
@@ -129,6 +129,16 @@
 				$get_modifier = 'modifier_groupeEtudiants';
 				$get_supprimer = 'supprimer_groupeEtudiants';
 				$methode_existe = 'existe_groupeEtudiants';
+				break;
+			
+			case "ajoutCreneauIntervenant":
+				$implemented = true;
+				$class = get_class(new Creneau_Intervenant(0));
+				$post_ajouter = 'validerAjoutCreneauIntervenant';
+				$post_modifier = 'validerModificationCreneauIntervenant';
+				$get_modifier = 'modifier_creneauIntervenant';
+				$get_supprimer = 'supprimer_creneauIntervenant';
+				$methode_existe = 'existe_creneauIntervenant';
 				break;
 				
 			default:
