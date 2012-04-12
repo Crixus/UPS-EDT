@@ -27,7 +27,7 @@
 							<a href="?page=ajoutIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Ajout d'un intervenant</a>
 						</li>
 						<li>
-							<a href="?page=gestionCreneauIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des intervenants</a>
+							<a href="?page=ajoutCreneauIntervenant<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des intervenants</a>
 						</li>
 					</ul>
 					<h1>Gestion des cours</h1>
