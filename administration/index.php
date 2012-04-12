@@ -69,7 +69,8 @@
 	
 	Creneau_Intervenant::prise_en_compte_formulaire();
 	Creneau_Intervenant::prise_en_compte_suppression();
-	
+	Creneau_Salle::prise_en_compte_formulaire();
+	Creneau_Salle::prise_en_compte_suppression();
 ?>
 <!DOCTYPE html>
 	<head>
