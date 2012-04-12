@@ -17,7 +17,7 @@
 							<a href="?page=ajoutSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion des salles</a>
 						</li>
 						<li>
-							<a href="?page=gestionCreneauSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des salles</a>
+							<a href="?page=ajoutCreneauSalle<?php if(isset($_GET['idPromotion'])){?>&amp;idPromotion=<?php echo $_GET['idPromotion']; }?>" >Gestion de la disponibilité des salles</a>
 						</li>
 					</ul>
 					
