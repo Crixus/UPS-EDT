@@ -8,21 +8,21 @@
 			"idEtudiant"
 		);
 		
-		public function Inscription(){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Inscription() {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Inscription::$nomTable);
 				$req->execute();
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Inscription::$attributs as $att){
+				foreach (Inscription::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -35,7 +35,7 @@
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";
 			
-			if ( ($nbre_etudiants == 0) || ($nbre_UE == 0) ){
+			if ( ($nbre_etudiants == 0) || ($nbre_UE == 0) ) {
 				echo "$tab<h2>Aucun étudiant n'a été inscrit et/ou aucune UE n'a été créé pour cette promotion</h2>\n";
 			}
 			else {
@@ -48,7 +48,7 @@
 				echo "$tab\t</tr>\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				foreach($liste_UE as $idUE){
+				foreach ($liste_UE as $idUE) {
 					$UE = new UE($idUE);
 					echo "$tab\t\t<td>".$UE->getNom()."</td>\n";
 				}
@@ -57,16 +57,16 @@
 				echo "$tab\t<tr>\n";
 				echo "$tab\t<th class=\"fondGrisFonce\" rowspan='{$nbre_etudiants}'>Nom<br/>des<br/>étudiants</th>\n";
 				$cpt = 0;
-				foreach($liste_etudiants as $idEtudiant){
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
+				foreach ($liste_etudiants as $idEtudiant) {
+					if ($cpt == 0) { $couleurFond="fondBlanc"; }
+					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
 					$Etudiant = new Etudiant($idEtudiant);
 					echo "$tab\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
 					echo "$tab\t\t<td class=\"$couleurFond\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
 					
-					foreach($liste_UE as $idUE){
+					foreach ($liste_UE as $idUE) {
 						$UE = new UE($idUE);
 
 						$nom_case = "case_UE_".$idUE;
@@ -83,7 +83,7 @@
 				
 				echo "$tab\t<tr>\n";
 				echo "$tab\t<th class=\"fondGrisFonce\" colspan='3'>Toute la promotion</th>\n";
-				foreach($liste_UE as $idUE){
+				foreach ($liste_UE as $idUE) {
 					$UE = new UE($idUE);
 
 					$nom_case = "case_promotion_".$idUE;
@@ -101,9 +101,9 @@
 		}
 		
 		public function est_inscrit ($idEtudiant, $idUE) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM ".Inscription::$nomTable." WHERE idUE=? AND idEtudiant=?");
 				$req->execute(
@@ -119,15 +119,15 @@
 				
 				return $estInscrit;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}		
 		}
 		
 		public function est_inscrit_promotion ($idUE) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM ".Inscription::$nomTable." WHERE idUE=?");
 				$req->execute(
@@ -142,15 +142,15 @@
 				
 				return $estInscrit;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}		
 		}		
 		
 		public function nbre_UE_inscrit ($idEtudiant) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(idUE) AS nb FROM ".Inscription::$nomTable." WHERE idEtudiant=?");
 				$req->execute(
@@ -163,15 +163,15 @@
 				
 				return $nbUE;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public function nbre_etudiant_inscrit ($idUE) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(idEtudiant) AS nb FROM ".Inscription::$nomTable." WHERE idUE=?");
 				$req->execute(
@@ -184,24 +184,24 @@
 				
 				return $nbUE;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public function toString(){
+		public function toString() {
 			$string = "";
-			foreach(Inscription::$attributs as $att){
+			foreach (Inscription::$attributs as $att) {
 				$string .= "$att".":".$this->$att." ";
 			}
 			return $string;
 		}
 		
-		public static function creer_table(){
+		public static function creer_table() {
 			return Utils_SQL::sql_from_file("./sql/".Inscription::$nomTable.".sql");
 		}
 		
-		public static function supprimer_table(){
+		public static function supprimer_table() {
 			return Utils_SQL::sql_supprimer_table(Inscription::$nomTable);
 		}
 	}

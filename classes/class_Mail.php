@@ -3,19 +3,19 @@
 		
 		// A TESTER
 		
-		public static function array_email_to_string($array){
+		public static function array_email_to_string($array) {
 			$nombreEmails = sizeof($array);
 			$string = "";
-			for($i = 0 ; $i < $nombreEmails ; $i++){
+			for ($i = 0 ; $i < $nombreEmails ; $i++) {
 				$string .= $array[$i];
-				if($i != ($nombreEmails -1)){
+				if ($i != ($nombreEmails -1)) {
 					$string .= ", ";
 				}
 			}
 			return $string;
 		}
 		
-		public static function envoyer_email($sujet, $contenu, $expediteur, $destinataires, $cc_destinataires, $bcc_destinataires){
+		public static function envoyer_email($sujet, $contenu, $expediteur, $destinataires, $cc_destinataires, $bcc_destinataires) {
 			$to = Mail::array_email_to_string($destinataires);
 			$cc = Mail::array_email_to_string($cc_destinataires);
 			$bcc = Mail::array_email_to_string($bcc_destinataires);
@@ -36,7 +36,7 @@
 			return mail($to, $subject, $message, $headers);
 		}
 		
-		public static function envoyer_creation_utilisateur($mail, $login, $mot_de_passe){
+		public static function envoyer_creation_utilisateur($mail, $login, $mot_de_passe) {
 
 			$sujet = "UPS-EDT - Connexion";
 			$destinataires = Array($mail);
@@ -49,8 +49,8 @@
 			return Mail::envoyer_email($sujet, $message, "ups-edt@ups-tlse3.com", $destinataires, $cc_destinataires, $bcc_destinataires);			
 		}
 		
-		public static function envoyer_modification_motDePasse_utilisateur($Utilisateur, $mot_de_passe){
-			switch($Utilisateur->getType()){
+		public static function envoyer_modification_motDePasse_utilisateur($Utilisateur, $mot_de_passe) {
+			switch ($Utilisateur->getType()) {
 				case "Etudiant":
 					$Destinataire = new Etudiant($Utilisateur->getIdCorrespondant());
 					break;

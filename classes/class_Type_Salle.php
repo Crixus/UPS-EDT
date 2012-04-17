@@ -8,13 +8,13 @@
 			"nom"
 		);
 		
-		public function getId(){ return $this->id; }
-		public function getNom(){ return $this->nom; }
+		public function getId() { return $this->id; }
+		public function getNom() { return $this->nom; }
 		
-		public function Type_Salle($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Type_Salle($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Type_Salle::$nomTable." WHERE id=?");
 				$req->execute(
@@ -23,19 +23,19 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Type_Salle::$attributs as $att){
+				foreach (Type_Salle::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_type_salle($nom){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function ajouter_type_salle($nom) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Type_Salle::$nomTable." VALUES(?, ?)");
 				
@@ -46,15 +46,15 @@
 					)
 				);			
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function modifier_type_salle($idTypeSalle, $nom){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_type_salle($idTypeSalle, $nom) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Type_Salle::$nomTable." SET nom=? WHERE id=?;");
 				$req->execute(
@@ -64,47 +64,47 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_type_salle($idTypeSalle){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function supprimer_type_salle($idTypeSalle) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Type_Salle::$nomTable." WHERE id=?;");
 				$req->execute(
 					Array($idTypeSalle)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function liste_id_type_salle(){
+		public static function liste_id_type_salle() {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Type_Salle::$nomTable." ORDER BY nom");
 				$req->execute();
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_type_salle_to_table($nombreTabulations = 0, $administration = false){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public static function liste_type_salle_to_table($nombreTabulations = 0, $administration = false) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbre_type_cours = sizeof($liste_type_cours);
@@ -115,13 +115,13 @@
 			echo "$tab\t\t<th rowspan='2'>Nom</th>\n";
 			echo "$tab\t\t<th colspan='{$nbre_type_cours}'>Type de cours</th>\n";
 			
-			if($administration){
+			if ($administration) {
 				echo "$tab\t\t<th rowspan='2'>Actions</th>\n";
 			}
 			echo "$tab\t</tr>\n";
 			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 			
-			foreach($liste_type_cours as $idType_Cours) {					
+			foreach ($liste_type_cours as $idType_Cours) {					
 				$Type_Cours = new Type_Cours($idType_Cours);
 				$nomType_Cours = $Type_Cours->getNom();
 				echo "$tab\t\t<th>$nomType_Cours</th>\n";
@@ -129,7 +129,7 @@
 			echo "$tab\t</tr>\n";
 			
 			$cpt = 0;
-			foreach($liste_type_salle as $idTypeSalle){
+			foreach ($liste_type_salle as $idTypeSalle) {
 				$Type_Salle = new Type_Salle($idTypeSalle);
 				
 				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt = ($cpt + 1)%2;
@@ -137,10 +137,10 @@
 				echo "$tab\t<tr class=\"$couleurFond\">\n";
 				echo "$tab\t\t<td>{$Type_Salle->getNom()}</td>\n";
 				
-				foreach($liste_type_cours as $idTypeCours) {				
+				foreach ($liste_type_cours as $idTypeCours) {				
 					$Type_Cours = new Type_Cours($idTypeCours);
 					$nomType_Cours = $Type_Cours->getNom();
-					if(Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
+					if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
 						$checked = "checked = \"checked\"" ;
 					else
 						$checked = "";
@@ -150,10 +150,10 @@
 					echo "</td>\n";
 				}
 				
-				if($administration){
+				if ($administration) {
 					$pageModification = "./index.php?page=ajoutTypeSalle&amp;modifier_type_salle=$idTypeSalle";
 					$pageSuppression = "./index.php?page=ajoutTypeSalle&amp;supprimer_type_salle=$idTypeSalle";
-					if(isset($_GET['idPromotion'])){
+					if (isset($_GET['idPromotion'])) {
 						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 					}
@@ -167,10 +167,10 @@
 			echo "$tab</table>\n";
 		}
 		
-		public static function existe_type_salle($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_type_salle($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Type_Salle::$nomTable." WHERE id=?");
 				$req->execute(
@@ -181,15 +181,15 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_nom_type_salle($nom){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_nom_type_salle($nom) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Type_Salle::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -200,15 +200,15 @@
 				
 				return $ligne['nb'] >= 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public function formulaireAjoutTypeSalle($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public function formulaireAjoutTypeSalle($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
-			if(isset($_GET['modifier_type_salle'])){ 
+			if (isset($_GET['modifier_type_salle'])) { 
 				$titre = "Modifier un type de salle";
 				$Type_Salle = new Type_Salle($_GET['modifier_type_salle']);
 				$nomModif = "value=\"{$Type_Salle->getNom()}\"";
@@ -216,11 +216,11 @@
 				$nameSubmit = "validerModificationTypeSalle";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_type_salle']}\" />";
 				$lienAnnulation = "index.php?page=ajoutTypeSalle";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un type de salle";
 				$nomModif = (isset($_POST['nom'])) ? "value=\"{$_POST['nom']}\"" : "";
 				$valueSubmit = "Ajouter un type de salle"; 
@@ -246,49 +246,49 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";	
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
 		}	
 		
-		public static function prise_en_compte_formulaire(){
+		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutTypeSalle'])){
+			if (isset($_POST['validerAjoutTypeSalle'])) {
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = !Type_Salle::existe_nom_type_salle($nom);
-				if($nom_correct){ // Test de saisie	
+				if ($nom_correct) { // Test de saisie	
 					Type_Salle::ajouter_type_salle($nom);
 					array_push($messages_notifications, "Le type de salle a bien été ajouté");
 				}
-				else{
+				else {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(!$nom_correct){ array_push($messages_erreurs, "Le nom de type de cours existe déjà"); }
+					if (!$nom_correct) { array_push($messages_erreurs, "Le nom de type de cours existe déjà"); }
 				}
 			}
-			else if(isset($_POST['validerModificationTypeSalle'])){
+			else if (isset($_POST['validerModificationTypeSalle'])) {
 				$id = htmlentities($_POST['id']);
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = true;
-				if($nom_correct){ // Test de saisie	
+				if ($nom_correct) { // Test de saisie	
 					Type_Salle::modifier_type_salle($id, $nom);
 					array_push($messages_notifications, "Le type de salle a bien été modifié");
 				}
-				else{
+				else {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
-		public static function prise_en_compte_suppression(){
+		public static function prise_en_compte_suppression() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_GET['supprimer_type_salle'])){		
-				if(Type_Salle::existe_type_salle($_GET['supprimer_type_salle'])){
+			if (isset($_GET['supprimer_type_salle'])) {		
+				if (Type_Salle::existe_type_salle($_GET['supprimer_type_salle'])) {
 					Type_Salle::supprimer_type_salle($_GET['supprimer_type_salle']);
 					array_push($messages_notifications, "Le type de salle a bien été supprimé");
 				}
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public static function page_administration($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Type_Salle::formulaireAjoutTypeSalle($nombreTabulations + 1);
 			echo "$tab<h2>Liste des types de salles</h2>\n";
 			Type_Salle::liste_type_salle_to_table($nombreTabulations + 1, true);
@@ -296,9 +296,9 @@
 		
 		public function appartient_salle_typeSalle($idSalle, $idType_Salle) {
 			$appartient = 0;
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM ".Appartient_Salle_TypeSalle::$nomTable." WHERE idSalle = ? AND idTypeSalle = ?");
 				$req->execute(
@@ -313,7 +313,7 @@
 				$req->closeCursor();
 				return $appartient;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}			
 		}

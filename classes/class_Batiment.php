@@ -50,8 +50,8 @@
 		 */
 		public function Batiment($id) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Batiment::$nomTable." WHERE id=?");
 				$req->execute(
@@ -76,8 +76,8 @@
 		 */
 		public static function Batiment_from_nom($nom) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Batiment::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -101,8 +101,8 @@
 		 */
 		public static function ajouter_batiment($nom, $lat, $lon) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Batiment::$nomTable." VALUES(?, ?, ?, ?)");
 				
@@ -123,8 +123,8 @@
 		 */
 		public static function modifier_batiment($idBatiment, $nom, $lat, $lon) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Batiment::$nomTable." SET nom=?, lat=?, lon=? WHERE id=?;");
 				$req->execute(
@@ -141,13 +141,13 @@
 		 */
 		public static function supprimer_batiment($idBatiment) {
 			if ($idBatiment != 0) {
-				$Batiment = new Batiment($idBatiment);
-				foreach ($Batiment->liste_salles() as $Salle) {
+				$_batiment = new Batiment($idBatiment);
+				foreach ($_batiment->liste_salles() as $Salle) {
 					Cours::modifier_salle_tout_cours($Salle->getId(), 0);
 				}
 				try {
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("DELETE FROM ".Batiment::$nomTable." WHERE id=?;");
 					$req->execute(
@@ -166,8 +166,8 @@
 		public function liste_salles() {
 			$listeSalle = Array();
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Salle::$nomTable." WHERE nomBatiment=?");
 				$req->execute(
@@ -186,8 +186,8 @@
 		
 		public static function existe_batiment($id) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Batiment::$nomTable." WHERE id=?");
 				$req->execute(
@@ -204,8 +204,8 @@
 		
 		public static function existe_nom_batiment($nom) {
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Batiment::$nomTable." WHERE nom=?");
 				$req->execute(
@@ -221,7 +221,7 @@
 		}
 		
 		public function table_salles($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$liste_salles = $this->liste_salles();
 			
 			if (sizeof($liste_salles) == 0) {
@@ -250,8 +250,8 @@
 		public static function liste_batiment() {
 			$listeId = Array();
 			try {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Batiment::$nomTable." ORDER BY UPPER(nom)");
 				$req->execute();
@@ -280,19 +280,19 @@
 			$cpt = 0;
 			foreach ($liste_batiment as $idBatiment) {
 				if ($idBatiment != 0) {
-					$Batiment = new Batiment($idBatiment);
+					$_batiment = new Batiment($idBatiment);
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-					$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$Batiment->getId()}";
+					$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$_batiment->getId()}";
 					if (isset($_GET['idPromotion'])) {
 						$lienInfosBatiment .= "&amp;idPromotion=".$_GET['idPromotion'];
 					}
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					echo $tab."\t\t<td>";
-					echo "<a href=\"$lienInfosBatiment\">".$Batiment->getNom()."</a>";
+					echo "<a href=\"" . $lienInfosBatiment . "\">".$_batiment->getNom()."</a>";
 					echo "</td>\n";
-					echo $tab."\t\t<td>{$Batiment->getLat()}</td>\n";
-					echo $tab."\t\t<td>{$Batiment->getLon()}</td>\n";
+					echo $tab."\t\t<td>{$_batiment->getLat()}</td>\n";
+					echo $tab."\t\t<td>{$_batiment->getLon()}</td>\n";
 
 					$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
 					$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
@@ -315,10 +315,10 @@
 			
 			if (isset($_GET['modifier_batiment'])) { 
 				$titre = "Modifier un batiment";
-				$Batiment = new Batiment($_GET['modifier_batiment']);
-				$nomModif = "value=\"".$Batiment->getNom()."\"";
-				$latModif = "value=\"".$Batiment->getLat()."\"";
-				$lonModif = "value=\"".$Batiment->getLon()."\"";
+				$_batiment = new Batiment($_GET['modifier_batiment']);
+				$nomModif = "value=\"" . $_batiment->getNom() . "\"";
+				$latModif = "value=\"" . $_batiment->getLat() . "\"";
+				$lonModif = "value=\"" . $_batiment->getLon() . "\"";
 				$valueSubmit = "Modifier le batiment"; 
 				$nameSubmit = "validerModificationBatiment";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_batiment']}\" />";
@@ -374,10 +374,10 @@
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
 			if (isset($_POST['validerAjoutBatiment'])) {
-				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])){
+				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])) {
 					array_push($messages_erreurs, "Problème de formulaire");
 				}
-				else{
+				else {
 					$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 					$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 					$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);

@@ -13,18 +13,18 @@
 			"tsFin"
 		);
 		
-		public function getId(){ return $this->id; }
-		public function getIdUE(){ return $this->idUE; }
-		public function getIdSalle(){ return $this->idSalle; }
-		public function getIdIntervenant(){ return $this->idIntervenant; }
-		public function getIdTypeCours(){ return $this->idTypeCours; }
-		public function getTsDebut(){ return $this->tsDebut; }
-		public function getTsFin(){ return $this->tsFin; }
+		public function getId() { return $this->id; }
+		public function getIdUE() { return $this->idUE; }
+		public function getIdSalle() { return $this->idSalle; }
+		public function getIdIntervenant() { return $this->idIntervenant; }
+		public function getIdTypeCours() { return $this->idTypeCours; }
+		public function getTsDebut() { return $this->tsDebut; }
+		public function getTsFin() { return $this->tsFin; }
 		
-		public function Cours($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Cours($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Cours::$nomTable." WHERE id=?");
 				$req->execute(
@@ -33,21 +33,21 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Cours::$attributs as $att){
+				foreach (Cours::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite){
+		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite) {
 		
 			for ($i=0; $i<=$recursivite; $i++) {
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				try {
+					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("INSERT INTO ".Cours::$nomTable." VALUES(?, ?, ?, ?, ?, ?, ?)");
 					$req->execute(
@@ -62,7 +62,7 @@
 						)
 					);
 				}
-				catch(Exception $e){
+				catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
@@ -71,7 +71,7 @@
 			}			
 		}
 		
-		public static function datePlusUneSemaine($tsDate){
+		public static function datePlusUneSemaine($tsDate) {
 			$tsDate_explode = explode(' ',$tsDate);
 			$tsDate_jma = $tsDate_explode[0];
 			$tsDate_hms = $tsDate_explode[1];
@@ -83,10 +83,10 @@
 			return $date;
 		}
 		
-		public static function modifier_cours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_cours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idUE=?, idSalle=?, idIntervenant=?, idTypeCours=?, tsDebut=?, tsFin=? WHERE id=?;");
 				$req->execute(
@@ -101,16 +101,16 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_cours($idCours){
+		public static function supprimer_cours($idCours) {
 			//Suppression des apparitions du cours dans la table "Appartient_Cours_GroupeCours"
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Appartient_Cours_GroupeCours::$nomTable." WHERE idCours=?;");
 				$req->execute(
@@ -120,9 +120,9 @@
 				);			
 			
 				//Suppression du cours
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				try {
+					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("DELETE FROM ".Cours::$nomTable." WHERE id=?;");
 					$req->execute(
@@ -131,49 +131,49 @@
 						)
 					);
 				}
-				catch(Exception $e){
+				catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function modifier_salle($idCours, $idSalle){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_salle($idCours, $idSalle) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idSalle=? WHERE id=?;");
 				$req->execute(
 					Array($idSalle, $idCours)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function modifier_salle_tout_cours($idSalleSrc, $idSalleDst){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_salle_tout_cours($idSalleSrc, $idSalleDst) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idSalle=? WHERE idSalle=?;");
 				$req->execute(
 					Array($idSalleDst, $idSalleSrc)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbCours = sizeof($liste_cours);
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCours == 0) {
 				echo "$tab<b>Aucun cours à venir n'est enregistré pour cette promotion</b>\n";
@@ -190,13 +190,13 @@
 				echo "$tab\t\t<th>Date</th>\n";
 				echo "$tab\t\t<th>Salle</th>\n";
 				
-				if($administration){
+				if ($administration) {
 					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
 				
 				$cpt = 0;
-				foreach($liste_cours as $idCours){
+				foreach ($liste_cours as $idCours) {
 					$Cours = new V_Infos_Cours($idCours);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
@@ -205,7 +205,7 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
-					foreach(V_Infos_Cours::$attributs as $att){
+					foreach (V_Infos_Cours::$attributs as $att) {
 						if ( ($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6) )
 							$valTemp = $Cours->$att;
 						else if ( ($cptBoucle == 2) || ($cptBoucle == 7) ) {
@@ -225,10 +225,10 @@
 						}
 						$cptBoucle++;
 					}
-					if($administration){
+					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCours&modifier_cours=$idCours";
 						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours=$idCours";
-						if(isset($_GET['idPromotion'])){
+						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 						}
@@ -321,13 +321,13 @@
 		}		
 		
 		// Formulaire
-		public function formulaireAjoutCours($idPromotion, $nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutCours($idPromotion, $nombresTabulations = 0) {
+			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
 			$liste_intervenant = Intervenant::liste_intervenant();
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			
-			if(isset($_GET['modifier_cours'])){ 
+			if (isset($_GET['modifier_cours'])) { 
 				$titre = "Modifier un cours";
 				$Cours = new Cours($_GET['modifier_cours']);
 				$idUEModif = $Cours->getIdUE();
@@ -340,11 +340,11 @@
 				$nameSubmit = "validerModificationCours";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_cours']}\" />";
 				$lienAnnulation = "index.php?page=ajoutCours";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un cours";
 				$idTypeCoursModif = 1;
 				$idSalleModif = 0;
@@ -360,10 +360,10 @@
 			echo "$tab\t\t\t<td><label for=\"UE\">UE</label></td>\n";
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
-			foreach($liste_UE_promotion as $idUE){
+			foreach ($liste_UE_promotion as $idUE) {
 				$UE = new UE($idUE);
 				$nomUE = $UE->getNom();
-				if(isset($idUEModif) && ($idUEModif == $idUE)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+				if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
 			}
 			echo "$tab\t\t\t\t</select>\n";
@@ -374,10 +374,10 @@
 			echo "$tab\t\t\t<td><label for=\"type\">Type</label></td>\n";
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
-			foreach($liste_type_cours as $idTypeCours){
+			foreach ($liste_type_cours as $idTypeCours) {
 				$Type_Cours = new Type_Cours($idTypeCours);
 				$nomTypeCours = $Type_Cours->getNom();
-				if($idTypeCoursModif == $idTypeCours){ $selected = "selected=\"selected\""; } else{ $selected = ""; }
+				if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
 			}
 			echo "$tab\t\t\t\t</select>\n";
@@ -389,13 +389,13 @@
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
 			
-			if(isset($idIntervenantModif) && ($idIntervenantModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+			if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach($liste_intervenant as $idIntervenant){
+			foreach ($liste_intervenant as $idIntervenant) {
 				if ($idIntervenant != 0) {
 					$Intervenant = new Intervenant($idIntervenant);
 					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-					if(isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
 				}
 			}
@@ -403,14 +403,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsDebutModif)){
+			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
 				$valueDateDebut = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureDebut = $explodeHeure[0];
 				$valueMinuteDebut = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateDebut = "";
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
@@ -442,7 +442,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteDebut) {
+				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
@@ -459,14 +459,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsFinModif)){
+			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
 				$valueDateFin = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureFin = $explodeHeure[0];
 				$valueMinuteFin = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateFin = "";
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
@@ -497,7 +497,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteFin) {
+				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
@@ -525,14 +525,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(! isset($_GET['modifier_cours'])){ 
+			if (! isset($_GET['modifier_cours'])) { 
 				echo "$tab\t\t<tr>\n";
 				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
 				echo "$tab\t\t\t<td>\n";
 				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
 				
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
-				for($i=1; $i<=10; $i++){
+				for ($i=1; $i<=10; $i++) {
 					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
 				}
 				echo "$tab\t\t\t\t</select> (en semaines)\n";
@@ -548,27 +548,27 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		public static function liste_salle_suivant_typeCours($idSalleModif, $idTypeCours) {
 			$tab = "";
 			$liste_salle = V_Liste_Salles::liste_salles_appartenant_typeCours($idTypeCours);
 			
-			if(isset($idSalleModif) && ($idSalleModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach($liste_salle as $idSalle){
+			foreach ($liste_salle as $idSalle) {
 				$Salle = new V_Liste_Salles($idSalle);
 				$nomBatiment = $Salle->getNomBatiment();
 				$nomSalle = $Salle->getNomSalle();
-				if(isset($idSalleModif) && ($idSalleModif == $idSalle)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"$idSalle\" $selected>$nomBatiment $nomSalle</option>\n";
 			}
 		}
 		
-		public static function prise_en_compte_formulaire(){
+		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_POST['validerAjoutCours'])){
+			if (isset($_POST['validerAjoutCours'])) {
 				$idUE = $_POST['UE'];
 				$idUE_correct = true;
 				$idSalle = $_POST['salle'];
@@ -591,15 +591,15 @@
 				$minuteFin_correct = true;
 				$recursivite = $_POST['recursivite'];
 				$recursivite_correct = true;
-				if($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct){	
+				if ($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);				
 					array_push($messages_notifications, "Le cours a bien été ajouté");
 				}
-				else{
+				else {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
-			else if(isset($_POST['validerModificationCours'])){	
+			else if (isset($_POST['validerModificationCours'])) {	
 				$id = $_POST['id']; 
 				$id_correct = V_Infos_Cours::existe_cours($id);			
 				$idUE = $_POST['UE'];
@@ -622,51 +622,51 @@
 				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
-				if($id_correct && $idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){
+				if ($id_correct && $idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {
 					Cours::modifier_cours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 					array_push($messages_notifications, "Le cours a bien été modifié");
 				}
-				else{
+				else {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
-		public static function prise_en_compte_suppression(){
+		public static function prise_en_compte_suppression() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_GET['supprimer_cours'])){	
-				if(V_Infos_Cours::existe_cours($_GET['supprimer_cours'])){
+			if (isset($_GET['supprimer_cours'])) {	
+				if (V_Infos_Cours::existe_cours($_GET['supprimer_cours'])) {
 					// Le cours existe
 					Cours::supprimer_cours($_GET['supprimer_cours']);
 					array_push($messages_notifications, "Le cours à bien été supprimé");
 				}
-				else{
+				else {
 					// Le cours n'existe pas
 					array_push($messages_erreurs, "Le cours n'existe pas");
 				}
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public static function page_administration($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo "$tab<h2>Liste des cours à venir</h2>\n";
 			Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}		
 		
-		public function toUl(){
+		public function toUl() {
 			$string = "<ul>\n";
-			foreach(Cours::$attributs as $att){
+			foreach (Cours::$attributs as $att) {
 				$string .= "<li>$att : ".$this->$att."</li>\n";
 			}
 			return "$string</ul>\n";
 		}
 		
-		public static function creer_table(){
+		public static function creer_table() {
 			return Utils_SQL::sql_from_file("./sql/".Cours::$nomTable.".sql");
 		}
 		
-		public static function supprimer_table(){
+		public static function supprimer_table() {
 			return Utils_SQL::sql_supprimer_table(Cours::$nomTable);
 		}
 	}

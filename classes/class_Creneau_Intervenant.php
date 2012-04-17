@@ -11,16 +11,16 @@
 		);
 		
 		
-		public function getId(){ return $this->id; }
-		public function getIdIntervenant(){ return $this->idIntervenant; }
-		public function getTsDebut(){ return $this->tsDebut; }
-		public function getTsFin(){ return $this->tsFin; }
+		public function getId() { return $this->id; }
+		public function getIdIntervenant() { return $this->idIntervenant; }
+		public function getTsDebut() { return $this->tsDebut; }
+		public function getTsFin() { return $this->tsFin; }
 		
 		
-		public function Creneau_Intervenant($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Creneau_Intervenant($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Creneau_Intervenant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -29,19 +29,19 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Creneau_Intervenant::$attributs as $att){
+				foreach (Creneau_Intervenant::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_creneauIntervenant($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_creneauIntervenant($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Creneau_Intervenant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -52,17 +52,17 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_creneauIntervenant($idIntervenant, $tsDebut, $tsFin, $recursivite){
+		public static function ajouter_creneauIntervenant($idIntervenant, $tsDebut, $tsFin, $recursivite) {
 		
 			for ($i=0; $i<=$recursivite; $i++) {
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				try {
+					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("INSERT INTO ".Creneau_Intervenant::$nomTable." VALUES(?, ?, ?, ?)");
 					$req->execute(
@@ -74,7 +74,7 @@
 						)
 					);
 				}
-				catch(Exception $e){
+				catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
@@ -83,10 +83,10 @@
 			}			
 		}
 		
-		public static function modifier_creneauIntervenant($idCreneauIntervenant, $idIntervenant, $tsDebut, $tsFin){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_creneauIntervenant($idCreneauIntervenant, $idIntervenant, $tsDebut, $tsFin) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Creneau_Intervenant::$nomTable." SET idIntervenant=?, tsDebut=?, tsFin=? WHERE id=?;");
 				$req->execute(
@@ -98,16 +98,16 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_creneauIntervenant($idCreneauIntervenant){
+		public static function supprimer_creneauIntervenant($idCreneauIntervenant) {
 			//Suppression du creneau pour l'intervenant
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Creneau_Intervenant::$nomTable." WHERE id=?;");
 				$req->execute(
@@ -116,36 +116,36 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		
-		public static function liste_creneauIntervenant(){
+		public static function liste_creneauIntervenant() {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Creneau_Intervenant::$nomTable." ORDER BY tsDebut");
 				$req->execute();
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
 		
-		public static function liste_creneauIntervenant_to_table($administration, $nombreTabulations = 0){
+		public static function liste_creneauIntervenant_to_table($administration, $nombreTabulations = 0) {
 			$liste_creneauIntervenant = Creneau_Intervenant::liste_creneauIntervenant();
 			$nbCreneauIntervenant = sizeof($liste_creneauIntervenant);
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCreneauIntervenant == 0) {
 				echo "$tab<b>Aucunes disponibilités n'a été enregistrés</b>\n";
@@ -159,13 +159,13 @@
 				echo "$tab\t\t<th>Intervenant</th>\n";
 				echo "$tab\t\t<th>Date</th>\n";
 				
-				if($administration){
+				if ($administration) {
 					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
 				
 				$cpt = 0;
-				foreach($liste_creneauIntervenant as $idCreneauIntervenant){
+				foreach ($liste_creneauIntervenant as $idCreneauIntervenant) {
 					$Creneau_Intervenant = new Creneau_Intervenant($idCreneauIntervenant);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
@@ -174,7 +174,7 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
-					foreach(Creneau_Intervenant::$attributs as $att){
+					foreach (Creneau_Intervenant::$attributs as $att) {
 						if ($cptBoucle == 1)
 							$valTemp = $Creneau_Intervenant->$att;
 						else if ($cptBoucle == 2) {
@@ -196,10 +196,10 @@
 						}
 						$cptBoucle++;
 					}
-					if($administration){
+					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCreneauIntervenant&modifier_creneauIntervenant=$idCreneauIntervenant";
 						$pageSuppression = "./index.php?page=ajoutCreneauIntervenant&supprimer_creneauIntervenant=$idCreneauIntervenant";
-						if(isset($_GET['idPromotion'])){
+						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 						}
@@ -293,11 +293,11 @@
 		
 		
 		// Formulaire
-		public function formulaireAjoutCreneauIntervenant($nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutCreneauIntervenant($nombresTabulations = 0) {
+			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_intervenant = Intervenant::liste_intervenant();
 			
-			if(isset($_GET['modifier_creneauIntervenant'])){ 
+			if (isset($_GET['modifier_creneauIntervenant'])) { 
 				$titre = "Modifier un creneau de disponibilité pour un intervenant";
 				$Creneau_Intervenant = new Creneau_Intervenant($_GET['modifier_creneauIntervenant']);
 				$idIntervenantModif = $Creneau_Intervenant->getIdIntervenant();
@@ -307,11 +307,11 @@
 				$nameSubmit = "validerModificationCreneauIntervenant";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_creneauIntervenant']}\" />";
 				$lienAnnulation = "index.php?page=ajoutCreneauIntervenant";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un creneau de disponibilité pour un intervenant";
 				$idTypeCoursModif = 1;
 				$idSalleModif = 0;
@@ -329,13 +329,13 @@
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
 			
-			if(isset($idIntervenantModif) && ($idIntervenantModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+			if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach($liste_intervenant as $idIntervenant){
+			foreach ($liste_intervenant as $idIntervenant) {
 				if ($idIntervenant != 0) {
 					$Intervenant = new Intervenant($idIntervenant);
 					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-					if(isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
 				}
 			}
@@ -343,14 +343,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsDebutModif)){
+			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
 				$valueDateDebut = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureDebut = $explodeHeure[0];
 				$valueMinuteDebut = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateDebut = "";
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
@@ -382,7 +382,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteDebut) {
+				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
@@ -399,14 +399,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsFinModif)){
+			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
 				$valueDateFin = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureFin = $explodeHeure[0];
 				$valueMinuteFin = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateFin = "";
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
@@ -437,7 +437,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteFin) {
+				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
@@ -455,14 +455,14 @@
 			echo "$tab\t\t</tr>\n";
 			
 			
-			if(! isset($_GET['modifier_creneauIntervenant'])){ 
+			if (! isset($_GET['modifier_creneauIntervenant'])) { 
 				echo "$tab\t\t<tr>\n";
 				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
 				echo "$tab\t\t\t<td>\n";
 				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
 				
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
-				for($i=1; $i<=52; $i++){
+				for ($i=1; $i<=52; $i++) {
 					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
 				}
 				echo "$tab\t\t\t\t</select> (en semaines)\n";
@@ -478,13 +478,13 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutCreneauIntervenant']) || isset($_POST['validerModificationCreneauIntervenant'])){
+			if (isset($_POST['validerAjoutCreneauIntervenant']) || isset($_POST['validerModificationCreneauIntervenant'])) {
 				// Vérification des champs
 				$idIntervenant = $_POST['intervenant'];
 				$idIntervenant_correct = true;
@@ -506,7 +506,7 @@
 					// Ajout d'un nouveau creneau intervenant
 					$recursivite = $_POST['recursivite'];
 					$recursivite_correct = true;
-					if($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct){	
+					if ($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Intervenant::ajouter_creneauIntervenant($idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
 						array_push($messages_notifications, "Le creneau intervenant a bien été ajouté");
 						$validation_ajout = true;
@@ -516,7 +516,7 @@
 					// Modification d'un creneau intervenant
 					$id = htmlentities($_POST['id']); 
 					$id_correct = Creneau_Intervenant::existe_creneauIntervenant($id);
-					if($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){	
+					if ($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Intervenant::modifier_creneauIntervenant($_GET['modifier_creneauIntervenant'], $idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 						array_push($messages_notifications, "Le creneau intervenant a bien été modifié");
 						$validation_ajout = true;
@@ -524,12 +524,12 @@
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout){
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(isset($id_correct) && !$id_correct){
+					if (isset($id_correct) && !$id_correct) {
 						array_push($messages_erreurs, "L'id du creneau intervenant n'est pas correct, contacter un administrateur");
 					}
-					if(!$idIntervenant_correct){
+					if (!$idIntervenant_correct) {
 						array_push($messages_erreurs, "L'intervenant n'est pas correcte");
 					}
 				}
@@ -552,7 +552,7 @@
 		
 		
 		public static function page_administration($nombreTabulations = 0) {			
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Creneau_Intervenant::formulaireAjoutCreneauIntervenant($nombreTabulations + 1);
 			echo "$tab<h2>Liste des creneaux de disponibilités des intervenants</h2>\n";
 			Creneau_Intervenant::liste_creneauIntervenant_to_table($nombreTabulations + 1);

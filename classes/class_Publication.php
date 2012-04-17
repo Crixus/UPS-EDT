@@ -8,21 +8,21 @@
 			"idGroupeCours"
 		);
 		
-		public function Publication(){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Publication() {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Publication::$nomTable);
 				$req->execute();
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Publication::$attributs as $att){
+				foreach (Publication::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -47,7 +47,7 @@
 				echo "$tab\t</tr>\n";
 				
 				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				foreach($liste_groupeEtudiants as $idGroupeEtudiants){
+				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
 					echo "$tab\t\t<td>".$Groupe_Etudiants->getNom()."</td>\n";
 				}
@@ -56,14 +56,14 @@
 				echo "$tab\t<tr>\n";
 				echo "$tab\t<th class=\"fondGrisFonce\" rowspan='{$nbre_groupeCours}'>Nom des groupes <br/>de cours</th>\n";
 				$cpt = 0;
-				foreach($liste_groupeCours as $idGroupeCours){
-					if($cpt == 0){ $couleurFond="fondBlanc"; }
-					else{ $couleurFond="fondGris"; }
+				foreach ($liste_groupeCours as $idGroupeCours) {
+					if ($cpt == 0) { $couleurFond="fondBlanc"; }
+					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
 					$Groupe_Cours = new Groupe_Cours($idGroupeCours);
 					echo "$tab\t\t<td class=\"fondGrisFonce\">".$Groupe_Cours->getNom()."</td>\n";
-					foreach($liste_groupeEtudiants as $idGroupeEtudiants){
+					foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 						$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 						$nom_case = "case_".$idGroupeCours."_".$idGroupeEtudiants;
@@ -82,9 +82,9 @@
 		}
 		
 		public function appartenance_publication ($idGroupe_Cours, $idGroupe_Etudiants) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM ".Publication::$nomTable." WHERE idGroupeEtudiants=? AND idGroupeCours=?");
 				$req->execute(
@@ -100,26 +100,26 @@
 				
 				return $appartient;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		
 		}
 		
 		
-		public function toString(){
+		public function toString() {
 			$string = "";
-			foreach(Publication::$attributs as $att){
+			foreach (Publication::$attributs as $att) {
 				$string .= "$att".":".$this->$att." ";
 			}
 			return $string;
 		}
 		
-		public static function creer_table(){
+		public static function creer_table() {
 			return Utils_SQL::sql_from_file("./sql/".Publication::$nomTable.".sql");
 		}
 		
-		public static function supprimer_table(){
+		public static function supprimer_table() {
 			return Utils_SQL::sql_supprimer_table(Publication::$nomTable);
 		}
 	}

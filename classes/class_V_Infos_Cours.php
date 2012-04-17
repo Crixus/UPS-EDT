@@ -14,18 +14,18 @@
 			"nomBatiment"
 		);
 		
-		public function getId(){return $this->id;}
-		public function getNomUE(){return $this->nomUE;}
-		public function getNomSalle(){return $this->nomSalle;}
-		public function getPrenomIntervenant(){return $this->prenomIntervenant;}
-		public function getNomIntervenant(){return $this->nomIntervenant;}
-		public function getNomTypeCours(){return $this->nomTypeCours;}
-		public function getNomBatiment(){return $this->nomBatiment;}
+		public function getId() {return $this->id;}
+		public function getNomUE() {return $this->nomUE;}
+		public function getNomSalle() {return $this->nomSalle;}
+		public function getPrenomIntervenant() {return $this->prenomIntervenant;}
+		public function getNomIntervenant() {return $this->nomIntervenant;}
+		public function getNomTypeCours() {return $this->nomTypeCours;}
+		public function getNomBatiment() {return $this->nomBatiment;}
 		
-		public function V_Infos_Cours($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function V_Infos_Cours($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".V_Infos_Cours::$nomTable." WHERE id=?");
 				$req->execute(
@@ -34,64 +34,64 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(V_Infos_Cours::$attributs as $att){
+				foreach (V_Infos_Cours::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function liste_cours($idPromotion){
+		public static function liste_cours($idPromotion) {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? ORDER BY tsDebut");
 				$req->execute(
 					Array($idPromotion)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_cours_futur($idPromotion){
+		public static function liste_cours_futur($idPromotion) {
 			$listeId = Array();
 			$date_now = date('Y-m-d 00:00:00');
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? AND tsDebut > '".$date_now."' ORDER BY tsDebut");
 				$req->execute(
 					Array($idPromotion)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_cours_passe_par_UE($idPromotion, $nomUE){
+		public static function liste_cours_passe_par_UE($idPromotion, $nomUE) {
 			$listeId = Array();
 			$date_now = date('Y-m-d 00:00:00');
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? AND nomUE = ? AND tsDebut < '".$date_now."' ORDER BY tsDebut");
 				$req->execute(
@@ -100,23 +100,23 @@
 						$nomUE
 					)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_cours_futur_par_UE($idPromotion, $nomUE){
+		public static function liste_cours_futur_par_UE($idPromotion, $nomUE) {
 			$listeId = Array();
 			$date_now = date('Y-m-d 00:00:00');
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion=? AND nomUE = ? AND tsDebut > '".$date_now."' ORDER BY tsDebut");
 				$req->execute(
@@ -125,21 +125,21 @@
 						$nomUE
 					)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function existe_cours($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_cours($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Cours::$nomTable." WHERE id=?");
 				$req->execute(
@@ -150,15 +150,15 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public function getNbreCours($idPromotion) { 
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion = ?");
 				$req->execute(
@@ -169,16 +169,16 @@
 				
 				return $ligne["nb"];
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public function getNbreCoursFutur($idPromotion) { 
 			$date_now = date('Y-m-d 00:00:00');
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Cours::$nomTable." WHERE idPromotion = ? AND tsDebut > '".$date_now."'");
 				$req->execute(
@@ -189,12 +189,12 @@
 				
 				return $ligne["nb"];
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public function getHeureDebut(){
+		public function getHeureDebut() {
 			$explode = explode(" ",$this->tsDebut);
 			$heureDebut = $explode[1];
 			$explode = explode(":",$heureDebut);
@@ -202,7 +202,7 @@
 			return $heureDebut;
 		}
 		
-		public function getHeureFin(){
+		public function getHeureFin() {
 			$explode = explode(" ",$this->tsFin);
 			$heureFin = $explode[1];
 			$explode = explode(":",$heureFin);
@@ -210,20 +210,20 @@
 			return $heureFin;
 		}
 		
-		public function commence_a_heure($heure){
+		public function commence_a_heure($heure) {
 			$explode = explode(" ",$this->tsDebut);
 			$heureDebut = $explode[1];
 			return ($heure == $heureDebut);
 		}
 		
-		public function nbQuartsHeure(){
+		public function nbQuartsHeure() {
 			$time = (strtotime($this->tsFin) - strtotime($this->tsDebut)) / 900;
 			return $time;
 		}
 		
-		public function toString(){
+		public function toString() {
 			$string = "";
-			foreach(V_Infos_Cours::$attributs as $att){
+			foreach (V_Infos_Cours::$attributs as $att) {
 				$string .= "$att".":".$this->$att." ";
 			}
 			return $string;

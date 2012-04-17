@@ -1,5 +1,5 @@
 <?php
-	class Etudiant{
+	class Etudiant {
 		
 		public static $nomTable = "Etudiant";
 		
@@ -23,9 +23,9 @@
 		public function getIdSpecialite() { return $this->idSpecialite; }
 		
 		public function Etudiant($id) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Etudiant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -34,18 +34,18 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Etudiant::$attributs as $att) {
+				foreach (Etudiant::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public static function ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $idPromotion, $idSpecialite) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Etudiant::$nomTable." VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				
@@ -66,15 +66,15 @@
 				//On créé maintenant l'Utilisateur associé
 				Utilisateur::creer_utilisateur($prenom, $nom, "Etudiant", $bdd->lastInsertId());
 			}
-			catch(Exception $e) {
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public static function modifier_etudiant($idEtudiant, $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Etudiant::$nomTable." SET numeroEtudiant=?, nom=?, prenom=?, email=?, telephone=?, idSpecialite=? WHERE id=?;");
 				$req->execute(
@@ -88,15 +88,15 @@
 						$idEtudiant
 					)
 				);
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public static function supprimer_etudiant($idEtudiant) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Etudiant::$nomTable." WHERE id=?;");
 				$req->execute(
@@ -104,15 +104,15 @@
 				);
 				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Etudiant",$idEtudiant);
 				Utilisateur::supprimer_utilisateur($idUtilisateur);
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_etudiant($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_etudiant($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM Etudiant WHERE id=?");
 				$req->execute(
@@ -123,13 +123,13 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public function formulaireAjoutEtudiant($idPromotion, $nombresTabulations = 0) {
-			$tab = ""; while($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_specialite = Specialite::liste_specialite($idPromotion);			
 			
 			if (isset($_GET['modifier_etudiant'])) { 
@@ -192,7 +192,7 @@
 			
 			if (isset($idSpecialiteModif) && ($idSpecialiteModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach($liste_specialite as $idSpecialite) {
+			foreach ($liste_specialite as $idSpecialite) {
 				$Specialite = new Specialite($idSpecialite);
 				$nomSpecialite = $Specialite->getNom();
 				if (isset($idSpecialiteModif) && ($idSpecialiteModif == $idSpecialite)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
@@ -229,7 +229,7 @@
 		
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutEtudiant']) || isset($_POST['validerModificationEtudiant'])){
+			if (isset($_POST['validerAjoutEtudiant']) || isset($_POST['validerModificationEtudiant'])) {
 				// Vérification des champs
 				$numeroEtudiant = $_POST['numeroEtudiant'];
 				$numeroEtudiant_correct = PregMatch::est_numero_etudiant($numeroEtudiant);
@@ -265,27 +265,27 @@
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout){
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(isset($id_correct) && !$id_correct){
+					if (isset($id_correct) && !$id_correct) {
 						array_push($messages_erreurs, "L'id de l'étudiant n'est pas correct, contacter un administrateur");
 					}
-					if(!$numeroEtudiant_correct){
+					if (!$numeroEtudiant_correct) {
 						array_push($messages_erreurs, "Le numéro d'étudiant n'est pas correct");
 					}
-					if(!$nom_correct){
+					if (!$nom_correct) {
 						array_push($messages_erreurs, "Le nom n'est pas correct");
 					}
-					if(!$prenom_correct){
+					if (!$prenom_correct) {
 						array_push($messages_erreurs, "Le prenom n'est pas correct");
 					}
-					if(!$email_correct){
+					if (!$email_correct) {
 						array_push($messages_erreurs, "L'email n'est pas correct");
 					}
-					if(!$telephone_correct){
+					if (!$telephone_correct) {
 						array_push($messages_erreurs, "Le téléphone n'est pas correct");
 					}
-					if(!$idSpecialiteCorrecte){
+					if (!$idSpecialiteCorrecte) {
 						array_push($messages_erreurs, "La spécialité n'est pas correcte");
 					}
 				}
@@ -306,7 +306,7 @@
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {			
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Etudiant::formulaireAjoutEtudiant($_GET['idPromotion'], $nombreTabulations + 1);
 			echo "$tab<h2>Liste des étudiants</h2>\n";
 			V_Infos_Etudiant::liste_etudiant_to_table($_GET['idPromotion'], $nombreTabulations + 1);
@@ -315,7 +315,7 @@
 		
 		public function toUl() {
 			$string = "<ul>\n";
-			foreach(Etudiant::$attributs as $att) {
+			foreach (Etudiant::$attributs as $att) {
 				$string .= "<li>$att : ".$this->$att."</li>\n";
 			}
 			return "$string</ul>\n";

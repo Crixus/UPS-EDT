@@ -13,18 +13,18 @@
 			"actif"
 		);
 		
-		public function getId(){ return $this->id; }
-		public function getNom(){ return $this->nom; }
-		public function getPrenom(){ return $this->prenom; }
-		public function getEmail(){ return $this->email; }
-		public function getTelephone(){ return $this->telephone; }
-		public function getNotificationsActives(){ return $this->notificationsActives; }
-		public function getActif(){ return $this->actif; }
+		public function getId() { return $this->id; }
+		public function getNom() { return $this->nom; }
+		public function getPrenom() { return $this->prenom; }
+		public function getEmail() { return $this->email; }
+		public function getTelephone() { return $this->telephone; }
+		public function getNotificationsActives() { return $this->notificationsActives; }
+		public function getActif () { return $this->actif; }
 		
-		public function Intervenant($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Intervenant($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Intervenant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -33,20 +33,20 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Intervenant::$attributs as $att){
+				foreach (Intervenant::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_intervenant($nom, $prenom, $email, $telephone){
-			try{
+		public static function ajouter_intervenant($nom, $prenom, $email, $telephone) {
+			try {
 				//On ajoute d'abord l'Intervenant
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Intervenant::$nomTable." VALUES(?, ?, ?, ?, ?, ?, ?)");
 				
@@ -65,15 +65,15 @@
 				//On créé maintenant l'Utilisateur associé
 				Utilisateur::creer_utilisateur($prenom, $nom, "Intervenant", $bdd->lastInsertId());
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function modifier_intervenant($idIntervenant, $nom, $prenom, $email, $telephone){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_intervenant($idIntervenant, $nom, $prenom, $email, $telephone) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Intervenant::$nomTable." SET nom=?, prenom=?, email=?, telephone=? WHERE id=?;");
 				$req->execute(
@@ -89,17 +89,17 @@
 				$req->execute(
 					Array($login, $motDePasse, $idIntervenant)
 					);
-			} catch(Exception $e){
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_intervenant($idIntervenant){
+		public static function supprimer_intervenant($idIntervenant) {
 		
 			//MAJ de la table "Cours" on met idIntervenant à 0 pour l'idIntervenant correspondant
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Cours::$nomTable." SET idIntervenant = 0 WHERE idIntervenant=?;");
 				$req->execute(
@@ -120,15 +120,15 @@
 				
 				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Intervenant", $idIntervenant);
 				Utilisateur::supprimer_utilisateur($idUtilisateur);
-			} catch(Exception $e){
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_intervenant($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_intervenant($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Intervenant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -139,16 +139,16 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		// Methode à refaire car nom incorrect
 		public static function getIntervenant($id) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT prenom, nom FROM ".Intervenant::$nomTable." WHERE id=?");
 				$req->execute(
@@ -158,7 +158,7 @@
 				$req->closeCursor();
 				$nomIntervenant = $ligne['prenom'].' '.$ligne['nom'];
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				$nomIntervenant = "";
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
@@ -167,45 +167,45 @@
 		
 		public function liste_id_UE() {
 			$listeIdUE = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".UE::$nomTable." WHERE idResponsable = ? ORDER BY nom");
 				$req->execute(
 					array($this->id)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeIdUE, $ligne['id']);
 				}
 				$req->closeCursor();
-			} catch(Exception $e){
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeIdUE;		
 		}
 		
-		public static function liste_intervenant(){
+		public static function liste_intervenant() {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Intervenant::$nomTable." ORDER BY nom");
 				$req->execute();
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
-			} catch(Exception $e){
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0){
+		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0) {
 			$liste_intervenant = Intervenant::liste_intervenant();
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
 			echo "$tab<table class=\"table_liste_administration\">\n";
 			
@@ -220,13 +220,13 @@
 			echo "$tab\t\t<th>UE de cette promotion dont il est responsable</th>\n";
 			
 			
-			if($administration){
+			if ($administration) {
 				echo "$tab\t\t<th>Actions</th>\n";
 			}
 			echo "$tab\t</tr>\n";
 			
 			$cpt = 0;
-			foreach($liste_intervenant as $idIntervenant){
+			foreach ($liste_intervenant as $idIntervenant) {
 				if ($idIntervenant != 0) {
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -243,25 +243,25 @@
 					echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 					$checked = ($Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
 					$nomCheckbox = "{$idIntervenant}_actif";
-					echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+					echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif ({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 					
 					$nbUE = sizeof($listeIdUE); $cptBoucle = 1;
 					echo "$tab\t\t<td>";
 					foreach ($listeIdUE as $idUE) {
 						$UE = new UE($idUE);
-						if($cptBoucle != 1){
-							if ($cptBoucle != $nbUE){ echo ", "; }
-							else{ echo" et "; }
+						if ($cptBoucle != 1) {
+							if ($cptBoucle != $nbUE) { echo ", "; }
+							else { echo" et "; }
 						}
 						echo "{$UE->getNom()}({$UE->getAnnee()})";
 						$cptBoucle ++;
 					}
 					echo "</td>\n";
 					
-					if($administration){
+					if ($administration) {
 						$pageModification = "./index.php?page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
 						$pageSuppression = "./index.php?page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
-						if(isset($_GET['idPromotion'])){
+						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 						}
@@ -277,10 +277,10 @@
 			echo "$tab</table>\n";
 		}
 		
-		public function formulaireAjoutIntervenant($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public function formulaireAjoutIntervenant($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
-			if(isset($_GET['modifier_intervenant'])){ 
+			if (isset($_GET['modifier_intervenant'])) { 
 				$titre = "Modifier un intervenant";
 				$Intervenant = new Intervenant($_GET['modifier_intervenant']);
 				$nomModif = "value=\"{$Intervenant->getNom()}\"";
@@ -291,11 +291,11 @@
 				$nameSubmit = "validerModificationIntervenant";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_intervenant']}\" />";
 				$lienAnnulation = "index.php?page=ajoutIntervenant";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un intervenant";
 				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
 				$prenomModif = (isset($_POST['prenom'])) ? "value=\"".$_POST['prenom']."\"" : "value=\"\"";
@@ -345,12 +345,12 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}		
 		}		
 		
-		public static function prise_en_compte_formulaire(){
+		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])){
+			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])) {
 				// Vérification des champs			
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
@@ -362,19 +362,19 @@
 				$telephone_correct = PregMatch::est_telephone($telephone);
 			
 				$validation_ajout = false;
-				if(isset($_POST['validerAjoutIntervenant'])){
+				if (isset($_POST['validerAjoutIntervenant'])) {
 					// Ajout d'un nouveau intervenant
-					if($nom_correct && $prenom_correct && $email_correct && $telephone_correct){		
+					if ($nom_correct && $prenom_correct && $email_correct && $telephone_correct) {		
 						Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
 						array_push($messages_notifications, "L'intervenant a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
-				else{
+				else {
 					// Modification d'un intervenant
 					$id = htmlentities($_POST['id']); 
 					$id_correct = Intervenant::existe_intervenant($id);
-					if($id_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct){	
+					if ($id_correct && $nom_correct && $prenom_correct && $email_correct && $telephone_correct) {	
 						Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
 						array_push($messages_notifications, "L'intervenant a bien été modifié");
 						$validation_ajout = true;
@@ -382,44 +382,44 @@
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout){
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(isset($id_correct) && !$id_correct){
+					if (isset($id_correct) && !$id_correct) {
 						array_push($messages_erreurs, "L'id de l'intervenant n'est pas correct, contacter un administrateur");
 					}
-					if(!$nom_correct){
+					if (!$nom_correct) {
 						array_push($messages_erreurs, "Le nom n'est pas correct");
 					}
-					if(!$prenom_correct){
+					if (!$prenom_correct) {
 						array_push($messages_erreurs, "Le prenom n'est pas correct");
 					}
-					if(!$email_correct){
+					if (!$email_correct) {
 						array_push($messages_erreurs, "L'email n'est pas correct");
 					}
-					if(!$telephone_correct){
+					if (!$telephone_correct) {
 						array_push($messages_erreurs, "Le téléphone n'est pas correct");
 					}
 				}
 			}
 		}
 		
-		public static function prise_en_compte_suppression(){
+		public static function prise_en_compte_suppression() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_GET['supprimer_intervenant'])){	
-				if(Intervenant::existe_intervenant($_GET['supprimer_intervenant'])){
+			if (isset($_GET['supprimer_intervenant'])) {	
+				if (Intervenant::existe_intervenant($_GET['supprimer_intervenant'])) {
 					// L'intervenant existe
 					Intervenant::supprimer_intervenant($_GET['supprimer_intervenant']);
 					array_push($messages_notifications, "L'intervenant à bien été supprimé");
 				}
-				else{
+				else {
 					// L'intervenant n'existe pas
 					array_push($messages_erreurs, "L'intervenant n'existe pas");
 				}
 			}
 		}		
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public static function page_administration($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Intervenant::formulaireAjoutIntervenant($nombreTabulations);
 			echo "$tab<h2>Liste des intervenants</h2>\n";
 			Intervenant::liste_Intervenant_to_table($nombreTabulations);

@@ -11,16 +11,16 @@
 		);
 		
 		
-		public function getId(){ return $this->id; }
-		public function getIdSalle(){ return $this->idSalle; }
-		public function getTsDebut(){ return $this->tsDebut; }
-		public function getTsFin(){ return $this->tsFin; }
+		public function getId() { return $this->id; }
+		public function getIdSalle() { return $this->idSalle; }
+		public function getTsDebut() { return $this->tsDebut; }
+		public function getTsFin() { return $this->tsFin; }
 		
 		
-		public function Creneau_Salle($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Creneau_Salle($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Creneau_Salle::$nomTable." WHERE id=?");
 				$req->execute(
@@ -29,19 +29,19 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Creneau_Salle::$attributs as $att){
+				foreach (Creneau_Salle::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_creneauSalle($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_creneauSalle($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Creneau_Salle::$nomTable." WHERE id=?");
 				$req->execute(
@@ -52,17 +52,17 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_creneauSalle($idSalle, $tsDebut, $tsFin, $recursivite){
+		public static function ajouter_creneauSalle($idSalle, $tsDebut, $tsFin, $recursivite) {
 		
 			for ($i=0; $i<=$recursivite; $i++) {
-				try{
-					$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+				try {
+					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 					$bdd->query("SET NAMES utf8");
 					$req = $bdd->prepare("INSERT INTO ".Creneau_Salle::$nomTable." VALUES(?, ?, ?, ?)");
 					$req->execute(
@@ -74,7 +74,7 @@
 						)
 					);
 				}
-				catch(Exception $e){
+				catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
@@ -83,10 +83,10 @@
 			}			
 		}
 		
-		public static function modifier_creneauSalle($idCreneauSalle, $idSalle, $tsDebut, $tsFin){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function modifier_creneauSalle($idCreneauSalle, $idSalle, $tsDebut, $tsFin) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Creneau_Salle::$nomTable." SET idSalle=?, tsDebut=?, tsFin=? WHERE id=?;");
 				$req->execute(
@@ -98,16 +98,16 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_creneauSalle($idCreneauSalle){
+		public static function supprimer_creneauSalle($idCreneauSalle) {
 			//Suppression du creneau pour l'Salle
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Creneau_Salle::$nomTable." WHERE id=?;");
 				$req->execute(
@@ -116,36 +116,36 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		
-		public static function liste_creneauSalle(){
+		public static function liste_creneauSalle() {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT id FROM ".Creneau_Salle::$nomTable." ORDER BY tsDebut");
 				$req->execute();
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
 		
-		public static function liste_creneauSalle_to_table($administration, $nombreTabulations = 0){
+		public static function liste_creneauSalle_to_table($administration, $nombreTabulations = 0) {
 			$liste_creneauSalle = Creneau_Salle::liste_creneauSalle();
 			$nbCreneauSalle = sizeof($liste_creneauSalle);
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCreneauSalle == 0) {
 				echo "$tab<b>Aucunes disponibilités n'a été enregistrés</b>\n";
@@ -159,13 +159,13 @@
 				echo "$tab\t\t<th>Salle</th>\n";
 				echo "$tab\t\t<th>Date</th>\n";
 				
-				if($administration){
+				if ($administration) {
 					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
 				
 				$cpt = 0;
-				foreach($liste_creneauSalle as $idCreneauSalle){
+				foreach ($liste_creneauSalle as $idCreneauSalle) {
 					$Creneau_Salle = new Creneau_Salle($idCreneauSalle);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
@@ -174,7 +174,7 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
-					foreach(Creneau_Salle::$attributs as $att){
+					foreach (Creneau_Salle::$attributs as $att) {
 						if ($cptBoucle == 1)
 							$valTemp = $Creneau_Salle->$att;
 						else if ($cptBoucle == 2) {
@@ -197,10 +197,10 @@
 						}
 						$cptBoucle++;
 					}
-					if($administration){
+					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCreneauSalle&modifier_creneauSalle=$idCreneauSalle";
 						$pageSuppression = "./index.php?page=ajoutCreneauSalle&supprimer_creneauSalle=$idCreneauSalle";
-						if(isset($_GET['idPromotion'])){
+						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 						}
@@ -294,11 +294,11 @@
 		
 		
 		// Formulaire
-		public function formulaireAjoutCreneauSalle($nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutCreneauSalle($nombresTabulations = 0) {
+			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_Salle = V_Liste_Salles::liste_salles();
 			
-			if(isset($_GET['modifier_creneauSalle'])){ 
+			if (isset($_GET['modifier_creneauSalle'])) { 
 				$titre = "Modifier un creneau de disponibilité pour une salle";
 				$Creneau_Salle = new Creneau_Salle($_GET['modifier_creneauSalle']);
 				$idSalleModif = $Creneau_Salle->getIdSalle();
@@ -308,11 +308,11 @@
 				$nameSubmit = "validerModificationCreneauSalle";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_creneauSalle']}\" />";
 				$lienAnnulation = "index.php?page=ajoutCreneauSalle";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un creneau de disponibilité pour une salle";
 				$idTypeCoursModif = 1;
 				$idSalleModif = 0;
@@ -330,14 +330,14 @@
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"Salle\" id=\"Salle\">\n";
 			
-			if(isset($idSalleModif) && ($idSalleModif == 0)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach($liste_Salle as $idSalle){
+			foreach ($liste_Salle as $idSalle) {
 				if ($idSalle != 0) {
 					$Salle = new V_Liste_Salles($idSalle);
 					$nomBatiment = $Salle->getNomBatiment();
 					$nomSalle = $Salle->getNomSalle();
-					if(isset($idSalleModif) && ($idSalleModif == $idSalle)){ $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo "$tab\t\t\t\t\t<option value=\"$idSalle\" $selected>$nomBatiment $nomSalle</option>\n";
 				}
 			}
@@ -345,14 +345,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsDebutModif)){
+			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
 				$valueDateDebut = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureDebut = $explodeHeure[0];
 				$valueMinuteDebut = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateDebut = "";
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
@@ -384,7 +384,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteDebut) {
+				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
@@ -401,14 +401,14 @@
 			echo "$tab\t\t\t</td>\n";
 			echo "$tab\t\t</tr>\n";
 			
-			if(isset($tsFinModif)){
+			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
 				$valueDateFin = "value=\"{$explode[0]}\" ";
 				$explodeHeure = explode(":", $explode[1]);
 				$valueHeureFin = $explodeHeure[0];
 				$valueMinuteFin = $explodeHeure[1];
 			}
-			else{
+			else {
 				$valueDateFin = "";
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
@@ -439,7 +439,7 @@
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
-				if($tab_minute[$cpt] == $valueMinuteFin) {
+				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
 				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
@@ -457,14 +457,14 @@
 			echo "$tab\t\t</tr>\n";
 			
 			
-			if(! isset($_GET['modifier_creneauSalle'])){ 
+			if (! isset($_GET['modifier_creneauSalle'])) { 
 				echo "$tab\t\t<tr>\n";
 				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
 				echo "$tab\t\t\t<td>\n";
 				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
 				
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
-				for($i=1; $i<=52; $i++){
+				for ($i=1; $i<=52; $i++) {
 					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
 				}
 				echo "$tab\t\t\t\t</select> (en semaines)\n";
@@ -480,13 +480,13 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutCreneauSalle']) || isset($_POST['validerModificationCreneauSalle'])){
+			if (isset($_POST['validerAjoutCreneauSalle']) || isset($_POST['validerModificationCreneauSalle'])) {
 				// Vérification des champs
 				$idSalle = $_POST['Salle'];
 				$idSalle_correct = true;
@@ -508,7 +508,7 @@
 					// Ajout d'un nouveau creneau Salle
 					$recursivite = $_POST['recursivite'];
 					$recursivite_correct = true;
-					if($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct){	
+					if ($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Salle::ajouter_creneauSalle($idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
 						array_push($messages_notifications, "Le creneau Salle a bien été ajouté");
 						$validation_ajout = true;
@@ -518,7 +518,7 @@
 					// Modification d'un creneau Salle
 					$id = htmlentities($_POST['id']); 
 					$id_correct = Creneau_Salle::existe_creneauSalle($id);
-					if($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct){	
+					if ($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Salle::modifier_creneauSalle($_GET['modifier_creneauSalle'], $idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 						array_push($messages_notifications, "Le creneau Salle a bien été modifié");
 						$validation_ajout = true;
@@ -526,12 +526,12 @@
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout){
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(isset($id_correct) && !$id_correct){
+					if (isset($id_correct) && !$id_correct) {
 						array_push($messages_erreurs, "L'id du creneau Salle n'est pas correct, contacter un administrateur");
 					}
-					if(!$idSalle_correct){
+					if (!$idSalle_correct) {
 						array_push($messages_erreurs, "L'Salle n'est pas correcte");
 					}
 				}
@@ -554,7 +554,7 @@
 		
 		
 		public static function page_administration($nombreTabulations = 0) {			
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Creneau_Salle::formulaireAjoutCreneauSalle($nombreTabulations + 1);
 			echo "$tab<h2>Liste des creneaux de disponibilités des salles</h2>\n";
 			Creneau_Salle::liste_creneauSalle_to_table($nombreTabulations + 1);

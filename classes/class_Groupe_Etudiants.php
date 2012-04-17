@@ -8,14 +8,14 @@
 			"identifiant"
 		);
 		
-		public function getNom(){ return $this->nom; }
-		public function getIdentifiant(){ return $this->identifiant; }
+		public function getNom() { return $this->nom; }
+		public function getIdentifiant() { return $this->identifiant; }
 		
 		
-		public function Groupe_Etudiants($id){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function Groupe_Etudiants($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Groupe_Etudiants::$nomTable." WHERE id=?");
 				$req->execute(
@@ -24,19 +24,19 @@
 				$ligne = $req->fetch();
 				$req->closeCursor();
 				
-				foreach(Groupe_Etudiants::$attributs as $att){
+				foreach (Groupe_Etudiants::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function existe_groupeEtudiants($id){
-			try{
-				$pdo_Options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_Options);
+		public static function existe_groupeEtudiants($id) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Groupe_Etudiants::$nomTable." WHERE id=?");
 				$req->execute(
@@ -47,15 +47,15 @@
 				
 				return $ligne['nb'] == 1;
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public function getNbreGroupeEtudiants($idPromotion){ 
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public function getNbreGroupeEtudiants($idPromotion) { 
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Groupe_Etudiants::$nomTable." WHERE idPromotion=?");
 				$req->execute(
@@ -66,15 +66,15 @@
 				
 				return $ligne["nb"];
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function ajouter_groupeEtudiants($idPromotion, $nom, $identifiant){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function ajouter_groupeEtudiants($idPromotion, $nom, $identifiant) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("INSERT INTO ".Groupe_Etudiants::$nomTable." VALUES(?, ?, ?, ?)");
 				
@@ -87,15 +87,15 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		public static function modifier_groupeEtudiants($idGroupeEtudiants, $idPromotion, $nom, $identifiant) {
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("UPDATE ".Groupe_Etudiants::$nomTable." SET nom=?, identifiant=?, idPromotion=? WHERE id=?;");
 				$req->execute(
@@ -107,15 +107,15 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function supprimer_groupeEtudiants($idGroupeEtudiants){
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		public static function supprimer_groupeEtudiants($idGroupeEtudiants) {
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("DELETE FROM ".Groupe_Etudiants::$nomTable." WHERE id=?;");
 				$req->execute(
@@ -124,36 +124,36 @@
 					)
 				);
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
-		public static function liste_groupeEtudiants($idPromotion){
+		public static function liste_groupeEtudiants($idPromotion) {
 			$listeId = Array();
-			try{
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
 				$req = $bdd->prepare("SELECT * FROM ".Groupe_Etudiants::$nomTable." WHERE idPromotion=? ORDER BY nom");
 				$req->execute(
 					array($idPromotion)
 				);
-				while($ligne = $req->fetch()){
+				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
 				}
 				$req->closeCursor();
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
 		}
 		
-		public static function liste_groupeEtudiants_to_table($idPromotion, $administration, $nombreTabulations = 0){
+		public static function liste_groupeEtudiants_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
-			$tab = ""; while($nombreTabulations > 0){ $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbreGroupeEtudiants == 0) {
 				echo "$tab<h2>Aucun groupe d'étudiants n'a été créés pour cette promotion</h2>\n";
@@ -166,26 +166,26 @@
 				echo "$tab\t\t<th>Identifiant</th>\n";
 				
 			
-				if($administration){
+				if ($administration) {
 					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
 				
 				$cpt = 0;
-				foreach($liste_groupeEtudiants as $idGroupeEtudiants){
+				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo "$tab\t<tr class=\"$couleurFond\">\n";
-					foreach(Groupe_Etudiants::$attributs as $att){
+					foreach (Groupe_Etudiants::$attributs as $att) {
 						echo "$tab\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
 					}
 					
-					if($administration){
+					if ($administration) {
 						$pageModification = "./index.php?page=ajoutGroupeEtudiants&amp;modifier_groupeEtudiants=$idGroupeEtudiants";
 						$pageSuppression = "./index.php?page=ajoutGroupeEtudiants&amp;supprimer_groupeEtudiants=$idGroupeEtudiants";
-						if(isset($_GET['idPromotion'])){
+						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
 							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
 						}
@@ -201,10 +201,10 @@
 			}
 		}
 		
-		public function formulaireAjoutGroupeEtudiants($idPromotion, $nombresTabulations = 0){
-			$tab = ""; while($nombresTabulation = 0){ $tab .= "\t"; $nombresTabulations--; }
+		public function formulaireAjoutGroupeEtudiants($idPromotion, $nombresTabulations = 0) {
+			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
-			if(isset($_GET['modifier_groupeEtudiants'])){ 
+			if (isset($_GET['modifier_groupeEtudiants'])) { 
 				$titre = "Modifier un groupe d'étudiant";
 				$Groupe_Etudiants = new Groupe_Etudiants($_GET['modifier_groupeEtudiants']);
 				$nomModif = "value=\"{$Groupe_Etudiants->getNom()}\"";
@@ -217,11 +217,11 @@
 				$nameSubmit = "validerModificationGroupeEtudiants";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeEtudiants']}\" />";
 				$lienAnnulation = "index.php?page=ajoutGroupeEtudiants";
-				if(isset($_GET['idPromotion'])){
+				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
 				}
 			}
-			else{
+			else {
 				$titre = "Ajouter un groupe d'étudiant";
 				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
 				$Promotion = new Promotion($idPromotion);
@@ -257,12 +257,12 @@
 			echo "$tab\t</table>\n";
 			echo "$tab</form>\n";
 			
-			if(isset($lienAnnulation)){echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}			
+			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}			
 		}		
 		
-		public static function prise_en_compte_formulaire(){
+		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])){
+			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])) {
 				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
@@ -275,9 +275,9 @@
 				$identifiant_correct = $nom_correct;
 				
 				$validation_ajout = false;
-				if(isset($_POST['validerAjoutGroupeEtudiants'])){
+				if (isset($_POST['validerAjoutGroupeEtudiants'])) {
 					// Ajout d'un nouveau groupe d'étudiants				
-					if($nom_correct && $identifiant_correct){	
+					if ($nom_correct && $identifiant_correct) {	
 						Groupe_Etudiants::ajouter_groupeEtudiants($_GET['idPromotion'], $nom, $identifiant);
 						array_push($messages_notifications, "Le groupe d'étudiant a bien été ajouté");
 						$validation_ajout = true;
@@ -287,7 +287,7 @@
 					// Modification d'un groupe d'étudiants
 					$id = htmlentities($_POST['id']);
 					$id_correct = Groupe_Etudiants::existe_groupeEtudiants($id);
-					if($id_correct && $nom_correct && $identifiant_correct){	
+					if ($id_correct && $nom_correct && $identifiant_correct) {	
 						Groupe_Etudiants::modifier_groupeEtudiants($_GET['modifier_groupeEtudiants'], $_GET['idPromotion'], $nom, $identifiant);
 						array_push($messages_notifications, "Le groupe d'étudiant a bien été modifié");
 						$validation_ajout = true;
@@ -295,56 +295,56 @@
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout){
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if(isset($id_correct) && !$id_correct){
+					if (isset($id_correct) && !$id_correct) {
 						array_push($messages_erreurs, "L'id du groupe d'étudiants n'est pas correct, contacter un administrateur");
 					}
-					if(!$nom_correct){
+					if (!$nom_correct) {
 						array_push($messages_erreurs, "Le nom n'est pas correct");
 					}
-					if(!$identifiant_correct){
+					if (!$identifiant_correct) {
 						array_push($messages_erreurs, "L'identifiant n'est pas correct");
 					}
 				}
 			}
 		}
 		
-		public static function prise_en_compte_suppression(){
+		public static function prise_en_compte_suppression() {
 			global $messages_notifications, $messages_erreurs;
-			if(isset($_GET['supprimer_groupeEtudiants'])){	
-				if(Groupe_Etudiants::existe_groupeEtudiants($_GET['supprimer_groupeEtudiants'])){
+			if (isset($_GET['supprimer_groupeEtudiants'])) {	
+				if (Groupe_Etudiants::existe_groupeEtudiants($_GET['supprimer_groupeEtudiants'])) {
 					// Le groupe d'étudiant existe
 					Groupe_Etudiants::supprimer_groupeEtudiants($_GET['supprimer_groupeEtudiants']);
 					array_push($messages_notifications, "Le groupe d'étudiant à bien été supprimé");
 				}
-				else{
+				else {
 					// Le groupe d'étudiant n'existe pas
 					array_push($messages_erreurs, "Le groupe d'étudiant n'existe pas");
 				}
 			}
 		}		
 		
-		public static function page_administration($nombreTabulations = 0){
-			$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+		public static function page_administration($nombreTabulations = 0) {
+			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			Groupe_Etudiants::formulaireAjoutGroupeEtudiants($_GET['idPromotion'], $nombreTabulations + 1);
 			echo "$tab<h2>Liste des groupes d'étudiants</h2>\n";
 			Groupe_Etudiants::liste_groupeEtudiants_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		
-		public function toString(){
+		public function toString() {
 			$string = "";
-			foreach(Groupe_Etudiants::$attributs as $att){
+			foreach (Groupe_Etudiants::$attributs as $att) {
 				$string .= "$att".":".$this->$att." ";
 			}
 			return $string;
 		}
 		
-		public static function creer_table(){
+		public static function creer_table() {
 			return Utils_SQL::sql_from_file("./sql/".Groupe_Etudiants::$nomTable.".sql");
 		}
 		
-		public static function supprimer_table(){
+		public static function supprimer_table() {
 			return Utils_SQL::sql_supprimer_table(Groupe_Etudiants::$nomTable);
 		}
 	}
