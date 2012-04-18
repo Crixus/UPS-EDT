@@ -97,7 +97,7 @@
 			$login = Utilisateur::gererer_login($prenom, $nom);
 			$motDePasse = MotDePasse::genererMotDePasse();
 			Mail::envoyer_creation_utilisateur($Destinataire->getEmail(), $login, $motDePasse);
-			$motDePasse = MotDePasse::crypter_md5_motDePasse($motDePasse); 
+			$motDePasse = MotDePasse::crypterMd5($motDePasse); 
 			Utilisateur::ajouter_Utilisateur($login, $motDePasse, $type, $idCorrespondant);
 		}
 		

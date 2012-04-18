@@ -6,38 +6,43 @@
 	
 	// Importation des classes
 	$repertoire = opendir("../classes/");
-	while($fichier = readdir($repertoire)){
-		if($fichier != '..' && $fichier != '.'){
-			include_once("../classes/$fichier");
+	while ($fichier = readdir($repertoire)) {
+		if ($fichier != '..' && $fichier != '.') {
+			include_once("../classes/" . $fichier);
 		}
 	}
 	
 	// Test de sécurité
 	include_once("./securite.php");
 	
-	function afficher_notifications($nombreTabulations = 0){
-		$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+	function afficher_notifications($nombreTabulations = 0) {
+		$tab = "";
+		for ($i = 0; $i < $nombreTabulations; $i++) {
+			$tab .= "\t";
+		}
 		
 		global $messages_notifications;
-		if(!empty($messages_notifications)){
-			echo "$tab<ul class=\"messages_notifications\">\n";
-			foreach($messages_notifications as $mess){
-				echo "$tab\t<li>Notification : $mess</li>\n";
+		if (!empty($messages_notifications)) {
+			echo $tab . "<ul class=\"messages_notifications\">\n";
+			foreach ($messages_notifications as $mess) {
+				echo $tab . "\t<li>Notification : " . $mess . "</li>\n";
 			}
-			echo "$tab</ul>\n";
+			echo $tab . "</ul>\n";
 		}
 	}
 	
-	function afficher_erreurs($nombreTabulations = 0){
-		$tab = ""; for($i = 0 ; $i < $nombreTabulations ; $i++){ $tab .= "\t"; }
+	function afficher_erreurs($nombreTabulations = 0) {
+		$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) {
+			$tab .= "\t";
+		}
 		
 		global $messages_erreurs;
-		if(!empty($messages_erreurs)){
-			echo "$tab<ul class=\"messages_erreurs\">\n";
-			foreach($messages_erreurs as $mess){
-				echo "$tab\t<li>Erreur : $mess</li>\n";
+		if (!empty($messages_erreurs)) {
+			echo $tab . "<ul class=\"messages_erreurs\">\n";
+			foreach ($messages_erreurs as $mess) {
+				echo $tab . "\t<li>Erreur : " . $mess . "</li>\n";
 			}
-			echo "$tab</ul>\n";
+			echo $tab . "</ul>\n";
 		}
 	}
 	
@@ -92,7 +97,9 @@
 		<div id="page_administration">
 			<div id="page_administration_haut">
 				<div id="page_administration_titre">
-					<h1><a href="./index.php<?php if(isset($_GET['idPromotion'])){ echo "?idPromotion={$_GET['idPromotion']}"; } ?>">Administration</a></h1>
+					<h1><a href="./index.php<?php if (isset($_GET['idPromotion'])) { 
+						echo "?idPromotion={$_GET['idPromotion']}"; 
+					} ?>">Administration</a></h1>
 				</div>
 				<div id="barre_selection_promotion">
 					<table>
@@ -100,10 +107,10 @@
 							<td>Selection d'une promotion</td>
 							<td>
 <?php 
-	if(isset($_GET['idPromotion'])){
+	if (isset($_GET['idPromotion'])) {
 		echo Promotion::liste_promotion_for_select($_GET['idPromotion'], 8); 
 	}
-	else{
+	else {
 		echo Promotion::liste_promotion_for_select(null, 8); 
 	}
 ?>
@@ -119,7 +126,9 @@
 				</nav>
 				<section>
 <?php 
-	if(isset($_GET['page'])){ include_once("./pages/{$_GET['page']}.php"); } 
+	if (isset($_GET['page'])) {
+		include_once("./pages/" . $_GET['page'] . ".php");
+	} 
 ?>
 				</section>
 			</div>

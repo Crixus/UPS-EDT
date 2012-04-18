@@ -1,5 +1,9 @@
 <?php
-	class Options{
+	/**
+	 * Classe permettant de gerer les options
+	 * (couleurs, sma ...)
+	 */
+	class Options {
 		
 		public static $nomTable = "Options";
 		
@@ -9,10 +13,35 @@
 			"valeur"
 		);
 		
-		public function getId() { return $this->id; }
-		public function getNom() { return $this->nom; }
-		public function getValeur() { return $this->valeur; }
+		/**
+		 * Getter de l'id de l'Options
+		 * @return int id de l'Options
+		 */
+		public function getId() {
+			return $this->id;
+		}
 		
+		/**
+		 * Getter du nom de l'Options
+		 * @return String nom de l'Options
+		 */
+		public function getNom() {
+			return $this->nom;
+		}
+		
+		/**
+		 * Getter de la valeur de l'Options
+		 * @return String valeur de l'Options
+		 */
+		public function getValeur() {
+			return $this->valeur;
+		}
+		
+		/**
+		 * Constructeur de la classe Options
+		 * Récupère les informations de Options dans la base de données depuis l'id
+		 * @param $id int id de l'Options
+		 */
 		public function Options($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -28,12 +57,17 @@
 				foreach (Options::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
-			}
-			catch (Exception $e) {
-				echo "Erreur : ".$e->getMessage()."<br />";
+				
+			} catch (Exception $e) {
+				echo "Erreur : " . $e->getMessage() . "<br />";
 			}
 		}
 		
+		/**
+		 * Ajouter une Option dans la base de données
+		 * @param $nom String nom de l'Option
+		 * @param $valeur String valeur de l'Option
+		 */
 		public static function ajouter_Options($nom, $valeur) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -48,8 +82,7 @@
 						$valeur
 					)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -66,8 +99,7 @@
 						$nom
 					)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -85,8 +117,7 @@
 				$req->closeCursor();
 				
 				return $ligne['nb'] == 1;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -141,39 +172,46 @@
 		}
 		
 		public static function formulaire_modification_Options_style_typeCours($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; 
+			for ($i = 0; $i < $nombreTabulations; $i++) {
+				$tab .= "\t";
+			}
 			
-			echo "$tab<h2>Gestion des couleurs de type de cours</h2>\n";
-			echo "$tab<form id=\"administration_stype_typeCours\" method=\"post\">\n";
-			echo "$tab\t<table id=\"administration_style_typesCours\">\n";
+			echo $tab . "<h2>Gestion des couleurs de type de cours</h2>\n";
+			echo $tab . "<form id=\"administration_stype_typeCours\" method=\"post\">\n";
+			echo $tab . "\t<table id=\"administration_style_typesCours\">\n";
 			foreach (Options::generer_array_Options_style() as $label => $nom) {
 				$valeur = Options::valeur_from_nom($nom);
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td>$label</td>\n";
-				echo "$tab\t\t\t<td><input type=\"color\" name=\"$nom\" value=\"$valeur\" /></td>\n";
+				echo $tab . "\t\t<tr>\n";
+				echo $tab . "\t\t\t<td>".$label."</td>\n";
+				echo $tab . "\t\t\t<td><input type=\"color\" name=\"".$nom."\" value=\"".$valeur."\" /></td>\n";
 				$class = "bg".substr($valeur, 1);
-				echo "$tab\t\t\t<td class=\"$class\"></td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab . "\t\t\t<td class=\"".$class."\"></td>\n";
+				echo $tab . "\t\t</tr>\n";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td><input type=\"submit\" name=\"valider_formulaire_administration_stype_typeCours\" value=\"Valider\"/></td>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t</tr>\n";
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
+			echo $tab . "\t\t<tr>\n";
+			echo $tab . "\t\t\t<td></td>\n";
+			echo $tab . "\t\t\t<td><input type=\"submit\" name=\"valider_formulaire_administration_stype_typeCours\" value=\"Valider\"/></td>\n";
+			echo $tab . "\t\t\t<td></td>\n";
+			echo $tab . "\t\t</tr>\n";
+			echo $tab . "\t</table>\n";
+			echo $tab . "</form>\n";
 			Options::afficher_apercu_style($nombreTabulations);
 		}
 		
 		public static function afficher_apercu_style($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
-			echo "$tab<table id=\"edt_semaine\">\n";
-			foreach (Type_Cours::liste_nom_type_cours() as $nom) {
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td class=\"$nom\">$nom</td>\n";
-				echo "$tab\t\t</tr>\n";
+			$tab = ""; 
+			for ($i = 0; $i < $nombreTabulations; $i++) {
+				$tab .= "\t";
 			}
-			echo "$tab</table>\n";
+			
+			echo $tab . "<table id=\"edt_semaine\">\n";
+			foreach (Type_Cours::liste_nom_type_cours() as $nom) {
+				echo $tab . "\t\t<tr>\n";
+				echo $tab . "\t\t\t<td class=\"".$nom."\">".$nom."</td>\n";
+				echo $tab . "\t\t</tr>\n";
+			}
+			echo $tab . "</table>\n";
 		}
 		
 		public static function prise_en_compte_formulaire() {
@@ -193,7 +231,7 @@
 					}
 					else {
 						// La couleur est incorrecte
-						array_push($messages_erreurs, "{$_POST[$nom]} n'est pas une couleur valide");
+						array_push($messages_erreurs, $_POST[$nom]." n'est pas une couleur valide");
 					}
 				}
 				array_push($messages_notifications, "Les couleurs ont bien étes appliquées");

@@ -2,7 +2,7 @@
 	session_start();
 	
 	// Redirection si l'utilisateur vas sur la page sans être connecté
-	if(!isset($_SESSION['idUtilisateur'])){
+	if (!isset($_SESSION['idUtilisateur'])) {
 		header('Location: ./connexion.php');
 	}
 	
@@ -12,35 +12,35 @@
 	
 	// Importation des classes (phase dev : a la fin les mettres 1 par 1 pour eviter de charger le serveur)
 	$repertoire = opendir("./classes/");
-	while($fichier = readdir($repertoire)){
-		if($fichier != '..' && $fichier != '.'){
-			include_once("./classes/$fichier");
+	while ($fichier = readdir($repertoire)) {
+		if ($fichier != '..' && $fichier != '.') {
+			include_once("./classes/" . $fichier);
 		}
 	}
 	
-	if(!isset($_GET['semaine'])){
+	if (!isset($_GET['semaine'])) {
 		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine(time());
-		header("Location: ./index.php?semaine=$debutSemaine");
+		header("Location: ./index.php?semaine=" . $debutSemaine);
 	}
-	else{
+	else {
 		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']);
-		if($debutSemaine != $_GET['semaine']){
-			header("Location: ./index.php?semaine=$debutSemaine");
+		if ($debutSemaine != $_GET['semaine']) {
+			header("Location: ./index.php?semaine=" . $debutSemaine);
 		}
 	}
 	
-	$debutSemaine = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - ((date('N')-1)*3600*24);
+	$debutSemaine = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - ((date('N') - 1) * 3600 * 24);
 	$semainePredente = $_GET['semaine'] - 604800;
 	$semaineSuivante = $_GET['semaine'] + 604800;
 	// Gestion heures d'été
-	if(date('H:i:s',$semaineSuivante) == "23:00:00"){
+	if (date('H:i:s', $semaineSuivante) == "23:00:00") {
 		$semaineSuivante += 3600;
 	}
 	
 	// Serialisation / Unserialisation / Variable de Session Utilisateur (necessaire quand la variable de session est un objet
 	// ATTENTION SI MISE A JOUR D'ETUDIANT !!!
-	if(!isset($_SESSION['Utilisateur_Serialize'])){
-		switch($_SESSION['Type']){
+	if (!isset($_SESSION['Utilisateur_Serialize'])) {
+		switch ($_SESSION['Type']) {
 			case "Etudiant":
 				$_SESSION['Utilisateur'] = new Etudiant($_SESSION['idUtilisateur']);
 				$_SESSION['Utilisateur_Serialize'] = serialize($_SESSION['Utilisateur']);
@@ -53,8 +53,7 @@
 				//
 				break;
 		}
-	}
-	else{
+	} else {
 		$_SESSION['Utilisateur'] = unserialize($_SESSION['Utilisateur_Serialize']);
 	}
 	
@@ -72,7 +71,7 @@
 			<table id="navigation_semaine">
 				<tr>
 					<td><a href="./index.php?semaine=<?php echo $semainePredente; ?>"><img src="./images/fleche_gauche.jpg" alt="fleche gauche" /></a></td>
-					<td>Semaine du <?php echo date('d/m/Y - H:i:s',$_GET['semaine']); ?> au <?php echo date('d/m/Y - H:i:s',$semaineSuivante-1); ?></td>
+					<td>Semaine du <?php echo date('d/m/Y - H:i:s', $_GET['semaine']); ?> au <?php echo date('d/m/Y - H:i:s', $semaineSuivante - 1); ?></td>
 					<td><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>"><img src="./images/fleche_droite.jpg" alt="fleche droite" /></a></td>
 				</tr>
 			</table>

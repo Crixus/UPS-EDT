@@ -7,17 +7,16 @@
 	
 	session_start();
 		
-	if(isset($_POST['Validation_Connexion'])){
+	if (isset($_POST['Validation_Connexion'])) {
 		$login = $_POST['Identifiant'];
 		$motDePasse = $_POST['Mot_de_passe'];
-		
-		if($idUtilisateur = Utilisateur::identification($login, $motDePasse)){
-			$Utilisateur = new Utilisateur($idUtilisateur);
-			$_SESSION['idUtilisateur'] = $Utilisateur->getIdCorrespondant();
-			$_SESSION['Type'] = $Utilisateur->getType();
+		$idUtilisateur = Utilisateur::identification($login, $motDePasse);
+		if ($idUtilisateur) {
+			$_Utilisateur = new Utilisateur($idUtilisateur);
+			$_SESSION['idUtilisateur'] = $_Utilisateur->getIdCorrespondant();
+			$_SESSION['Type'] = $_Utilisateur->getType();
 			header('Location: ./index.php');
-		}
-		else{
+		} else {
 			// A REFAIRE
 			echo "<p>Login ou pass incorrect</p>";
 		}

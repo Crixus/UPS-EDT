@@ -1,22 +1,35 @@
 <?php
-	class MotDePasse{
+	/** 
+	 * Classe MotDePasse - Permet de gerer les mot de passes
+	 * Génération et Cryptage
+	 */ 
+	class MotDePasse {
 		
+		/**
+		 * Renvoi un mot de passe généré aléatoirement
+		 * @return String mot de passe généré
+		 */
 		public static function genererMotDePasse() {
 			$alphabet = "abcdefghijklmnopqrstuvwxyz".
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ".
 						"0123456789";
-			$taille_alphabet = strlen($alphabet);
+			$tailleAlphabet = strlen($alphabet);
 			
-			$nombre_caracteres = 8;
-			$mot_de_passe = "";
-			for ($i = 0 ; $i < $nombre_caracteres ; $i++) {
-				$mot_de_passe .= $alphabet[rand(0, $taille_alphabet - 1)];
+			$nombreCaracteres = 8;
+			$motDePasse = "";
+			for ($i = 0; $i < $nombreCaracteres; $i++) {
+				$motDePasse .= $alphabet[rand(0, $tailleAlphabet - 1)];
 			}
-			return $mot_de_passe;			
+			return $motDePasse;			
 		}
 		
-		public static function crypter_md5_motDePasse($motDePasse) {
-			return md5($motDePasse);
+		/**
+		 * Crypte une chaine de caractère en md5
+		 * @param $nom String chaine à crypter
+		 * @return chaine cryptée en md5
+		 */
+		public static function crypterMd5($chaine) {
+			return md5($chaine);
 		}
 		
 	}

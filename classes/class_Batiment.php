@@ -1,5 +1,5 @@
 <?php
-	/** doxygen
+	/** 
 	 * Classe Batiment - Permet de gerer les batiments
 	 * Page testée sur le checkstyle (pour apprendre à l'utiliser)
 	 */ 
