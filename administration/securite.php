@@ -154,6 +154,16 @@
 				$getSupprimer = 'supprimer_creneauSalle';
 				$methodeExiste = 'existe_creneauSalle';
 				break;
+			
+			case "ajoutSeance":
+				$implemented = true;
+				$class = get_class(new Seance(0));
+				$postAjouter = 'validerAjoutSeance';
+				$postModifier = 'validerModificationSeance';
+				$getModifier = 'modifier_seance';
+				$getSupprimer = 'supprimer_seance';
+				$methodeExiste = 'existe_seance';
+				break;
 				
 			default:
 				$implemented = false;

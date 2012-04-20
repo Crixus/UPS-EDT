@@ -76,6 +76,8 @@
 	Creneau_Intervenant::prise_en_compte_suppression();
 	Creneau_Salle::prise_en_compte_formulaire();
 	Creneau_Salle::prise_en_compte_suppression();
+	Seance::prise_en_compte_formulaire();
+	Seance::prise_en_compte_suppression();
 ?>
 <!DOCTYPE html>
 	<head>
@@ -92,6 +94,7 @@
 		<script type="text/javascript" src="../js/gestionGroupeCours.js?v=<?php echo filemtime("../js/gestionGroupeCours.js");?>"></script>
 		<script type="text/javascript" src="../js/inscriptionUE.js?v=<?php echo filemtime("../js/inscriptionUE.js");?>"></script>
 		<script type="text/javascript" src="../js/listeCoursParUE.js?v=<?php echo filemtime("../js/listeCoursParUE.js");?>"></script>
+		<script type="text/javascript" src="../js/gestionSeance.js?v=<?php echo filemtime("../js/gestionSeance.js");?>"></script>
 	</head>
 	<body>
 		<div id="page_administration">
