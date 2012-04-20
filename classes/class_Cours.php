@@ -215,7 +215,6 @@
 						}
 						else if ($cptBoucle == 5) {
 							$valTemp2 = $Cours->$att;
-							$val = "De ".$valTemp." à ".$valTemp2;
 							echo "$tab\t\t<td>";
 							Cours::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
