@@ -2,4 +2,4 @@
 <?php
 	afficher_notifications(5);
 	afficher_erreurs(5);
-	//JourNonOuvrable::page_administration(1);
+	JourNonOuvrable::page_administration(1);
