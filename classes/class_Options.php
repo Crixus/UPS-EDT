@@ -178,25 +178,31 @@
 			}
 			
 			echo $tab . "<h2>Gestion des couleurs de type de cours</h2>\n";
-			echo $tab . "<form id=\"administration_stype_typeCours\" method=\"post\">\n";
-			echo $tab . "\t<table id=\"administration_style_typesCours\">\n";
-			foreach (Options::generer_array_Options_style() as $label => $nom) {
-				$valeur = Options::valeur_from_nom($nom);
+			$listeOptionStyle = Options::generer_array_Options_style();
+			$nbOptionStyle = sizeof($listeOptionStyle);
+			if ($nbOptionStyle == 0)
+				echo $tab . "<b>Veuillez créer un type de cours dans un premier temps</b>\n";
+			else {
+				echo $tab . "<form id=\"administration_stype_typeCours\" method=\"post\">\n";
+				echo $tab . "\t<table id=\"administration_style_typesCours\">\n";
+				foreach ($listeOptionStyle as $label => $nom) {
+					$valeur = Options::valeur_from_nom($nom);
+					echo $tab . "\t\t<tr>\n";
+					echo $tab . "\t\t\t<td>".$label."</td>\n";
+					echo $tab . "\t\t\t<td><input type=\"color\" name=\"".$nom."\" value=\"".$valeur."\" /></td>\n";
+					$class = "bg".substr($valeur, 1);
+					echo $tab . "\t\t\t<td class=\"".$class."\"></td>\n";
+					echo $tab . "\t\t</tr>\n";
+				}
 				echo $tab . "\t\t<tr>\n";
-				echo $tab . "\t\t\t<td>".$label."</td>\n";
-				echo $tab . "\t\t\t<td><input type=\"color\" name=\"".$nom."\" value=\"".$valeur."\" /></td>\n";
-				$class = "bg".substr($valeur, 1);
-				echo $tab . "\t\t\t<td class=\"".$class."\"></td>\n";
+				echo $tab . "\t\t\t<td></td>\n";
+				echo $tab . "\t\t\t<td><input type=\"submit\" name=\"valider_formulaire_administration_stype_typeCours\" value=\"Valider\"/></td>\n";
+				echo $tab . "\t\t\t<td></td>\n";
 				echo $tab . "\t\t</tr>\n";
+				echo $tab . "\t</table>\n";
+				echo $tab . "</form>\n";
+				Options::afficher_apercu_style($nombreTabulations);
 			}
-			echo $tab . "\t\t<tr>\n";
-			echo $tab . "\t\t\t<td></td>\n";
-			echo $tab . "\t\t\t<td><input type=\"submit\" name=\"valider_formulaire_administration_stype_typeCours\" value=\"Valider\"/></td>\n";
-			echo $tab . "\t\t\t<td></td>\n";
-			echo $tab . "\t\t</tr>\n";
-			echo $tab . "\t</table>\n";
-			echo $tab . "</form>\n";
-			Options::afficher_apercu_style($nombreTabulations);
 		}
 		
 		public static function afficher_apercu_style($nombreTabulations = 0) {

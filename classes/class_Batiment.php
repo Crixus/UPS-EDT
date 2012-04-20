@@ -267,47 +267,53 @@
 		
 		public static function table_administration_batiments($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
-			$liste_batiment = Batiment::liste_batiment();
+			$liste_batiment = Batiment::liste_batiment();			
+			$nbBatiment = sizeof($liste_batiment);
 			
-			echo $tab."<table class=\"table_liste_administration\">\n";			
-			echo $tab."\t<tr class=\"fondGrisFonce\">\n";			
-			echo $tab."\t\t<th>Nom</th>\n";
-			echo $tab."\t\t<th>Latitude</th>\n";
-			echo $tab."\t\t<th>Longitude</th>\n";
-			echo $tab."\t\t<th>Actions</th>\n";
-			echo $tab."\t</tr>\n";
-			
-			$cpt = 0;
-			foreach ($liste_batiment as $idBatiment) {
-				if ($idBatiment != 0) {
-					$_batiment = new Batiment($idBatiment);
-					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-					$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$_batiment->getId()}";
-					if (isset($_GET['idPromotion'])) {
-						$lienInfosBatiment .= "&amp;idPromotion=".$_GET['idPromotion'];
-					}
-					
-					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					echo $tab."\t\t<td>";
-					echo "<a href=\"" . $lienInfosBatiment . "\">".$_batiment->getNom()."</a>";
-					echo "</td>\n";
-					echo $tab."\t\t<td>{$_batiment->getLat()}</td>\n";
-					echo $tab."\t\t<td>{$_batiment->getLon()}</td>\n";
-
-					$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
-					$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
-					if (isset($_GET['idPromotion'])) {
-						$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
-						$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
-					}
-					echo $tab."\t\t<td>";
-					echo "<a href=\"".$pageModification."\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
-					echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le bâtiment ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
-					echo "</td>\n";
-					echo $tab."\t</tr>\n";
-				}
+			if ($nbBatiment <= 1) {
+				echo "$tab<b>Aucun batiment n'est enregistré</b>\n";
 			}
-			echo $tab."</table>\n";
+			else {
+				echo $tab."<table class=\"table_liste_administration\">\n";			
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";			
+				echo $tab."\t\t<th>Nom</th>\n";
+				echo $tab."\t\t<th>Latitude</th>\n";
+				echo $tab."\t\t<th>Longitude</th>\n";
+				echo $tab."\t\t<th>Actions</th>\n";
+				echo $tab."\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_batiment as $idBatiment) {
+					if ($idBatiment != 0) {
+						$_batiment = new Batiment($idBatiment);
+						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+						$lienInfosBatiment = "./index.php?page=infosBatiment&amp;idBatiment={$_batiment->getId()}";
+						if (isset($_GET['idPromotion'])) {
+							$lienInfosBatiment .= "&amp;idPromotion=".$_GET['idPromotion'];
+						}
+						
+						echo $tab."\t<tr class=\"".$couleurFond."\">\n";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"" . $lienInfosBatiment . "\">".$_batiment->getNom()."</a>";
+						echo "</td>\n";
+						echo $tab."\t\t<td>{$_batiment->getLat()}</td>\n";
+						echo $tab."\t\t<td>{$_batiment->getLon()}</td>\n";
+
+						$pageModification = "./index.php?page=ajoutBatiment&amp;modifier_batiment=$idBatiment";
+						$pageSuppression = "./index.php?page=ajoutBatiment&amp;supprimer_batiment=$idBatiment";
+						if (isset($_GET['idPromotion'])) {
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
+						}
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le bâtiment ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+						echo "</td>\n";
+						echo $tab."\t</tr>\n";
+					}
+				}
+				echo $tab."</table>\n";
+			}
 		}
 		
 		public function formulaireAjoutBatiment($nombreTabulations = 0) {

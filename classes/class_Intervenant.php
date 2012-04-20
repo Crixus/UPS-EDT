@@ -204,77 +204,83 @@
 		}
 		
 		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0) {
-			$liste_intervenant = Intervenant::liste_intervenant();
+			$liste_intervenant = Intervenant::liste_intervenant();			
+			$nbre_intervenant = sizeof($liste_intervenant);
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
-			echo "$tab<table class=\"table_liste_administration\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			
-			echo "$tab\t\t<th>Nom</th>\n";
-			echo "$tab\t\t<th>Prénom</th>\n";
-			echo "$tab\t\t<th>Email</th>\n";
-			echo "$tab\t\t<th>Téléphone</th>\n";
-			echo "$tab\t\t<th>Notifications actives</th>\n";
-			echo "$tab\t\t<th>Actif</th>\n";
-			echo "$tab\t\t<th>UE de cette promotion dont il est responsable</th>\n";
-			
-			
-			if ($administration) {
-				echo "$tab\t\t<th>Actions</th>\n";
+			if ($nbre_intervenant <= 1) {
+				echo "$tab<b>Aucun intervenant n'est enregistré</b>\n";
 			}
-			echo "$tab\t</tr>\n";
-			
-			$cpt = 0;
-			foreach ($liste_intervenant as $idIntervenant) {
-				if ($idIntervenant != 0) {
-					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-					
-					$Intervenant = new Intervenant($idIntervenant);
-					$listeIdUE = $Intervenant->liste_id_UE();
-					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
-					echo "$tab\t\t<td>".$Intervenant->nom."</td>\n";
-					echo "$tab\t\t<td>".$Intervenant->prenom."</td>\n";
-					echo "$tab\t\t<td>".$Intervenant->email."</td>\n";
-					echo "$tab\t\t<td>".$Intervenant->telephone."</td>\n";
-					$checked = ($Intervenant->notificationsActives) ? "checked = \"checked\"" : $checked = "";
-					$nomCheckbox = "{$idIntervenant}_notifications";
-					echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
-					$checked = ($Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
-					$nomCheckbox = "{$idIntervenant}_actif";
-					echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif ({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
-					
-					$nbUE = sizeof($listeIdUE); $cptBoucle = 1;
-					echo "$tab\t\t<td>";
-					foreach ($listeIdUE as $idUE) {
-						$UE = new UE($idUE);
-						if ($cptBoucle != 1) {
-							if ($cptBoucle != $nbUE) { echo ", "; }
-							else { echo" et "; }
-						}
-						echo "{$UE->getNom()}({$UE->getAnnee()})";
-						$cptBoucle ++;
-					}
-					echo "</td>\n";
-					
-					if ($administration) {
-						$pageModification = "./index.php?page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
-						$pageSuppression = "./index.php?page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
-						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
-						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer l\'intervenant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
-						echo "</td>\n";
-					}
-					echo "$tab\t</tr>\n";
+			else {
+				echo "$tab<table class=\"table_liste_administration\">\n";
+				
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				
+				echo "$tab\t\t<th>Nom</th>\n";
+				echo "$tab\t\t<th>Prénom</th>\n";
+				echo "$tab\t\t<th>Email</th>\n";
+				echo "$tab\t\t<th>Téléphone</th>\n";
+				echo "$tab\t\t<th>Notifications actives</th>\n";
+				echo "$tab\t\t<th>Actif</th>\n";
+				echo "$tab\t\t<th>UE de cette promotion dont il est responsable</th>\n";
+				
+				
+				if ($administration) {
+					echo "$tab\t\t<th>Actions</th>\n";
 				}
+				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_intervenant as $idIntervenant) {
+					if ($idIntervenant != 0) {
+						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+						
+						$Intervenant = new Intervenant($idIntervenant);
+						$listeIdUE = $Intervenant->liste_id_UE();
+						
+						echo "$tab\t<tr class=\"$couleurFond\">\n";
+						echo "$tab\t\t<td>".$Intervenant->nom."</td>\n";
+						echo "$tab\t\t<td>".$Intervenant->prenom."</td>\n";
+						echo "$tab\t\t<td>".$Intervenant->email."</td>\n";
+						echo "$tab\t\t<td>".$Intervenant->telephone."</td>\n";
+						$checked = ($Intervenant->notificationsActives) ? "checked = \"checked\"" : $checked = "";
+						$nomCheckbox = "{$idIntervenant}_notifications";
+						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						$checked = ($Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
+						$nomCheckbox = "{$idIntervenant}_actif";
+						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif ({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						
+						$nbUE = sizeof($listeIdUE); $cptBoucle = 1;
+						echo "$tab\t\t<td>";
+						foreach ($listeIdUE as $idUE) {
+							$UE = new UE($idUE);
+							if ($cptBoucle != 1) {
+								if ($cptBoucle != $nbUE) { echo ", "; }
+								else { echo" et "; }
+							}
+							echo "{$UE->getNom()}({$UE->getAnnee()})";
+							$cptBoucle ++;
+						}
+						echo "</td>\n";
+						
+						if ($administration) {
+							$pageModification = "./index.php?page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
+							$pageSuppression = "./index.php?page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
+							if (isset($_GET['idPromotion'])) {
+								$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+								$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							}
+							echo "$tab\t\t<td>";
+							echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+							echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer l\'intervenant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+							echo "</td>\n";
+						}
+						echo "$tab\t</tr>\n";
+					}
+				}
+				
+				echo "$tab</table>\n";
 			}
-			
-			echo "$tab</table>\n";
 		}
 		
 		public function formulaireAjoutIntervenant($nombreTabulations = 0) {

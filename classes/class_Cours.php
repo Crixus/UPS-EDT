@@ -324,8 +324,10 @@
 		public function formulaireAjoutCours($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
+			$nbUE = sizeof($liste_UE_promotion);
 			$liste_intervenant = Intervenant::liste_intervenant();
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
+			$nbTypeCours = sizeof($liste_type_cours);
 			
 			if (isset($_GET['modifier_cours'])) { 
 				$titre = "Modifier un cours";
@@ -353,202 +355,208 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"UE\">UE</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
-			foreach ($liste_UE_promotion as $idUE) {
-				$UE = new UE($idUE);
-				$nomUE = $UE->getNom();
-				if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"type\">Type</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
-			foreach ($liste_type_cours as $idTypeCours) {
-				$Type_Cours = new Type_Cours($idTypeCours);
-				$nomTypeCours = $Type_Cours->getNom();
-				if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"intervenant\">Intervenant</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
-			
-			if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach ($liste_intervenant as $idIntervenant) {
-				if ($idIntervenant != 0) {
-					$Intervenant = new Intervenant($idIntervenant);
-					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-					if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
-				}
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			if (isset($tsDebutModif)) {
-				$explode = explode(" ", $tsDebutModif);
-				$valueDateDebut = "value=\"{$explode[0]}\" ";
-				$explodeHeure = explode(":", $explode[1]);
-				$valueHeureDebut = $explodeHeure[0];
-				$valueMinuteDebut = $explodeHeure[1];
-			}
+			if ($nbUE == 0)
+				echo "$tab<h2>Vous devez d'aboir créer des UE pour cette promotion avant de créer des séances</h2><br/><br/>\n";
+			else if ($nbTypeCours == 0)
+				echo "$tab<h2>Vous devez d'aboir créer des types de cours avant de créer des séances</h2><br/><br/>\n";
 			else {
-				$valueDateDebut = "";
-				$valueHeureDebut = "";
-				$valueMinuteDebut = "";
-			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Debut</td>\n";
-			echo "$tab\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Debut</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
-			for ($cpt=0;$cpt<=23;$cpt++) {
-				if ($cpt == $valueHeureDebut)
-					$selected = " selected";
-				else if ( ($cpt == 7) && ($valueHeureDebut == "") )
-					$selected = " selected";
-				else
-					$selected = "";
-					
-				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
-				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
-			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
-			$tab_minute = array(0,15,30,45);
-			$first=false;
-			for ($cpt=0;$cpt<4;$cpt++) {
-				if ($tab_minute[$cpt] == $valueMinuteDebut) {
-					$selected = " selected";
-				}
-				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
-					$selected = " selected";
-				else
-					$selected = "";
-					
-				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
-				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
-			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			if (isset($tsFinModif)) {
-				$explode = explode(" ", $tsFinModif);
-				$valueDateFin = "value=\"{$explode[0]}\" ";
-				$explodeHeure = explode(":", $explode[1]);
-				$valueHeureFin = $explodeHeure[0];
-				$valueMinuteFin = $explodeHeure[1];
-			}
-			else {
-				$valueDateFin = "";
-				$valueHeureFin = "";
-				$valueMinuteFin = "";
-			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Fin</td>\n";
-			echo "$tab\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Fin</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureFin\">\n";			
-			for ($cpt=0;$cpt<=23;$cpt++) {
-				if ($cpt == $valueHeureFin)
-					$selected = " selected";
-				else if ( ($cpt == 9) && ($valueHeureFin == "") )
-					$selected = " selected";
-				else
-					$selected = "";
-					
-				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
-				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
-			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteFin\">\n";		
-			$tab_minute = array(0,15,30,45);
-			$first=false;
-			for ($cpt=0;$cpt<4;$cpt++) {
-				if ($tab_minute[$cpt] == $valueMinuteFin) {
-					$selected = " selected";
-				}
-				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
-					$selected = " selected";
-				else
-					$selected = "";
-					
-				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
-				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
-			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"salle\">Salle</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
-			
-			Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
-			
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			if (! isset($_GET['modifier_cours'])) { 
+				echo "$tab<h2>$titre</h2>\n";
+				echo "$tab<form method=\"post\">\n";
+				echo "$tab\t<table>\n";
 				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
+				echo "$tab\t\t\t<td><label for=\"UE\">UE</label></td>\n";
 				echo "$tab\t\t\t<td>\n";
-				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
-				
-				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
-				for ($i=1; $i<=10; $i++) {
-					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+				echo "$tab\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
+				foreach ($liste_UE_promotion as $idUE) {
+					$UE = new UE($idUE);
+					$nomUE = $UE->getNom();
+					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
 				}
-				echo "$tab\t\t\t\t</select> (en semaines)\n";
+				echo "$tab\t\t\t\t</select>\n";
 				echo "$tab\t\t\t</td>\n";
 				echo "$tab\t\t</tr>\n";
-			}			
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
-			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"type\">Type</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
+				foreach ($liste_type_cours as $idTypeCours) {
+					$Type_Cours = new Type_Cours($idTypeCours);
+					$nomTypeCours = $Type_Cours->getNom();
+					if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
+				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"intervenant\">Intervenant</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
+				
+				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+				foreach ($liste_intervenant as $idIntervenant) {
+					if ($idIntervenant != 0) {
+						$Intervenant = new Intervenant($idIntervenant);
+						$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+						echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+					}
+				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				if (isset($tsDebutModif)) {
+					$explode = explode(" ", $tsDebutModif);
+					$valueDateDebut = "value=\"{$explode[0]}\" ";
+					$explodeHeure = explode(":", $explode[1]);
+					$valueHeureDebut = $explodeHeure[0];
+					$valueMinuteDebut = $explodeHeure[1];
+				}
+				else {
+					$valueDateDebut = "";
+					$valueHeureDebut = "";
+					$valueMinuteDebut = "";
+				}
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td>Date Debut</td>\n";
+				echo "$tab\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td>Heure Debut</td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
+				for ($cpt=0;$cpt<=23;$cpt++) {
+					if ($cpt == $valueHeureDebut)
+						$selected = " selected";
+					else if ( ($cpt == 7) && ($valueHeureDebut == "") )
+						$selected = " selected";
+					else
+						$selected = "";
+						
+					if ($cpt < 10)
+						echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					else
+						echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+				}
+				echo "$tab\t\t\t\t\t</select>\n";
+				echo "$tab\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
+				$tab_minute = array(0,15,30,45);
+				$first=false;
+				for ($cpt=0;$cpt<4;$cpt++) {
+					if ($tab_minute[$cpt] == $valueMinuteDebut) {
+						$selected = " selected";
+					}
+					else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
+						$selected = " selected";
+					else
+						$selected = "";
+						
+					if ($cpt == 0)
+						echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					else
+						echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+				}
+				echo "$tab\t\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				if (isset($tsFinModif)) {
+					$explode = explode(" ", $tsFinModif);
+					$valueDateFin = "value=\"{$explode[0]}\" ";
+					$explodeHeure = explode(":", $explode[1]);
+					$valueHeureFin = $explodeHeure[0];
+					$valueMinuteFin = $explodeHeure[1];
+				}
+				else {
+					$valueDateFin = "";
+					$valueHeureFin = "";
+					$valueMinuteFin = "";
+				}
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td>Date Fin</td>\n";
+				echo "$tab\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
+				echo "$tab\t\t</tr>\n";
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td>Heure Fin</td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"heureFin\">\n";			
+				for ($cpt=0;$cpt<=23;$cpt++) {
+					if ($cpt == $valueHeureFin)
+						$selected = " selected";
+					else if ( ($cpt == 9) && ($valueHeureFin == "") )
+						$selected = " selected";
+					else
+						$selected = "";
+						
+					if ($cpt < 10)
+						echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					else
+						echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+				}
+				echo "$tab\t\t\t\t\t</select>\n";
+				echo "$tab\t\t\t\t<select name=\"minuteFin\">\n";		
+				$tab_minute = array(0,15,30,45);
+				$first=false;
+				for ($cpt=0;$cpt<4;$cpt++) {
+					if ($tab_minute[$cpt] == $valueMinuteFin) {
+						$selected = " selected";
+					}
+					else if ( ($cpt == 3) && ($valueMinuteFin == "") )
+						$selected = " selected";
+					else
+						$selected = "";
+						
+					if ($cpt == 0)
+						echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					else
+						echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+				}
+				echo "$tab\t\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"salle\">Salle</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
+				
+				Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
+				
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				if (! isset($_GET['modifier_cours'])) { 
+					echo "$tab\t\t<tr>\n";
+					echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
+					echo "$tab\t\t\t<td>\n";
+					echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
+					
+					echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
+					for ($i=1; $i<=10; $i++) {
+						echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+					}
+					echo "$tab\t\t\t\t</select> (en semaines)\n";
+					echo "$tab\t\t\t</td>\n";
+					echo "$tab\t\t</tr>\n";
+				}			
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td></td>\n";
+				echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t</table>\n";
+				echo "$tab</form>\n";
+				
+				if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			}
 		}
 		
 		public static function liste_salle_suivant_typeCours($idSalleModif, $idTypeCours) {

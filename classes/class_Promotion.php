@@ -117,6 +117,23 @@
 			return $listeId;
 		}
 		
+		public static function nb_promotion() {
+			$listeId = Array();
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Promotion::$nomTable." WHERE id!=0 ORDER BY nom");
+				$req->execute();
+				$ligne = $req->fetch();
+				$req->closeCursor();
+			}
+			catch (Exception $e) {
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $ligne['nb'];
+		}
+		
 		public function liste_promotion_for_select($idPromotion = null, $nombreTabulations = 0) {
 			$liste_promotion = Promotion::liste_promotion();
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -139,58 +156,64 @@
 		
 		public static function liste_promotion_to_table($administration, $nombreTabulations = 0) {
 			$liste_promotion = Promotion::liste_promotion();
+			$nbListePromotion = sizeof($liste_promotion);
+			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
-			echo "$tab<table class=\"table_liste_administration\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			
-			echo "$tab\t\t<th>Nom</th>\n";
-			echo "$tab\t\t<th>Année</th>\n";
-			echo "$tab\t\t<th>Date</th>\n";
-			
-			if ($administration) {
-				echo "$tab\t\t<th>Actions</th>\n";
-			}
-			echo "$tab\t</tr>\n";
-			
-			$cpt = 0;
-			foreach ($liste_promotion as $idPromo) {
-				$Promotion = new Promotion($idPromo);
+			if ($nbListePromotion == 0)
+				echo "$tab<b>Aucunes promotions n'est enregistré</b>\n";
+			else {
+				echo "$tab<table class=\"table_liste_administration\">\n";
 				
-				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
 				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				$cptBoucle=0;
-				$valTemp="";
-				$valTemp2="";
-				foreach (Promotion::$attributs as $att) {
-					if ($cptBoucle == 2)
-						$valTemp = $Promotion->$att;
-					else if ($cptBoucle == 3) {
-						$valTemp2 = $Promotion->$att;
-						echo "$tab\t\t<td>";
-						Promotion::dateCours($valTemp, $valTemp2);
-						echo "</td>\n";
-					}
-					else {
-						echo "$tab\t\t<td>".$Promotion->$att."</td>\n";
-					}
-					$cptBoucle++;
-				}
+				echo "$tab\t\t<th>Nom</th>\n";
+				echo "$tab\t\t<th>Année</th>\n";
+				echo "$tab\t\t<th>Date</th>\n";
+				
 				if ($administration) {
-					$pageModification = "./index.php?page=ajoutPromotion&amp;modifier_promotion=$idPromo";
-					if (isset($_GET['idPromotion'])) {
-						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-					}
-					echo "$tab\t\t<td>";
-					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-					echo "</td>\n";
+					echo "$tab\t\t<th>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_promotion as $idPromo) {
+					$Promotion = new Promotion($idPromo);
+					
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+					
+					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					$cptBoucle=0;
+					$valTemp="";
+					$valTemp2="";
+					foreach (Promotion::$attributs as $att) {
+						if ($cptBoucle == 2)
+							$valTemp = $Promotion->$att;
+						else if ($cptBoucle == 3) {
+							$valTemp2 = $Promotion->$att;
+							echo "$tab\t\t<td>";
+							Promotion::dateCours($valTemp, $valTemp2);
+							echo "</td>\n";
+						}
+						else {
+							echo "$tab\t\t<td>".$Promotion->$att."</td>\n";
+						}
+						$cptBoucle++;
+					}
+					if ($administration) {
+						$pageModification = "./index.php?page=ajoutPromotion&amp;modifier_promotion=$idPromo";
+						if (isset($_GET['idPromotion'])) {
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "</td>\n";
+					}
+					echo "$tab\t</tr>\n";
+				}
+				
+				echo "$tab</table>\n";
 			}
-			
-			echo "$tab</table>\n";
 		}
 		
 		public function dateCours($dateDebut, $dateFin) {

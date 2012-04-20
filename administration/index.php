@@ -107,6 +107,9 @@
 				<div id="barre_selection_promotion">
 					<table>
 						<tr>
+<?php
+	if (Promotion::nb_promotion() != 0) {
+?>
 							<td>Selection d'une promotion</td>
 							<td>
 <?php 
@@ -118,6 +121,9 @@
 	}
 ?>
 							</td>
+<?php
+	}
+?>
 							<td><a href="?page=ajoutPromotion" >Ajout d'une promotion</a></td>
 						</tr>
 					</table>

@@ -223,7 +223,9 @@
 		public function formulaireAjoutSeance($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
+			$nbUE = sizeof($liste_UE_promotion);
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
+			$nbTypeCours = sizeof($liste_type_cours);
 			$liste_intervenant = Intervenant::liste_intervenant();
 			$liste_seance_precedente_promotion = V_Infos_Seance_Promotion::liste_seance($idPromotion);
 			
@@ -258,108 +260,114 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Durée</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"duree\" type=\"number\" min=\"1\" max=\"99\" required {$dureeModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"UE\">UE</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
-			foreach ($liste_UE_promotion as $idUE) {
-				$UE = new UE($idUE);
-				$nomUE = $UE->getNom();
-				if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"type\">Type</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
-			foreach ($liste_type_cours as $idTypeCours) {
-				$Type_Cours = new Type_Cours($idTypeCours);
-				$nomTypeCours = $Type_Cours->getNom();
-				if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"intervenant\">Intervenant</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
-			
-			if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+			if ($nbUE == 0)
+				echo "$tab<h2>Vous devez d'aboir créer des UE pour cette promotion avant de créer des séances</h2><br/><br/>\n";
+			else if ($nbTypeCours == 0)
+				echo "$tab<h2>Vous devez d'aboir créer des types de cours avant de créer des séances</h2><br/><br/>\n";
+			else {
+				echo "$tab<h2>$titre</h2>\n";
+				echo "$tab<form method=\"post\">\n";
+				echo "$tab\t<table>\n";
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label>Nom</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label>Durée</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<input name=\"duree\" type=\"number\" min=\"1\" max=\"99\" required {$dureeModif}/>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"UE\">UE</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
+				foreach ($liste_UE_promotion as $idUE) {
+					$UE = new UE($idUE);
+					$nomUE = $UE->getNom();
+					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
+				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"type\">Type</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
+				foreach ($liste_type_cours as $idTypeCours) {
+					$Type_Cours = new Type_Cours($idTypeCours);
+					$nomTypeCours = $Type_Cours->getNom();
+					if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
+				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"intervenant\">Intervenant</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
+				
+				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+				foreach ($liste_intervenant as $idIntervenant) {
+					if ($idIntervenant != 0) {
+						$Intervenant = new Intervenant($idIntervenant);
+						$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+						echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+					}
+				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"salle\">Salle</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
+				
+				Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
+				
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label for=\"seancePrecedente\">Seance Précèdente</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"seancePrecedente\" id=\"seancePrecedente\">\n";
+				if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == 0) ) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach ($liste_intervenant as $idIntervenant) {
-				if ($idIntervenant != 0) {
-					$Intervenant = new Intervenant($idIntervenant);
-					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-					if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo "$tab\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+				foreach ($liste_seance_precedente_promotion as $idSeance) {
+					if ( !(isset($_GET['modifier_seance']) && ($idSeance == $idSeanceEnregistrer)) ){
+						$Seance = new Seance($idSeance);
+						$nomSeance = $Seance->getNom();
+						if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == $idSeance)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+						echo "$tab\t\t\t\t\t<option value=\"$idSeance\" $selected>$nomSeance</option>\n";
+					}
 				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td></td>\n";
+				echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t</table>\n";
+				echo "$tab</form>\n";
+				
+				if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"salle\">Salle</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
-			
-			Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
-			
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"seancePrecedente\">Seance Précèdente</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"seancePrecedente\" id=\"seancePrecedente\">\n";
-			if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == 0) ) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-			echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach ($liste_seance_precedente_promotion as $idSeance) {
-				if ( !(isset($_GET['modifier_seance']) && ($idSeance == $idSeanceEnregistrer)) ){
-					$Seance = new Seance($idSeance);
-					$nomSeance = $Seance->getNom();
-					if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == $idSeance)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo "$tab\t\t\t\t\t<option value=\"$idSeance\" $selected>$nomSeance</option>\n";
-				}
-			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
-			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}
 		
 		

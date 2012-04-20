@@ -106,65 +106,72 @@
 		public static function liste_type_salle_to_table($nombreTabulations = 0, $administration = false) {
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
+			$nbTypeSalles = sizeof($liste_type_salle);
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbre_type_cours = sizeof($liste_type_cours);
 			
-			echo "$tab<table class=\"table_liste_administration\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			echo "$tab\t\t<th rowspan='2'>Nom</th>\n";
-			echo "$tab\t\t<th colspan='{$nbre_type_cours}'>Type de cours</th>\n";
-			
-			if ($administration) {
-				echo "$tab\t\t<th rowspan='2'>Actions</th>\n";
+			if ($nbTypeSalles == 0) {
+				echo "$tab<b>Aucun type de salles n'est enregistré</b>\n";
 			}
-			echo "$tab\t</tr>\n";
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			
-			foreach ($liste_type_cours as $idType_Cours) {					
-				$Type_Cours = new Type_Cours($idType_Cours);
-				$nomType_Cours = $Type_Cours->getNom();
-				echo "$tab\t\t<th>$nomType_Cours</th>\n";
-			}
-			echo "$tab\t</tr>\n";
-			
-			$cpt = 0;
-			foreach ($liste_type_salle as $idTypeSalle) {
-				$Type_Salle = new Type_Salle($idTypeSalle);
+			else {
+				echo "$tab<table class=\"table_liste_administration\">\n";
 				
-				$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt = ($cpt + 1)%2;
-				
-				echo "$tab\t<tr class=\"$couleurFond\">\n";
-				echo "$tab\t\t<td>{$Type_Salle->getNom()}</td>\n";
-				
-				foreach ($liste_type_cours as $idTypeCours) {				
-					$Type_Cours = new Type_Cours($idTypeCours);
-					$nomType_Cours = $Type_Cours->getNom();
-					if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
-						$checked = "checked = \"checked\"" ;
-					else
-						$checked = "";
-					$nameCheckbox = "{$idTypeCours}_{$nomType_Cours}";
-					echo "$tab\t\t<td>";
-					echo "<input type=\"checkbox\" name=\"$nameCheckbox\" value=\"$idTypeSalle\" onclick=\"appartenance_typeSalle_typeCours($idTypeCours,$idTypeSalle,this)\" $checked />";
-					echo "</td>\n";
-				}
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo "$tab\t\t<th rowspan='2'>Nom</th>\n";
+				if ($nbre_type_cours != 0)
+				echo "$tab\t\t<th colspan='{$nbre_type_cours}'>Type de cours</th>\n";
 				
 				if ($administration) {
-					$pageModification = "./index.php?page=ajoutTypeSalle&amp;modifier_type_salle=$idTypeSalle";
-					$pageSuppression = "./index.php?page=ajoutTypeSalle&amp;supprimer_type_salle=$idTypeSalle";
-					if (isset($_GET['idPromotion'])) {
-						$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-						$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
-					}
-					echo "$tab\t\t<td>";
-					echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-					echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le type de salle ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
-					echo "</td>\n";
+					echo "$tab\t\t<th rowspan='2'>Actions</th>\n";
 				}
 				echo "$tab\t</tr>\n";
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				
+				foreach ($liste_type_cours as $idType_Cours) {					
+					$Type_Cours = new Type_Cours($idType_Cours);
+					$nomType_Cours = $Type_Cours->getNom();
+					echo "$tab\t\t<th>$nomType_Cours</th>\n";
+				}
+				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_type_salle as $idTypeSalle) {
+					$Type_Salle = new Type_Salle($idTypeSalle);
+					
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt = ($cpt + 1)%2;
+					
+					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo "$tab\t\t<td>{$Type_Salle->getNom()}</td>\n";
+					
+					foreach ($liste_type_cours as $idTypeCours) {				
+						$Type_Cours = new Type_Cours($idTypeCours);
+						$nomType_Cours = $Type_Cours->getNom();
+						if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
+							$checked = "checked = \"checked\"" ;
+						else
+							$checked = "";
+						$nameCheckbox = "{$idTypeCours}_{$nomType_Cours}";
+						echo "$tab\t\t<td>";
+						echo "<input type=\"checkbox\" name=\"$nameCheckbox\" value=\"$idTypeSalle\" onclick=\"appartenance_typeSalle_typeCours($idTypeCours,$idTypeSalle,this)\" $checked />";
+						echo "</td>\n";
+					}
+					
+					if ($administration) {
+						$pageModification = "./index.php?page=ajoutTypeSalle&amp;modifier_type_salle=$idTypeSalle";
+						$pageSuppression = "./index.php?page=ajoutTypeSalle&amp;supprimer_type_salle=$idTypeSalle";
+						if (isset($_GET['idPromotion'])) {
+							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le type de salle ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
+					}
+					echo "$tab\t</tr>\n";
+				}
+				echo "$tab</table>\n";
 			}
-			echo "$tab</table>\n";
 		}
 		
 		public static function existe_type_salle($id) {

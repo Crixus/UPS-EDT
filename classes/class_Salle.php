@@ -264,9 +264,12 @@
 			echo "$tab\t\t\t<td><label>Bâtiment</label></td>\n";
 			echo "$tab\t\t\t<td>\n";
 			echo "$tab\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
+			
 			foreach ($liste_nom_batiment as $nom_batiment) {
-				if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+				if ($nom_batiment != 'DEFAULT') {
+					if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					echo "$tab\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+				}
 			}
 			echo "$tab\t\t\t\t</select>\n";
 			echo "$tab\t\t\t</td>\n";
@@ -334,75 +337,81 @@
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			
 			$liste_id_salles = Salle::liste_id_salles();
+			$nbSalles = sizeof($liste_id_salles);
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			
-			echo "$tab<table class=\"table_liste_administration\">\n";
-			
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			echo "$tab\t\t<th rowspan=\"2\">Nom</th>\n";
-			echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
-			echo "$tab\t\t<th rowspan=\"2\">Salle</th>\n";
-			echo "$tab\t\t<th rowspan=\"2\">Capacité</th>\n";
-			echo "$tab\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
-			if ($administration) {
-				echo "$tab\t\t<th rowspan=\"2\">Actions</th>\n";
+			if ($nbSalles <= 1) {
+				echo "$tab<b>Aucunes salles n'est enregistrées</b>\n";
 			}
-			echo "$tab\t</tr>\n";
-			echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-			
-			foreach ($liste_type_salle as $idType_Salle) {					
-				$Type_Salle = new Type_Salle($idType_Salle);
-				$nomType_Salle = $Type_Salle->getNom();
-				echo "$tab\t\t<th>$nomType_Salle</th>\n";
-			}
-			echo "$tab\t</tr>\n";
-			
-			$cpt = 0;
-			foreach ($liste_id_salles as $idSalle) {
-				if ($idSalle != 0) {
-					$Salle = new Salle($idSalle);
-					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-					$lienInfosSalle = "./index.php?page=infosSalle&amp;idSalle={$Salle->getId()}";
-					if (isset($_GET['idPromotion'])) {
-						$lienInfosSalle .= "&amp;idPromotion={$_GET['idPromotion']}";
-					}
-					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
-					echo "$tab\t\t<td>";
-					echo "<a href=\"$lienInfosSalle\">{$Salle->getNomBatiment()} - {$Salle->getNom()}</a>";
-					echo "</td>\n";
-					echo "$tab\t\t<td>{$Salle->getNomBatiment()}</td>\n";
-					echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
-					echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
-									
-					foreach ($liste_type_salle as $idType_Salle) {					
-						$Type_Salle = new Type_Salle($idType_Salle);
-						$nomType_Salle = $Type_Salle->getNom();
-						if (Type_Salle::appartient_salle_typeSalle($idSalle, $idType_Salle)) 
-							$checked = "checked = \"checked\"" ;
-						else
-							$checked = "";
-						$nomCheckbox = "{$idSalle}_{$nomType_Salle}";
-						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idSalle}_{$nomType_Salle}\" value=\"{$idType_Salle}\" onclick=\"appartenance_salle_typeSalle({$idSalle},{$idType_Salle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
-					}
+			else {			
+				echo "$tab<table class=\"table_liste_administration\">\n";
 				
-					if ($administration) {
-						$pageModification = "./index.php?page=ajoutSalle&amp;modifier_salle=$idSalle";
-						$pageSuppression = "./index.php?page=ajoutSalle&amp;supprimer_salle=$idSalle";
-						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
-						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer la salle ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
-						echo "</td>";
-					}
-					echo "$tab\t</tr>\n";
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo "$tab\t\t<th rowspan=\"2\">Nom</th>\n";
+				echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
+				echo "$tab\t\t<th rowspan=\"2\">Salle</th>\n";
+				echo "$tab\t\t<th rowspan=\"2\">Capacité</th>\n";
+				echo "$tab\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
+				if ($administration) {
+					echo "$tab\t\t<th rowspan=\"2\">Actions</th>\n";
 				}
+				echo "$tab\t</tr>\n";
+				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				
+				foreach ($liste_type_salle as $idType_Salle) {					
+					$Type_Salle = new Type_Salle($idType_Salle);
+					$nomType_Salle = $Type_Salle->getNom();
+					echo "$tab\t\t<th>$nomType_Salle</th>\n";
+				}
+				echo "$tab\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_id_salles as $idSalle) {
+					if ($idSalle != 0) {
+						$Salle = new Salle($idSalle);
+						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+						$lienInfosSalle = "./index.php?page=infosSalle&amp;idSalle={$Salle->getId()}";
+						if (isset($_GET['idPromotion'])) {
+							$lienInfosSalle .= "&amp;idPromotion={$_GET['idPromotion']}";
+						}
+						
+						echo "$tab\t<tr class=\"$couleurFond\">\n";
+						echo "$tab\t\t<td>";
+						echo "<a href=\"$lienInfosSalle\">{$Salle->getNomBatiment()} - {$Salle->getNom()}</a>";
+						echo "</td>\n";
+						echo "$tab\t\t<td>{$Salle->getNomBatiment()}</td>\n";
+						echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
+						echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
+										
+						foreach ($liste_type_salle as $idType_Salle) {					
+							$Type_Salle = new Type_Salle($idType_Salle);
+							$nomType_Salle = $Type_Salle->getNom();
+							if (Type_Salle::appartient_salle_typeSalle($idSalle, $idType_Salle)) 
+								$checked = "checked = \"checked\"" ;
+							else
+								$checked = "";
+							$nomCheckbox = "{$idSalle}_{$nomType_Salle}";
+							echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idSalle}_{$nomType_Salle}\" value=\"{$idType_Salle}\" onclick=\"appartenance_salle_typeSalle({$idSalle},{$idType_Salle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
+						}
+					
+						if ($administration) {
+							$pageModification = "./index.php?page=ajoutSalle&amp;modifier_salle=$idSalle";
+							$pageSuppression = "./index.php?page=ajoutSalle&amp;supprimer_salle=$idSalle";
+							if (isset($_GET['idPromotion'])) {
+								$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+								$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							}
+							echo "$tab\t\t<td>";
+							echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
+							echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer la salle ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+							echo "</td>";
+						}
+						echo "$tab\t</tr>\n";
+					}
+				}
+				
+				echo "$tab</table>\n";
 			}
-			
-			echo "$tab</table>\n";
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {
