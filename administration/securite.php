@@ -10,7 +10,7 @@
 	$listePagesAdminPromo = Array(
 		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", 
 		"ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php", 
-		"gestionGroupeCours.php", "listeCoursParUE.php"
+		"gestionGroupeCours.php", "listeCoursParUE.php", "ajoutJoursNonOuvrables.php", "ajoutSeance.php"
 	);
 	$listePagesAdminHorsPromo = Array(
 		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php",
