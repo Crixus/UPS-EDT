@@ -7,8 +7,20 @@
 								Gestion des couleurs de type de cours
 							</a>
 						</li>
-					</ul>
-					
+<?php 
+	if (isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)) {
+?>
+						<li>
+							<a href="?page=ajoutJoursNonOuvrables<?php if (isset($_GET['idPromotion'])) {
+								echo "&amp;idPromotion=" . $_GET['idPromotion']; 
+							}?>" >
+								Ajout des jours non ouvrables
+							</a>
+						</li>
+<?php
+	}
+?>
+					</ul>				
 					<h1>Gestion des salles</h1>
 					<ul>
 						<li>
@@ -58,6 +70,22 @@
 							</a>
 						</li>
 					</ul>
+<?php 
+	if (isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)) {
+?>
+					<h1>Gestion des séances</h1>
+					<ul>
+						<li>
+							<a href="?page=ajoutSeance<?php if (isset($_GET['idPromotion'])) {
+								echo "&amp;idPromotion=" . $_GET['idPromotion'];
+							}?>" >
+								Ajout d'une séance
+							</a>
+						</li>
+					</ul>
+<?php
+	}
+?>
 					<h1>Gestion des cours</h1>
 					<ul>
 						<li>
