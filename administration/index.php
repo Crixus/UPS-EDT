@@ -78,6 +78,9 @@
 	Creneau_Salle::prise_en_compte_suppression();
 	Seance::prise_en_compte_formulaire();
 	Seance::prise_en_compte_suppression();
+	
+	JourNonOuvrable::prise_en_compte_formulaire();
+	JourNonOuvrable::prise_en_compte_suppression();
 ?>
 <!DOCTYPE html>
 	<head>

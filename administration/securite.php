@@ -10,7 +10,7 @@
 	$listePagesAdminPromo = Array(
 		"ajoutCours.php", "ajoutEtudiant.php", "ajoutGroupeCours.php", "ajoutGroupeEtudiants.php", 
 		"ajoutSpecialite.php", "gestionPublication.php", "gestionGroupeEtudiants.php", 
-		"gestionGroupeCours.php", "listeCoursParUE.php", "ajoutJoursNonOuvrables.php", "ajoutSeance.php"
+		"gestionGroupeCours.php", "listeCoursParUE.php", "ajoutJourNonOuvrable.php", "ajoutSeance.php"
 	);
 	$listePagesAdminHorsPromo = Array(
 		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php",
@@ -163,6 +163,16 @@
 				$getModifier = 'modifier_seance';
 				$getSupprimer = 'supprimer_seance';
 				$methodeExiste = 'existe_seance';
+				break;
+			
+			case "ajoutJourNonOuvrable":
+				$implemented = true;
+				$class = get_class(new JourNonOuvrable(0));
+				$postAjouter = 'validerAjoutJourNonOuvrable';
+				$postModifier = 'validerModificationJourNonOuvrable';
+				$getModifier = 'modifier_jourNonOuvrable';
+				$getSupprimer = 'supprimer_jourNonOuvrable';
+				$methodeExiste = 'existe_jourNonOuvrable';
 				break;
 				
 			default:

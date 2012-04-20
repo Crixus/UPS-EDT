@@ -11,7 +11,7 @@
 	if (isset($_GET['idPromotion']) && ($_GET['idPromotion'] != 0)) {
 ?>
 						<li>
-							<a href="?page=ajoutJoursNonOuvrables<?php if (isset($_GET['idPromotion'])) {
+							<a href="?page=ajoutJourNonOuvrable<?php if (isset($_GET['idPromotion'])) {
 								echo "&amp;idPromotion=" . $_GET['idPromotion']; 
 							}?>" >
 								Ajout des jours non ouvrables
