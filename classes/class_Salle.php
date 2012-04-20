@@ -218,6 +218,7 @@
 		public function formulaireAjoutModificationSalle($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
 			$liste_nom_batiment = Salle::listeNomBatiment();
+			$nbBatiment = sizeof($liste_nom_batiment);
 			
 			if (isset($_GET['modifier_salle'])) { 
 				$titre = "Modifier une salle";
@@ -243,47 +244,51 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Capacité</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"1\" max=\"999\" required {$capaciteModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Bâtiment</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
-			
-			foreach ($liste_nom_batiment as $nom_batiment) {
-				if ($nom_batiment != 'DEFAULT') {
-					if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo "$tab\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+			if ($nbBatiment <= 1)
+				echo "$tab<h2>Vous devez d'aboir créer des batiments avant de créer des salles</h2><br/><br/>\n";
+			else {
+				echo "$tab<h2>$titre</h2>\n";
+				echo "$tab<form method=\"post\">\n";
+				echo "$tab\t<table>\n";
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label>Nom</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label>Capacité</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"1\" max=\"999\" required {$capaciteModif}/>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td><label>Bâtiment</label></td>\n";
+				echo "$tab\t\t\t<td>\n";
+				echo "$tab\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
+				
+				foreach ($liste_nom_batiment as $nom_batiment) {
+					if ($nom_batiment != 'DEFAULT') {
+						if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+						echo "$tab\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+					}
 				}
+				echo "$tab\t\t\t\t</select>\n";
+				echo "$tab\t\t\t</td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t\t<tr>\n";
+				echo "$tab\t\t\t<td></td>\n";
+				echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"$valueSubmit\"></td>\n";
+				echo "$tab\t\t</tr>\n";
+				
+				echo "$tab\t</table>\n";
+				echo "$tab</form>\n";		
+				
+				if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"$valueSubmit\"></td>\n";
-			echo "$tab\t\t</tr>\n";
-			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";		
-			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
 		}	
 		
 		public static function prise_en_compte_formulaire() {
