@@ -2,4 +2,4 @@
 <?php
 	afficher_notifications(5);
 	afficher_erreurs(5);
-	//Seance::page_administration(1);
+	Seance::page_administration(1);
