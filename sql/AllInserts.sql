@@ -22,16 +22,16 @@ INSERT INTO `Specialite` (`idPromotion`, `nom`, `intitule`) VALUES
 (4, 'CAMSI', 'Conception d''Architectures de Machines et de Systèmes Informatiques');
 
 INSERT INTO `Etudiant` (`numeroEtudiant`, `nom`, `prenom`, `email`, `telephone`, `notificationsActives`, `idPromotion`, `idSpecialite`) VALUES
-(1, 'Curny', 'Jérémy', 'jeremy.curny@gmail.com', '', 1, 4, 1),
-(2, 'Letourneur', 'Anthony', 'mail1@mail.com', '', 1, 4, 1),
-(3, 'Chapeyroux', 'Sebastien', 'chapeyroux.sebastien@gmail.com', '', 1, 4, 1),
-(4, 'Francois', 'Marie', 'mail3@mail.com', '', 1, 4, 2),
-(5, 'Salvatore', 'Benoit', 'mail4@mail.com', '', 1, 4, 3),
-(6, 'Dachy', 'Mathieu', 'mail5@mail.com', '', 1, 4, 1),
-(20800000, 'Carassus', 'Vincent', 'carassus@gmail.com', '', 1, 4, 1),
-(155, 'Sans D''Aggut', 'Thomas', 'mailThomas', '', 1, 4, 2),
-(12, 'Collet', 'Lois', 'mailCollet@mail.com', '', 1, 4, 1),
-(20700251, 'Weissebeck', 'Thierry', 'mailThierry@mail.fr', '', 1, 4, 1);
+(20000000, 'Curny', 'Jérémy', 'mail1@mail.com', '', 1, 4, 1),
+(20100000, 'Letourneur', 'Anthony', 'mail2@mail.com', '', 1, 4, 1),
+(20200000, 'Chapeyroux', 'Sebastien', 'mail3@mail.com', '', 1, 4, 1),
+(20300000, 'Francois', 'Marie', 'mail4@mail.com', '', 1, 4, 2),
+(204000000, 'Salvatore', 'Benoit', 'mail5@mail.com', '', 1, 4, 3),
+(20500000, 'Dachy', 'Mathieu', 'mail6@mail.com', '', 1, 4, 1),
+(20600000, 'Carassus', 'Vincent', 'mail7@mail.com', '', 1, 4, 1),
+(20700000, 'Sans D''Aggut', 'Thomas', 'mail8@mail.com', '', 1, 4, 2),
+(20800000, 'Collet', 'Lois', 'mail9@mail.com', '', 1, 4, 1),
+(20900000, 'Weissebeck', 'Thierry', 'mail10@mail.com', '', 1, 4, 1);
 
 INSERT INTO `Batiment` (`nom`, `lat`, `lon`) VALUES
 ("1A", 43.562186, 1.467211),
@@ -176,7 +176,7 @@ INSERT INTO `UE` (`nom`, `intitule`, `nbHeuresCours`, `nbHeuresTD`, `nbHeuresTP`
 ('RC', 'Représentation des Connaissances', 14, 16, 0, 3, 11, 4),
 ('MàN', 'Mise à Niveau', 20, 10, 0, 0, 0, 4),
 ('CGE', 'Communication et Gestion des entreprises', 16, 14, 0, 3, 12, 4),
-('LV', 'Anglais', 0, 24, 0, 3, 2, 4),
+('ANGLAIS', 'Anglais', 0, 24, 0, 3, 2, 4),
 ('MA', 'Méthodes Agiles', 14, 10, 6, 3, 13, 4),
 ('DCLL', 'Développement Collaboratif et Logiciels Libres', 12, 6, 12, 3, 13, 4),
 ('MPI', 'Management de Projets Informatiques', 14, 16, 0, 3, 13, 4),
@@ -292,7 +292,7 @@ INSERT INTO `Utilisateur` (`login`, `motDePasse`, `type`, `idCorrespondant`) VAL
 ('claire_chaplier', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 2),
 ('vincent_carassus', '1a1dc91c907325c69271ddf0c944bc72', 'Etudiant', 7),
 ('jean-paul_bashoun', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 3),
-('henri_massi', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 4),
+('henri_massie', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 4),
 ('thomas_sans_d''aggut', '1a1dc91c907325c69271ddf0c944bc72', 'Etudiant', 8),
 ('lois_collet', '1a1dc91c907325c69271ddf0c944bc72', 'Etudiant', 9),
 ('thierry_weissebeck', '1a1dc91c907325c69271ddf0c944bc72', 'Etudiant', 10),
@@ -303,7 +303,7 @@ INSERT INTO `Utilisateur` (`login`, `motDePasse`, `type`, `idCorrespondant`) VAL
 ('mathias_paulin', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 9),
 ('zoubir_mammeri', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 10),
 ('pierre_regnier', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 11),
-('s', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 12),
+('severine_lalande', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 12),
 ('bernard_cherbonneau', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 13),
 ('ilena_ober', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 14),
 ('jerome_mengin', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 15),
@@ -318,10 +318,10 @@ INSERT INTO `Utilisateur` (`login`, `motDePasse`, `type`, `idCorrespondant`) VAL
 ('georges_da costa', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 24),
 ('jean-marc_pierson', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 25),
 ('jacques_jorda', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 26),
-('fr', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 27),
+('frederic_migeon', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 27),
 ('marco antonio_winckler', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 28),
-('r', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 29),
-('lo', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 30),
+('regine_andre-obrecht', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 29),
+('loic_barthe', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 30),
 ('denis_kouame', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 31),
 ('alain_crouzil', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 32),
 ('christine_senac', '1a1dc91c907325c69271ddf0c944bc72', 'Intervenant', 33);
