@@ -373,7 +373,8 @@
 		
 		public static function prise_en_compte_formulaire() {
 			global $messages_notifications, $messages_erreurs;
-			if (isset($_POST['validerAjoutSeance'])) {
+			if (isset($_POST['validerAjoutSeance']) || isset($_POST['validerModificationSeance'])) {
+				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nom_correct = PregMatch::est_nom($nom);
 				$duree = $_POST['duree'];
@@ -387,39 +388,37 @@
 				$idSalle = $_POST['salle'];
 				$idSalle_correct = true;
 				$idSeancePrecedente = $_POST['seancePrecedente'];
-				$idSeancePrecedenteCorrecte = true;					
-				
-				if ($nom_correct && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {	
-					Seance::ajouter_seance($nom, $duree, 0, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);				
-					array_push($messages_notifications, "La séance a bien été ajouté");
-				}
-				else {
-					array_push($messages_erreurs, "La séance n'est pas correcte");
-				}
-			}
-			else if (isset($_POST['validerModificationSeance'])) {	
-				$id = $_POST['id']; 
-				$id_correct = Seance::existe_seance($id);	
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
-				$nom_correct = PregMatch::est_nom($nom);
-				$duree = $_POST['duree'];
-				$duree_correct = true;				
-				$idUE = $_POST['UE'];
-				$idUE_correct = true;
-				$typeCours = $_POST['typeCours'];
-				$typeCours_correct = true;
-				$idIntervenant = $_POST['intervenant'];
-				$idIntervenant_correct = true;
-				$idSalle = $_POST['salle'];
-				$idSalle_correct = true;
-				$idSeancePrecedente = $_POST['seancePrecedente'];
 				$idSeancePrecedenteCorrecte = true;		
-				if ($id_correct && $nom_correct && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {	
-					Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
-					array_push($messages_notifications, "La séance a bien été modifié");
+				
+				$validation_ajout = false;
+				if (isset($_POST['validerAjoutSeance'])) {
+					// Ajout d'une nouvelle seance
+					if ($nom_correct && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+						Seance::ajouter_seance($nom, $duree, 0, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);				
+						array_push($messages_notifications, "La séance a bien été ajouté");
+						$validation_ajout = true;
+					}
 				}
 				else {
+					// Modification d'une nouvelle seance
+					$id = htmlentities($_POST['id']); 
+					$id_correct = JourNonOuvrable::existe_jourNonOuvrable($id);
+					if ($id_correct && $nom_correct && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+						Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
+						array_push($messages_notifications, "La séance a bien été modifié");
+						$validation_ajout = true;
+					}				
+				}
+				
+				// Traitement des erreurs
+				if (!$validation_ajout) {
 					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					if (isset($id_correct) && !$id_correct) {
+						array_push($messages_erreurs, "L'id de la séance n'est pas correct, contacter un administrateur");
+					}
+					if (!$nom_correct) {
+						array_push($messages_erreurs, "Le nom n'est pas correct");
+					}
 				}
 			}
 		}
