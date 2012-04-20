@@ -53,7 +53,7 @@ DROP VIEW IF EXISTS `V_Liste_Salles`;
 DROP VIEW IF EXISTS `V_Liste_Specialite`;
 DROP VIEW IF EXISTS `V_Infos_UE`;
 DROP VIEW IF EXISTS `V_Infos_Cours_Etudiants`;
-DROP VIEW IF EXISTS `V_Infos_Seance_Pomotion`;
+DROP VIEW IF EXISTS `V_Infos_Seance_Promotion`;
 
 CREATE TABLE IF NOT EXISTS `Promotion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -354,32 +354,32 @@ ORDER BY `nomBatiment`, `nomSalle`;
 
 
 CREATE VIEW `V_Infos_Cours` AS
-SELECT Cours.id AS id, UE.nom AS nomUE, 
-	CASE Cours.idIntervenant WHEN 0 THEN "" ELSE Intervenant.nom END AS nomIntervenant, 
-	CASE Cours.idIntervenant WHEN 0 THEN "" ELSE Intervenant.prenom END AS prenomIntervenant, 
-	Cours.idIntervenant AS idIntervenant, Type_Cours.nom AS nomTypeCours, Cours.tsDebut as tsDebut, Cours.tsFin AS tsFin,
-	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.nomSalle END AS nomSalle, 
-	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.nomBatiment END AS nomBatiment, 
-	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.lat END AS lat, 	
-	CASE Cours.idSalle WHEN 0 THEN "" ELSE V_Liste_Salles.lon END AS lon, 
-UE.idPromotion AS idPromotion
-FROM Cours
-JOIN Type_Cours ON Type_Cours.id = Cours.idTypeCours
-JOIN V_Liste_Salles ON (V_Liste_Salles.id = Cours.idSalle OR Cours.idSalle = 0)
-JOIN Intervenant ON (Cours.idIntervenant = Intervenant.id OR Cours.idIntervenant = 0)
-JOIN UE ON UE.id = Cours.idUE
-GROUP BY Cours.id
-ORDER BY idPromotion, tsDebut;
+SELECT `Cours`.`id` AS `id`, `UE`.`nom` AS `nomUE`, 
+	CASE `Cours`.`idIntervenant` WHEN 0 THEN "" ELSE `Intervenant`.`nom` END AS `nomIntervenant`, 
+	CASE `Cours`.`idIntervenant` WHEN 0 THEN "" ELSE `Intervenant`.`prenom` END AS `prenomIntervenant`, 
+	`Cours`.`idIntervenant` AS `idIntervenant`, `Type_Cours`.`nom` AS `nomTypeCours`, `Cours`.`tsDebut` AS `tsDebut`, `Cours`.`tsFin` AS `tsFin`,
+	CASE `Cours`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`nomSalle` END AS `nomSalle`, 
+	CASE `Cours`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`nomBatiment` END AS `nomBatiment`, 
+	CASE `Cours`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`lat` END AS `lat`, 	
+	CASE `Cours`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`lon` END AS `lon`, 
+	`UE`.`idPromotion` AS `idPromotion`
+FROM `Cours`
+JOIN `Type_Cours` ON `Type_Cours`.`id` = `Cours`.`idTypeCours`
+JOIN `V_Liste_Salles` ON (`V_Liste_Salles`.`id` = `Cours`.`idSalle` OR `Cours`.`idSalle` = 0)
+JOIN `Intervenant` ON (`Cours`.`idIntervenant` = `Intervenant`.`id` OR `Cours`.`idIntervenant` = 0)
+JOIN `UE` ON `UE`.`id` = `Cours`.`idUE`
+GROUP BY `Cours`.`id`
+ORDER BY `idPromotion`, `tsDebut`;
 
 CREATE VIEW `V_Cours_Etudiants` AS
-SELECT Cours.id AS idCours, Etudiant.id AS idEtudiant
-FROM Etudiant
-JOIN Appartient_Etudiant_GroupeEtudiants ON Appartient_Etudiant_GroupeEtudiants.idEtudiant = Etudiant.id
-JOIN Groupe_Etudiants ON Groupe_Etudiants.id = Appartient_Etudiant_GroupeEtudiants.idGroupeEtudiants
-JOIN Publication ON Publication.idGroupeEtudiants = Groupe_Etudiants.id
-JOIN Groupe_Cours ON Groupe_Cours.id = Publication.idGroupeCours
-JOIN Appartient_Cours_GroupeCours ON Appartient_Cours_GroupeCours.idGroupeCours = Groupe_Cours.id
-JOIN Cours ON Cours.id = Appartient_Cours_GroupeCours.idCours;
+SELECT `Cours`.`id` AS `idCours`, `Etudiant`.`id` AS `idEtudiant`
+FROM `Etudiant`
+JOIN `Appartient_Etudiant_GroupeEtudiants` ON `Appartient_Etudiant_GroupeEtudiants`.`idEtudiant` = `Etudiant`.`id`
+JOIN `Groupe_Etudiants` ON `Groupe_Etudiants`.`id` = `Appartient_Etudiant_GroupeEtudiants`.`idGroupeEtudiants`
+JOIN `Publication` ON `Publication`.`idGroupeEtudiants` = `Groupe_Etudiants`.`id`
+JOIN `Groupe_Cours` ON `Groupe_Cours`.`id` = `Publication`.`idGroupeCours`
+JOIN `Appartient_Cours_GroupeCours` ON `Appartient_Cours_GroupeCours`.`idGroupeCours` = `Groupe_Cours`.`id`
+JOIN `Cours` ON `Cours`.`id` = `Appartient_Cours_GroupeCours`.`idCours`;
 
 
 
@@ -420,12 +420,25 @@ JOIN `V_Infos_Cours` ON `V_Infos_Cours`.`id` = `V_Cours_Etudiants`.`idCours`
 ORDER BY `V_Cours_Etudiants`.`idEtudiant`,`V_Infos_Cours`.`tsDebut`;
 
 
-CREATE VIEW `V_Infos_Seance_Pomotion` AS 
-SELECT `Seance`.`id` AS `id`, `Seance`.`nom` AS `nom`, `Seance`.`duree` AS `duree`, `Seance`.`effectue` AS `effectue`, `Seance`.`idUE` AS `idUE`, `Seance`.`idSalle` AS `idSalle`, `Seance`.`idIntervenant` AS `idIntervenant`, `Seance`.`idTypeCours` AS `idTypeCours`, `Seance`.`idSeancePrecedente` AS `idSeancePrecedente`,
+CREATE VIEW `V_Infos_Seance_Promotion` AS 
+SELECT `Seance`.`id` AS `id`, `Seance`.`nom` AS `nom`, `Seance`.`duree` AS `duree`, `Seance`.`effectue` AS `effectue`, 
+	`UE`.`nom` AS `nomUE`, `Seance`.`idUE` AS `idUE`, 
+	CASE `Seance`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`nomSalle` END AS `nomSalle`, 
+	CASE `Seance`.`idSalle` WHEN 0 THEN "" ELSE `V_Liste_Salles`.`nomBatiment` END AS `nomBatiment`, 
+	`Seance`.`idSalle` AS `idSalle`,
+	CASE `Seance`.`idIntervenant` WHEN 0 THEN "" ELSE `Intervenant`.`nom` END AS `nomIntervenant`, 
+	CASE `Seance`.`idIntervenant` WHEN 0 THEN "" ELSE `Intervenant`.`prenom` END AS `prenomIntervenant`, 
+	`Seance`.`idIntervenant` AS `idIntervenant`, 
+	`Type_Cours`.`nom` AS `nomTypeCours`, `Seance`.`idTypeCours` AS `idTypeCours`, 
+	`Seance`.`idSeancePrecedente` AS `idSeancePrecedente`, 
 	`Promotion`.`id` AS `idPromotion`
 FROM `Seance`
 JOIN `UE` ON `Seance`.`idUE` = `UE`.`id`
+JOIN `Intervenant` ON (`Seance`.`idIntervenant` = `Intervenant`.`id` OR `Seance`.`idIntervenant` = 0)
+JOIN `V_Liste_Salles` ON (`Seance`.`idSalle` = `V_Liste_Salles`.`id` OR `Seance`.`idSalle` = 0)
+JOIN `Type_Cours` ON `Type_Cours`.`id` = `Seance`.`idTypeCours`
 JOIN `Promotion` ON `UE`.`idPromotion` = `Promotion`.`id`
 GROUP BY `Seance`.`id`
 ORDER BY `idPromotion`, `nom`;
-a
+
+
