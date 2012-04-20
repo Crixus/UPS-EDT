@@ -83,7 +83,7 @@ INSERT INTO `Specialite` (`id`, `idPromotion`, `nom`, `intitule`) VALUES
 (0, 0, 'DEFAULT', 'DEFAULT');
 
 CREATE TABLE IF NOT EXISTS `JourNonOuvrable` (
-  -- Si la Promotion est supprimée, alors la spécialité est supprimée
+  -- Si la Promotion est supprimée, alors le jour non ouvrable est supprimée
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(32) NOT NULL,
   `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
