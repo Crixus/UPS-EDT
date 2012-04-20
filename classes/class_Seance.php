@@ -51,7 +51,7 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".V_Infos_Seance_Promotion::$nomTable." WHERE id=?");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Seance::$nomTable." WHERE id=?");
 				$req->execute(
 					Array($id)
 					);
