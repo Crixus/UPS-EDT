@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `Appartient_Etudiant_GroupeEtudiants`;
 DROP TABLE IF EXISTS `Groupe_Cours`;
 DROP TABLE IF EXISTS `Groupe_Etudiants`;
 
+DROP TABLE IF EXISTS `Seance`;
 DROP TABLE IF EXISTS `Cours`;
 DROP TABLE IF EXISTS `UE`;
 
@@ -39,6 +40,8 @@ DROP TABLE IF EXISTS `Batiment`;
 
 DROP TABLE IF EXISTS `Etudiant`;
 
+DROP TABLE IF EXISTS `JourNonOuvrable`;
+
 DROP TABLE IF EXISTS `Specialite`;
 
 DROP TABLE IF EXISTS `Promotion`;
@@ -50,6 +53,7 @@ DROP VIEW IF EXISTS `V_Liste_Salles`;
 DROP VIEW IF EXISTS `V_Liste_Specialite`;
 DROP VIEW IF EXISTS `V_Infos_UE`;
 DROP VIEW IF EXISTS `V_Infos_Cours_Etudiants`;
+DROP VIEW IF EXISTS `V_Infos_Seance_Pomotion`;
 
 CREATE TABLE IF NOT EXISTS `Promotion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -77,6 +81,17 @@ CREATE TABLE IF NOT EXISTS `Specialite` (
 
 INSERT INTO `Specialite` (`id`, `idPromotion`, `nom`, `intitule`) VALUES
 (0, 0, 'DEFAULT', 'DEFAULT');
+
+CREATE TABLE IF NOT EXISTS `JourNonOuvrable` (
+  -- Si la Promotion est supprimée, alors la spécialité est supprimée
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) NOT NULL,
+  `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tsFin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `idPromotion` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (idPromotion) REFERENCES Promotion(id) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `Groupe_Cours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -160,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `UE` (
   `nbHeuresTD` double NOT NULL,
   `nbHeuresTP` double NOT NULL,
   `ECTS` double NOT NULL,
-  `idResponsable` int(11),
+  `idResponsable` int(11) NOT NULL DEFAULT 0,
   `idPromotion` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`idResponsable`) REFERENCES Intervenant (`id`),
@@ -224,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `Cours` (
    -- Si l'intervenant est supprimé, alors on met l'intervenant par defaut (vérifier que l'intervenant par défaut est dans le BD)
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idUE` int(11) NOT NULL,
-  `idSalle` int(11) NOT NULL,
+  `idSalle` int(11) NOT NULL DEFAULT 0,
   `idIntervenant` int(11) NOT NULL DEFAULT 0,
   `idTypeCours` int(11) NOT NULL,
   `tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -235,6 +250,26 @@ CREATE TABLE IF NOT EXISTS `Cours` (
   FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`),
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `Seance` (
+   -- Si la salle est supprimée, alors on met la salle par defaut (vérifier que la salle par défaut est dans la BD)
+   -- Si l'intervenant est supprimé, alors on met l'intervenant par defaut (vérifier que l'intervenant par défaut est dans le BD)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(50) NOT NULL,
+  `duree` int(11) NOT NULL,
+  `effectue` int(11) NOT NULL DEFAULT 0,
+  `idUE` int(11) NOT NULL,
+  `idSalle` int(11) NOT NULL DEFAULT 0,
+  `idIntervenant` int(11) NOT NULL DEFAULT 0,
+  `idTypeCours` int(11) NOT NULL,
+  `idSeancePrecedente` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`idUE`) REFERENCES UE(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
+  FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`),
+  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
 
 CREATE TABLE IF NOT EXISTS `Publication` (
   -- Si le groupe d'etudiant est supprimé, alors on supprime la publication
@@ -312,10 +347,10 @@ CREATE TABLE IF NOT EXISTS `Inscription` (
 
 
 CREATE VIEW `V_Liste_Salles` AS
-SELECT Salle.id AS id, Salle.nom AS nomSalle, Salle.nomBatiment AS nomBatiment, Salle.capacite AS capacite, Batiment.lat AS lat, Batiment.lon AS lon
-FROM Salle
-JOIN Batiment ON Batiment.nom = Salle.nomBatiment
-ORDER BY nomBatiment, nomSalle;
+SELECT `Salle`.`id` AS `id`, `Salle`.`nom` AS `nomSalle`, `Salle`.`nomBatiment` AS `nomBatiment`, `Salle`.`capacite` AS `capacite`, `Batiment`.`lat` AS lat, `Batiment`.`lon` AS `lon`
+FROM `Salle`
+JOIN `Batiment` ON `Batiment`.`nom` = `Salle`.`nomBatiment`
+ORDER BY `nomBatiment`, `nomSalle`;
 
 
 CREATE VIEW `V_Infos_Cours` AS
@@ -360,24 +395,37 @@ ORDER BY `Etudiant`.`nom`,`Etudiant`.`prenom`,`Etudiant`.`numeroEtudiant`;
 
 
 CREATE VIEW `V_Liste_Specialite`
-AS SELECT Specialite.id AS id, Specialite.nom AS nomSpecialite, Promotion.nom AS nomPromotion, Promotion.annee AS annee
-FROM Specialite
-JOIN Promotion ON Specialite.idPromotion = Promotion.id
-ORDER BY annee, nomPromotion, nomSpecialite;
+AS SELECT `Specialite`.`id` AS `id`, `Specialite`.`nom` AS `nomSpecialite`, `Promotion`.`nom` AS `nomPromotion`, `Promotion`.`annee` AS `annee`
+FROM `Specialite`
+JOIN `Promotion` ON `Specialite`.`idPromotion` = `Promotion`.`id`
+ORDER BY `annee`, `nomPromotion`, `nomSpecialite`;
 
 CREATE VIEW `V_Infos_UE` AS
-SELECT UE.id AS id, UE.nom AS nom, UE.intitule AS intitule, UE.nbHeuresCours AS nbHeuresCours, UE.nbHeuresTD AS nbHeuresTD, UE.nbHeuresTP AS nbHeuresTP, UE.ECTS AS ECTS,
-	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.nom END AS nomResponsable, 
-	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.prenom END AS prenomResponsable, 
-	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.email END AS emailResponsable, 
-	CASE UE.idResponsable WHEN 0 THEN "" ELSE Intervenant.id END AS idResponsable, 
-	Promotion.nom AS nomPromotion, Promotion.annee AS anneePromotion, UE.idPromotion AS idPromotion
-FROM UE
-JOIN Intervenant ON (UE.idResponsable = Intervenant.id OR UE.idResponsable = 0)
-JOIN Promotion ON UE.idPromotion = Promotion.id
-GROUP BY UE.id
-ORDER BY anneePromotion, nom;
+SELECT `UE`.`id` AS `id`, `UE`.`nom` AS `nom`, `UE`.`intitule` AS `intitule`, `UE`.`nbHeuresCours` AS `nbHeuresCours`, `UE`.`nbHeuresTD` AS `nbHeuresTD`, `UE`.`nbHeuresTP` AS `nbHeuresTP`, `UE`.`ECTS` AS `ECTS`,
+	CASE `UE`.`idResponsable` WHEN 0 THEN "" ELSE `Intervenant`.`nom` END AS `nomResponsable`, 
+	CASE `UE`.`idResponsable` WHEN 0 THEN "" ELSE `Intervenant`.`prenom` END AS `prenomResponsable`, 
+	CASE `UE`.`idResponsable` WHEN 0 THEN "" ELSE `Intervenant`.`email` END AS `emailResponsable`, 
+	CASE `UE`.`idResponsable` WHEN 0 THEN "" ELSE `Intervenant`.`id` END AS `idResponsable`, 
+	`Promotion`.`nom` AS `nomPromotion`, `Promotion`.`annee` AS `anneePromotion`, `UE`.`idPromotion` AS `idPromotion`
+FROM `UE`
+JOIN `Intervenant` ON (`UE`.`idResponsable` = `Intervenant`.`id` OR `UE`.`idResponsable` = 0)
+JOIN `Promotion` ON `UE`.`idPromotion` = `Promotion`.`id`
+GROUP BY `UE`.`id`, `UE`.`idPromotion`
+ORDER BY `anneePromotion`, `nom`;
 
 CREATE VIEW `V_Infos_Cours_Etudiants` AS 
 SELECT `V_Cours_Etudiants`.`idCours` AS `idCours`,`V_Cours_Etudiants`.`idEtudiant` AS `idEtudiant`,`V_Infos_Cours`.`tsDebut` AS `tsDebut`,`V_Infos_Cours`.`tsFin` AS `tsFin` 
-FROM (`V_Cours_Etudiants` join `V_Infos_Cours` on((`V_Infos_Cours`.`id` = `V_Cours_Etudiants`.`idCours`))) order by `V_Cours_Etudiants`.`idEtudiant`,`V_Infos_Cours`.`tsDebut`;
+FROM `V_Cours_Etudiants` 
+JOIN `V_Infos_Cours` ON `V_Infos_Cours`.`id` = `V_Cours_Etudiants`.`idCours` 
+ORDER BY `V_Cours_Etudiants`.`idEtudiant`,`V_Infos_Cours`.`tsDebut`;
+
+
+CREATE VIEW `V_Infos_Seance_Pomotion` AS 
+SELECT `Seance`.`id` AS `id`, `Seance`.`nom` AS `nom`, `Seance`.`duree` AS `duree`, `Seance`.`effectue` AS `effectue`, `Seance`.`idUE` AS `idUE`, `Seance`.`idSalle` AS `idSalle`, `Seance`.`idIntervenant` AS `idIntervenant`, `Seance`.`idTypeCours` AS `idTypeCours`, `Seance`.`idSeancePrecedente` AS `idSeancePrecedente`,
+	`Promotion`.`id` AS `idPromotion`
+FROM `Seance`
+JOIN `UE` ON `Seance`.`idUE` = `UE`.`id`
+JOIN `Promotion` ON `UE`.`idPromotion` = `Promotion`.`id`
+GROUP BY `Seance`.`id`
+ORDER BY `idPromotion`, `nom`;
+a
