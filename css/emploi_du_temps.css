@@ -1,6 +1,12 @@
 div#affichage_edt_semaine{
 }
 
+div#affichage_edt_semaine h1{
+	text-align:center;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
 div#affichage_edt_semaine h2{
 	text-align:center;
 }
@@ -17,4 +23,12 @@ div#affichage_edt_semaine section table#edt_semaine{
 
 div#affichage_edt_semaine footer{
 	text-align:center;
+}
+
+div#affichage_edt_semaine div#imageBasEdt{
+	text-align:center;
+}
+
+div#affichage_edt_semaine div#imageBasEdt img{
+	max-width:200px;
 }

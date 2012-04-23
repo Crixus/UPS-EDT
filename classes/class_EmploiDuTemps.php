@@ -167,11 +167,20 @@
 		public static function cours_to_td($_cours, $colspan) {
 			$td = "";
 			$td .= "<td class=\"" . $_cours->getNomTypeCours() . "\" colspan=\"" . $colspan . "\">\n";
-			$prenom = $_cours->getprenomIntervenant();
 			$td .= "" . $_cours->getHeureDebut() . " - " . $_cours->getHeureFin() . "<br />";
-			$td .= "" . $_cours->getNomUE() . " - " . strtoupper($_cours->getNomTypeCours()) . "<br />";
-			$td .= "" . $_cours->getNomBatiment() . " - " . $_cours->getNomSalle() . "<br />";
-			$td .= "" .$prenom[0] . ". " . $_cours->getNomIntervenant() . "";
+			$td .= "<b>" . $_cours->getNomUE() . " - " . strtoupper($_cours->getNomTypeCours()) . "</b><br />";
+			if ($_cours->getNomBatiment() != "") {
+				$td .= "" . $_cours->getNomBatiment() . " - " . $_cours->getNomSalle() . "<br />";
+			} else {
+				$td .= "Salle inconnue<br />";
+			}
+			
+			if ($_cours->getPrenomIntervenant() != "") {
+				$prenom = $_cours->getPrenomIntervenant();
+				$td .= $prenom[0] . ". " . $_cours->getNomIntervenant() . "";
+			} else {
+				$td .= "Intervenant inconnu";
+			}
 			$td .= "</td>"; 
 			return $td;
 		}

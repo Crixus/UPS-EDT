@@ -171,6 +171,80 @@
 		}
 		
 		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
+			$nbCours = sizeof($liste_cours);
+			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
+			
+			if ($nbCours == 0) {
+				echo $tab."<b>Aucun cours à venir n'est enregistré pour cette promotion</b>\n";
+			}
+			else {
+			
+				echo $tab."<table class=\"table_liste_administration\">\n";
+				
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				
+				echo $tab."\t\t<th>UE</th>\n";
+				echo $tab."\t\t<th>Intervenant</th>\n";
+				echo $tab."\t\t<th>Type</th>\n";
+				echo $tab."\t\t<th>Date</th>\n";
+				echo $tab."\t\t<th>Salle</th>\n";
+				
+				if ($administration) {
+					echo $tab."\t\t<th>Actions</th>\n";
+				}
+				echo $tab."\t</tr>\n";
+				
+				$cpt = 0;
+				foreach ($liste_cours as $idCours) {
+					$Cours = new V_Infos_Cours($idCours);
+					
+					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
+					
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					$cptBoucle=0;
+					$valTemp="";
+					$valTemp2="";
+					foreach (V_Infos_Cours::$attributs as $att) {
+						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
+							$valTemp = $Cours->$att;
+						else if (($cptBoucle == 2) || ($cptBoucle == 7)) {
+							$val = $Cours->$att." ".$valTemp;
+							$valTemp="";
+							echo $tab."\t\t<td>".$val."</td>\n";
+						}
+						else if ($cptBoucle == 5) {
+							$valTemp2 = $Cours->$att;
+							echo $tab."\t\t<td>";
+							Cours::dateCours($valTemp, $valTemp2);
+							echo "</td>\n";
+						}
+						else {
+							echo $tab."\t\t<td>".$Cours->$att."</td>\n";
+						}
+						$cptBoucle++;
+					}
+					if ($administration) {
+						$pageModification = "./index.php?page=ajoutCours&modifier_cours=$idCours";
+						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours=$idCours";
+						if (isset($_GET['idPromotion'])) {
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
+						}
+						
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le cours ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "</td>\n";
+					}
+					echo $tab."\t</tr>\n";
+				}
+				
+				echo $tab."</table>\n";
+			}
+		}
+		
+		public static function liste_cours_futurs_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbCours = sizeof($liste_cours);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -316,7 +390,7 @@
 					break;
 			}
 			
-			echo "{$numero_jour} {$nom_mois} {$annee}";
+			echo $numero_jour." ".$nom_mois." ".$annee;
 		}		
 		
 		// Formulaire
@@ -658,22 +732,8 @@
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des cours à venir</h2>\n";
-			Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
+			Cours::liste_cours_futurs_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
+			//echo $tab."<h2>Liste des cours (a cacher : JS)</h2>\n";
+			//Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}		
-		
-		public function toUl() {
-			$string = "<ul>\n";
-			foreach (Cours::$attributs as $att) {
-				$string .= "<li>$att : ".$this->$att."</li>\n";
-			}
-			return "$string</ul>\n";
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Cours::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Cours::$nomTable);
-		}
 	}

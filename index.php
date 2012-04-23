@@ -59,18 +59,18 @@
 ?>
 <!DOCTYPE html>
 	<head>
-		<title>UPS TimeTable</title>
+		<title>UPS-EDT</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="./css/style.php" />
 	</head>
 	<body>
 		<div id="affichage_edt_semaine">
-			<h1>Ups TimeTable</h1>
+			<h1>UPS-EDT</h1>
 			<h2>Affichage emploi du temps semaine</h2>
 			<table id="navigation_semaine">
 				<tr>
 					<td><a href="./index.php?semaine=<?php echo $semainePredente; ?>"><img src="./images/fleche_gauche.jpg" alt="fleche gauche" /></a></td>
-					<td>Semaine du <?php echo date('d/m/Y - H:i:s', $_GET['semaine']); ?> au <?php echo date('d/m/Y - H:i:s', $semaineSuivante - 1); ?></td>
+					<td>Semaine du <?php echo date('d/m/Y', $_GET['semaine']); ?> au <?php echo date('d/m/Y', $semaineSuivante - 1); ?></td>
 					<td><a href="./index.php?semaine=<?php echo $semaineSuivante; ?>"><img src="./images/fleche_droite.jpg" alt="fleche droite" /></a></td>
 				</tr>
 			</table>
@@ -81,8 +81,11 @@
 			</section>
 			<footer>
 				<p><a href="./export.php?semaine=<?php echo $_GET['semaine']; ?>">Téléchargement PDF</a> - <a href="#">Téléchargement Google Agenda</a></p>
-				<p><a href="#">Manuel Utilisateur</a></p>
+				<p><a href="./manuels/Manuel_Utilisateur.pdf">Manuel Utilisateur</a></p>
 				<p><a href="./deconnexion.php">Deconnexion</a></p>
+				<div id="imageBasEdt">
+						<img src="./images/logo_UPS.jpg" alt="Logo université Toulouse 3" />
+					</div>
 			</footer>
 		</div>
 	</body>

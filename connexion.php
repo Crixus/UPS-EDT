@@ -59,8 +59,7 @@
 			</form>
 			<div id="bas">
 				<ul>
-					<li>Manuel Utilisateur</li>
-					<li><a href="./administration/">Administration</a></li>
+					<li><a href="./manuels/Manuel_Utilisateur.pdf">Manuel Utilisateur</a></li>
 			</div>
 		</div>
 	</body>
