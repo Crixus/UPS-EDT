@@ -1,11 +1,11 @@
 <?php
 	// Informations de base de données
-	include_once('./includes/infos_bdd.php');
+	include_once('../includes/infos_bdd.php');
 	
 	// Création des tables (phase de deploiement / tests)
 	define('CREER_BD', true);
 	
-	include_once('./classes/class_Utils_SQL.php');
+	include_once('../classes/class_Utils_SQL.php');
 	
 	$repertoire = opendir("./classes/");
 	while ($fichier = readdir($repertoire)) {
