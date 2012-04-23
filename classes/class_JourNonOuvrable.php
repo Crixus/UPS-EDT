@@ -146,21 +146,21 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbJourNonOuvrable == 0) {
-				echo "$tab<b>Aucun jours non ouvrables n'est enregistré pour cette promotion</b>\n";
+				echo $tab."<b>Aucun jours non ouvrables n'est enregistré pour cette promotion</b>\n";
 			}
 			else {
 			
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				echo "$tab\t\t<th>Type</th>\n";
-				echo "$tab\t\t<th>Date</th>\n";
+				echo $tab."\t\t<th>Type</th>\n";
+				echo $tab."\t\t<th>Date</th>\n";
 				
 				if ($administration) {
-					echo "$tab\t\t<th>Actions</th>\n";
+					echo $tab."\t\t<th>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_jourNonOuvrable as $idJourNonOuvrable) {
@@ -168,20 +168,20 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
 					foreach (JourNonOuvrable::$attributs as $att) {
 						if ($cptBoucle == 1) 
-							echo "$tab\t\t<td>".$JourNonOuvrable->$att."</td>\n";	
+							echo $tab."\t\t<td>".$JourNonOuvrable->$att."</td>\n";	
 							
 						else if ($cptBoucle == 2) {
 							$valTemp = $JourNonOuvrable->$att;
 						}
 						else if ($cptBoucle == 3) {
 							$valTemp2 = $JourNonOuvrable->$att;
-							echo "$tab\t\t<td>";
+							echo $tab."\t\t<td>";
 							Cours::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
 							$valTemp="";
@@ -194,19 +194,19 @@
 						$pageModification = "./index.php?page=ajoutJourNonOuvrable&modifier_jourNonOuvrable=$idJourNonOuvrable";
 						$pageSuppression = "./index.php?page=ajoutJourNonOuvrable&supprimer_jourNonOuvrable=$idJourNonOuvrable";
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
 						
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le jour non ouvrable ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le jour non ouvrable ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
 						echo "</td>\n";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
@@ -226,7 +226,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_jourNonOuvrable']}\" />";
 				$lienAnnulation = "index.php?page=ajoutJourNonOuvrable";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -237,16 +237,16 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Type</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"type\" type=\"text\" required {$typeModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Type</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"type\" type=\"text\" required {$typeModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
@@ -260,49 +260,49 @@
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Debut</td>\n";
-			echo "$tab\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Debut</td>\n";
+			echo $tab."\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Debut</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Heure Debut</td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
 			for ($cpt=0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureDebut)
 					$selected = " selected";
-				else if ( ($cpt == 7) && ($valueHeureDebut == "") )
+				else if (($cpt == 7) && ($valueHeureDebut == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
-				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
+				else if (($cpt == 3) && ($valueMinuteDebut == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+					echo $tab."\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
@@ -316,63 +316,63 @@
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Fin</td>\n";
-			echo "$tab\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Fin</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureFin\">\n";			
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Fin</td>\n";
+			echo $tab."\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Heure Fin</td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<select name=\"heureFin\">\n";			
 			for ($cpt=0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureFin)
 					$selected = " selected";
-				else if ( ($cpt == 9) && ($valueHeureFin == "") )
+				else if (($cpt == 9) && ($valueHeureFin == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteFin\">\n";		
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t\t<select name=\"minuteFin\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
-				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
+				else if (($cpt == 3) && ($valueMinuteFin == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+					echo $tab."\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";	
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";	
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";
 			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutJourNonOuvrable']) || isset($_POST['validerModificationJourNonOuvrable'])) {
 				// Vérification des champs				
 				$type = htmlentities($_POST['type'],ENT_QUOTES,'UTF-8');
@@ -395,53 +395,53 @@
 					// Ajout d'un nouveau jour non ouvrable
 					if ($type_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {
 						JourNonOuvrable::ajouter_jourNonOuvrable($type, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $_GET['idPromotion']);
-						array_push($messages_notifications, "Le jour non ouvrable a bien été ajouté");
+						array_push($messagesNotifications, "Le jour non ouvrable a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
 				else {
 					// Modification d'un nouveau jour non ouvrable
 					$id = htmlentities($_POST['id']); 
-					$id_correct = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($id_correct && $type_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {
+					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
+					if ($idCorrect && $type_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {
 						JourNonOuvrable::modifier_jourNonOuvrable($_GET['modifier_jourNonOuvrable'], $type, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $_GET['idPromotion']);
-						array_push($messages_notifications, "Le jour non ouvrable a bien été modifié");
+						array_push($messagesNotifications, "Le jour non ouvrable a bien été modifié");
 						$validation_ajout = true;
 					}				
 				}
 				
 				// Traitement des erreurs
 				if (!$validation_ajout) {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if (isset($id_correct) && !$id_correct) {
-						array_push($messages_erreurs, "L'id du jour non ouvrable n'est pas correct, contacter un administrateur");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					if (isset($idCorrect) && !$idCorrect) {
+						array_push($messagesErreurs, "L'id du jour non ouvrable n'est pas correct, contacter un administrateur");
 					}
 					if (!$type_correct) {
-						array_push($messages_erreurs, "Le type n'est pas correct");
+						array_push($messagesErreurs, "Le type n'est pas correct");
 					}
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_jourNonOuvrable'])) {	
 				if (JourNonOuvrable::existe_jourNonOuvrable($_GET['supprimer_jourNonOuvrable'])) {
 					// Le jour non ouvrable existe
 					JourNonOuvrable::supprimer_jourNonOuvrable($_GET['supprimer_jourNonOuvrable']);
-					array_push($messages_notifications, "Le jour non ouvrable à bien été supprimée");
+					array_push($messagesNotifications, "Le jour non ouvrable à bien été supprimée");
 				}
 				else {
 					// Le jour non ouvrable n'existe pas
-					array_push($messages_erreurs, "Le jour non ouvrable n'existe pas");
+					array_push($messagesErreurs, "Le jour non ouvrable n'existe pas");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			JourNonOuvrable::formulaireAjoutJourNonOuvrable($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h2>Liste des jours non ouvrables enregistrée</h2>\n";
+			echo $tab."<h2>Liste des jours non ouvrables enregistrée</h2>\n";
 			JourNonOuvrable::liste_jourNonOuvrable_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}
 	}

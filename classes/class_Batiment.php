@@ -1,7 +1,6 @@
 <?php
 	/** 
 	 * Classe Batiment - Permet de gerer les batiments
-	 * Page testée sur le checkstyle (pour apprendre à l'utiliser)
 	 */ 
 	class Batiment {
 		
@@ -121,7 +120,7 @@
 		 * @param $lat double latitude du Batiment à modifier
 		 * @param $lon double longitude du Batiment à modifier
 		 */
-		public static function modifier_batiment($idBatiment, $nom, $lat, $lon) {
+		public static function modifierBatiment($idBatiment, $nom, $lat, $lon) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -139,11 +138,11 @@
 		 * Supprime un batiment dans la base de données à partir de son id
 		 * @param $idBatiment int id du Batiment à supprimer
 		 */
-		public static function supprimer_batiment($idBatiment) {
+		public static function supprimerBatiment($idBatiment) {
 			if ($idBatiment != 0) {
 				$_batiment = new Batiment($idBatiment);
-				foreach ($_batiment->liste_salles() as $Salle) {
-					Cours::modifier_salle_tout_cours($Salle->getId(), 0);
+				foreach ($_batiment->liste_salles() as $_salle) {
+					Cours::modifier_salle_tout_cours($_salle->getId(), 0);
 				}
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -184,7 +183,7 @@
 			return $listeSalle;
 		}
 		
-		public static function existe_batiment($id) {
+		public static function existeBatiment($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -235,12 +234,12 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
-				foreach ($liste_salles as $Salle) {
+				foreach ($liste_salles as $_salle) {
 					$couleurFond = ($cpt == 0) ? "fondblanc" : "fondGris";
 					$cpt++; $cpt %= 2;
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					echo $tab."\t\t<td>".$Salle->getNom()."</td>\n";
-					echo $tab."\t\t<td>".$Salle->getCapacite()."</td>\n";
+					echo $tab."\t\t<td>".$_salle->getNom()."</td>\n";
+					echo $tab."\t\t<td>".$_salle->getCapacite()."</td>\n";
 					echo $tab."\t</tr>\n";
 				}
 				echo $tab."</table>\n";
@@ -266,12 +265,12 @@
 		}
 		
 		public static function table_administration_batiments($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$liste_batiment = Batiment::liste_batiment();			
 			$nbBatiment = sizeof($liste_batiment);
 			
 			if ($nbBatiment <= 1) {
-				echo "$tab<b>Aucun batiment n'est enregistré</b>\n";
+				echo $tab."<b>Aucun batiment n'est enregistré</b>\n";
 			}
 			else {
 				echo $tab."<table class=\"table_liste_administration\">\n";			
@@ -317,7 +316,7 @@
 		}
 		
 		public function formulaireAjoutBatiment($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			if (isset($_GET['modifier_batiment'])) { 
 				$titre = "Modifier un batiment";
@@ -378,27 +377,27 @@
 		}	
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutBatiment'])) {
 				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])) {
-					array_push($messages_erreurs, "Problème de formulaire");
+					array_push($messagesErreurs, "Problème de formulaire");
 				}
 				else {
 					$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 					$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 					$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
-					$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
+					$nomCorrect = true; // Pas de vérifications spéciales pour un nom de batiment
 					$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
 					$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
-					if ($nom_correct && $lat_correct && $lon_correct) {
+					if ($nomCorrect && $lat_correct && $lon_correct) {
 						Batiment::ajouter_batiment($nom, $lat, $lon);
-						array_push($messages_notifications, "Le bâtiment a bien été ajouté");
+						array_push($messagesNotifications, "Le bâtiment a bien été ajouté");
 					}
 					else {
-						array_push($messages_erreurs, "La saisie n'est pas correcte");
-						$nom_correct ? true : array_push($messages_erreurs, "Le nom n'est pas correct") ;
-						$lat_correct ? true : array_push($messages_erreurs, "La latitude n'est pas correcte") ;
-						$lon_correct ? true : array_push($messages_erreurs, "La longitude n'est pas correcte") ;
+						array_push($messagesErreurs, "La saisie n'est pas correcte");
+						$nomCorrect ? true : array_push($messagesErreurs, "Le nom n'est pas correct");
+						$lat_correct ? true : array_push($messagesErreurs, "La latitude n'est pas correcte");
+						$lon_correct ? true : array_push($messagesErreurs, "La longitude n'est pas correcte");
 					}
 				}
 			}
@@ -407,44 +406,44 @@
 				$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 				$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 				$id = $_POST['id'];
-				$nom_correct = true; // Pas de vérifications spéciales pour un nom de batiment
+				$nomCorrect = true; // Pas de vérifications spéciales pour un nom de batiment
 				$lat_correct = ($lat == NULL || PregMatch::est_float($lat));
 				$lon_correct = ($lon == NULL || PregMatch::est_float($lon));
-				$id_correct = true;
-				if ($nom_correct && $lat_correct && $lon_correct && $id_correct) {
-					Batiment::modifier_batiment($id, $nom, $lat, $lon);
-					array_push($messages_notifications, "Le bâtiment a bien été modifié");
+				$idCorrect = true;
+				if ($nomCorrect && $lat_correct && $lon_correct && $idCorrect) {
+					Batiment::modifierBatiment($id, $nom, $lat, $lon);
+					array_push($messagesNotifications, "Le bâtiment a bien été modifié");
 				}
 				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					$id_correct  ? true : array_push($messages_erreurs, "id de modification n'est pas correct : Merci de contacter un administrateur");
-					$nom_correct ? true : array_push($messages_erreurs, "Le nom n'est pas correct") ;
-					$lat_correct ? true : array_push($messages_erreurs, "La latitude n'est pas correcte") ;
-					$lon_correct ? true : array_push($messages_erreurs, "La longitude n'est pas correcte") ;
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					$idCorrect  ? true : array_push($messagesErreurs, "id de modification n'est pas correct : Merci de contacter un administrateur");
+					$nomCorrect ? true : array_push($messagesErreurs, "Le nom n'est pas correct");
+					$lat_correct ? true : array_push($messagesErreurs, "La latitude n'est pas correcte");
+					$lon_correct ? true : array_push($messagesErreurs, "La longitude n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_batiment'])) {			
-				if (Batiment::existe_batiment($_GET['supprimer_batiment'])) {
+				if (Batiment::existeBatiment($_GET['supprimer_batiment'])) {
 					// Le batiment existe
-					Batiment::supprimer_batiment($_GET['supprimer_batiment']);
-					array_push($messages_notifications, "Le bâtiment a bien été supprimé");
+					Batiment::supprimerBatiment($_GET['supprimer_batiment']);
+					array_push($messagesNotifications, "Le bâtiment a bien été supprimé");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Batiment::formulaireAjoutBatiment($nombreTabulations);
 			echo $tab."<h2>Liste des bâtiments</h2>\n";
 			Batiment::table_administration_batiments($nombreTabulations);
 		}
 		
 		public function page_informations($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$latitude = ($this->getLat() == NULL) ? "<span class=\"erreur\">Pas de latitude saisie</span>" : $this->getLat();
 			$longitude = ($this->getLon() == NULL) ? "<span class=\"erreur\">Pas de longitude saisie</span>" : $this->getLon();
 			echo $tab."<h2>Bâtiment ".$this->getNom()."</h2>\n";

@@ -1,6 +1,13 @@
 <?php
-	class Utils_SQL{
+	/** 
+	 * Classe Utils_SQL - Permet d'utiliser des fonction pour MySQL
+	 */ 
+	class Utils_SQL {
 		
+		/**
+		 * Lance un fichier SQL
+		 * @param $cheminFichier chemin du fichier à lancer
+		 */
 		public function sql_from_file($cheminFichier) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -24,12 +31,16 @@
 						$finRequete = false;
 					}
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
+		/**
+		 * Vérifie si une table SQL existe
+		 * @param $nomTable nom de la table à tester
+		 * @return bool true si la table existe, false sinon
+		 */
 		public function existeTable($nomTable) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -38,12 +49,16 @@
 				$requete = "SHOW TABLES FROM ".DB_NAME." LIKE \"$nomTable\"";
 				$req = $bdd->query($requete);
 				return ($req->rowCount() != 0);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
+		/**
+		 * Supprime une table de la base de données
+		 * @param $nomTable nom de la table à supprimer
+		 * @return bool true si la table est supprimée, false sinon
+		 */
 		public static function sql_supprimer_table($nomTable) {
 			if (Utils_SQL::existeTable($nomTable)) {
 				try {
@@ -53,13 +68,11 @@
 					$req = $bdd->prepare("DROP TABLE ".$nomTable);
 					$req->execute();
 					return true;
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 					return false;
 				}
-			}
-			else {
+			} else {
 				return false;
 			}
 		}

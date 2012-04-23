@@ -1,6 +1,6 @@
 					<h1>Liste des cours par UE</h1>
 <?php
-	afficher_notifications(5);
+	afficherNotifications(5);
 	afficher_erreurs(5);
 	UE::page_administration_listeCoursParUE(1);	
 	

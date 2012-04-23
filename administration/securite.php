@@ -40,9 +40,9 @@
 				$class = get_class(new Batiment(0)); // A l'arrache...
 				$postAjouter = 'validerAjoutBatiment';
 				$postModifier = 'validerModificationBatiment';
-				$getModifier = 'modifier_batiment';
-				$getSupprimer = 'supprimer_batiment';
-				$methodeExiste = 'existe_batiment';
+				$getModifier = 'modifierBatiment';
+				$getSupprimer = 'supprimerBatiment';
+				$methodeExiste = 'existeBatiment';
 				break;
 				
 			case "ajoutSalle":
@@ -50,9 +50,9 @@
 				$class = get_class(new Salle(0));
 				$postAjouter = 'validerAjoutSalle';
 				$postModifier = 'validerModificationSalle';
-				$getModifier = 'modifier_salle';
-				$getSupprimer = 'supprimer_salle';
-				$methodeExiste = 'existe_salle';
+				$getModifier = 'modifierSalle';
+				$getSupprimer = 'supprimerSalle';
+				$methodeExiste = 'existeSalle';
 				break;
 				
 			case "ajoutTypeSalle":
@@ -60,9 +60,9 @@
 				$class = get_class(new Type_Salle(0));
 				$postAjouter = 'validerAjoutTypeSalle';
 				$postModifier = 'validerModificationTypeSalle';
-				$getModifier = 'modifier_type_salle';
-				$getSupprimer = 'supprimer_type_salle';
-				$methodeExiste = 'existe_type_salle';
+				$getModifier = 'modifierTypeSalle';
+				$getSupprimer = 'supprimerTypeSalle';
+				$methodeExiste = 'existeTypeSalle';
 				break;
 			
 			case "ajoutIntervenant":
@@ -220,12 +220,12 @@
 		// Autres pages
 		switch ($_GET['page']) {
 			case "infosBatiment":
-				if (!isset($_GET['idBatiment']) || (isset($_GET['idBatiment']) && !Batiment::existe_batiment($_GET['idBatiment']))) {
+				if (!isset($_GET['idBatiment']) || (isset($_GET['idBatiment']) && !Batiment::existeBatiment($_GET['idBatiment']))) {
 					header('Location: ./index.php');
 				}
 				break;	
 			case "infosSalle":
-				if (!isset($_GET['idSalle']) || (isset($_GET['idSalle']) && !Batiment::existe_batiment($_GET['idSalle']))) {
+				if (!isset($_GET['idSalle']) || (isset($_GET['idSalle']) && !Batiment::existeBatiment($_GET['idSalle']))) {
 					header('Location: ./index.php');
 				}
 				break;

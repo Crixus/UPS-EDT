@@ -110,18 +110,18 @@ tr.fondGrisFonce, th.fondGrisFonce, td.fondGrisFonce{
 }
 
 <?php
-	foreach(Type_Cours::liste_nom_type_cours() as $nom){
-		echo "table#edt_semaine td.$nom{\n";
-		echo "\tbackground-color: ".Options::valeur_from_nom("background_color_$nom").";\n";
-		echo "\tcolor: ".Options::valeur_from_nom("color_$nom").";\n";
+	foreach (Type_Cours::liste_nom_type_cours() as $nom) {
+		echo "table#edt_semaine td.".$nom."{\n";
+		echo "\tbackground-color: ".Options::valeur_from_nom("background_color_".$nom."").";\n";
+		echo "\tcolor: ".Options::valeur_from_nom("color_".$nom."").";\n";
 		echo "\tborder: black 1px solid;\n";
 		echo "}\n\n";
 	}
 	
-	foreach(Options::toutes_valeurs_distinct() as $valeur){
+	foreach (Options::toutes_valeurs_distinct() as $valeur) {
 		$class = "bg".substr($valeur, 1);
-		echo "table#administration_style_typesCours tr td.$class{\n";
-		echo "\tbackground-color: $valeur;\n";
+		echo "table#administration_style_typesCours tr td.".$class."{\n";
+		echo "\tbackground-color: ".$valeur.";\n";
 		echo "\tborder: black 1px solid;\n";
 		echo "\twidth:50px;";
 		echo "}\n\n";

@@ -6,7 +6,7 @@ include_once("../../classes/class_V_Infos_Etudiant.php");
 include_once("../../classes/class_UE.php");
 
 
-if (isset($_POST['appartient']) && isset($_POST['type']) ) {
+if (isset($_POST['appartient']) && isset($_POST['type'])) {
 
 	$appartient = $_POST['appartient'];
 	$type = $_POST['type'];
@@ -17,11 +17,11 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 
 			$idEtudiant = $_POST['idEtudiant'];
 			$idUE = $_POST['idUE'];
-			if ( (V_Infos_Etudiant::existe_etudiant($idEtudiant)) && (UE::existe_UE($idUE)) ) { //Test de sécurité
+			if ((V_Infos_Etudiant::existe_etudiant($idEtudiant)) && (UE::existe_UE($idUE))) { //Test de sécurité
 				if ($appartient == 1) { //Ajout du lien dans la table Inscription
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("INSERT INTO Inscription VALUES(?, ?)");
 						
@@ -32,14 +32,14 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 							)
 						);			
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}	
 				}
 				else { //Suppression du lien dans la table Inscription
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("DELETE FROM Inscription WHERE idUE = ? AND idEtudiant=?;");
 						$req->execute(
@@ -49,7 +49,7 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 							)
 						);
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}	
 				}
@@ -68,11 +68,11 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 				$idPromotion = $_POST['idPromotion'];
 				$liste_etudiants = V_Infos_Etudiant::liste_etudiant($idPromotion);
 				
-				foreach($liste_etudiants as $idEtudiant) {
+				foreach ($liste_etudiants as $idEtudiant) {
 				
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM Inscription WHERE idUE = ? AND idEtudiant=?;");
 						$req->execute(
@@ -88,9 +88,9 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 						
 						if ($appartient == 1) { //Ajout du lien dans la table Inscription
 							if ($nb == 0) { 					
-								try{
-									$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+								try {
+									$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 									$bdd->query("SET NAMES utf8");
 									$req = $bdd->prepare("INSERT INTO Inscription VALUES(?, ?)");
 									
@@ -101,16 +101,16 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 										)
 									);			
 								}
-								catch(Exception $e){
+								catch (Exception $e) {
 									echo "Erreur : ".$e->getMessage()."<br />";
 								}	
 							}					
 						}
 						else { //Suppression du lien dans la table Inscription
 							if ($nb == 1) { 					
-								try{
-									$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+								try {
+									$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 									$bdd->query("SET NAMES utf8");
 									$req = $bdd->prepare("DELETE FROM Inscription WHERE idUE = ? AND idEtudiant=?;");
 									$req->execute(
@@ -120,13 +120,13 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 										)
 									);
 								}
-								catch(Exception $e){
+								catch (Exception $e) {
 									echo "Erreur : ".$e->getMessage()."<br />";
 								}
 							}	
 						}
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}				
 				}

@@ -1,5 +1,8 @@
 <?php
-	class Promotion{
+	/*
+	 * Classe qui permet de gérer les Promotions
+	 */
+	class Promotion {
 		
 		public static $nomTable = "Promotion";
 		
@@ -10,7 +13,14 @@
 			"tsFin"
 		);
 		
-		public function getNom() { return $this->nom; }
+		/**
+		 * Getter du nom de la Promotion
+		 * @return String nom de la Promotion
+		 */
+		public function getNom() { 
+			return $this->nom;
+		}
+		
 		public function getAnnee() { return $this->annee; }
 		public function getTsDebut() { return $this->tsDebut; }
 		public function getTsFin() { return $this->tsFin; }
@@ -30,8 +40,7 @@
 				foreach (Promotion::$attributs as $att) {
 					$this->$att = $ligne["$att"];
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -52,8 +61,7 @@
 						$tsFin
 					)
 				);			
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -73,8 +81,7 @@
 						$idPromotion
 					)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -137,44 +144,44 @@
 		public function liste_promotion_for_select($idPromotion = null, $nombreTabulations = 0) {
 			$liste_promotion = Promotion::liste_promotion();
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
-			echo "$tab<select onChange='selection_promotion(this)'>\n";
+			echo $tab."<select onChange='selection_promotion(this)'>\n";
 			
-			echo "$tab\t<option value=0>--</option>\n";
+			echo $tab."\t<option value=0>--</option>\n";
 			
 			foreach ($liste_promotion as $idPromotionListe) {
 				$Promotion = new Promotion($idPromotionListe);
 				$nom = $Promotion->getNom();
 				
 				if ($idPromotionListe == $idPromotion)
-					echo "$tab\t<option value={$idPromotionListe} selected>{$nom}</option>\n";
+					echo $tab."\t<option value={$idPromotionListe} selected>{$nom}</option>\n";
 				else
-					echo "$tab\t<option value={$idPromotionListe}>{$nom}</option>\n";
+					echo $tab."\t<option value={$idPromotionListe}>{$nom}</option>\n";
 			}
 			
-			echo "$tab</select>\n";
+			echo $tab."</select>\n";
 		}
 		
 		public static function liste_promotion_to_table($administration, $nombreTabulations = 0) {
 			$liste_promotion = Promotion::liste_promotion();
 			$nbListePromotion = sizeof($liste_promotion);
 			
-			$tab = ""; for ($i = 0; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			if ($nbListePromotion == 0)
-				echo "$tab<b>Aucunes promotions n'est enregistré</b>\n";
+				echo $tab."<b>Aucunes promotions n'est enregistré</b>\n";
 			else {
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				echo "$tab\t\t<th>Nom</th>\n";
-				echo "$tab\t\t<th>Année</th>\n";
-				echo "$tab\t\t<th>Date</th>\n";
+				echo $tab."\t\t<th>Nom</th>\n";
+				echo $tab."\t\t<th>Année</th>\n";
+				echo $tab."\t\t<th>Date</th>\n";
 				
 				if ($administration) {
-					echo "$tab\t\t<th>Actions</th>\n";
+					echo $tab."\t\t<th>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_promotion as $idPromo) {
@@ -182,7 +189,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -191,28 +198,28 @@
 							$valTemp = $Promotion->$att;
 						else if ($cptBoucle == 3) {
 							$valTemp2 = $Promotion->$att;
-							echo "$tab\t\t<td>";
+							echo $tab."\t\t<td>";
 							Promotion::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
 						}
 						else {
-							echo "$tab\t\t<td>".$Promotion->$att."</td>\n";
+							echo $tab."\t\t<td>".$Promotion->$att."</td>\n";
 						}
 						$cptBoucle++;
 					}
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutPromotion&amp;modifier_promotion=$idPromo";
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
 						echo "</td>\n";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
@@ -287,7 +294,7 @@
 		
 		// Formulaire
 		public function formulaireAjoutPromotion($idPromotion, $nombreTabulations = 0) {
-			$tab = ""; for ($i = 0; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			if (isset($_GET['modifier_promotion'])) { 
 				$titre = "Modifier une promotion";
 				$Promotion = new Promotion($_GET['modifier_promotion']);
@@ -300,7 +307,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_promotion']}\" />";
 				$lienAnnulation = "index.php?page=ajoutPromotion";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -312,22 +319,22 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Nom</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Annéee</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"annee\" type=\"number\" min=\"2010\" max=\"9999\" required {$anneeModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Annéee</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"annee\" type=\"number\" min=\"2010\" max=\"9999\" required {$anneeModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
@@ -341,10 +348,10 @@
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Debut</td>\n";
-			echo "$tab\t\t\t<td><input name=\"tsDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Debut</td>\n";
+			echo $tab."\t\t\t<td><input name=\"tsDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
@@ -358,66 +365,66 @@
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Fin</td>\n";
-			echo "$tab\t\t\t<td><input name=\"tsFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Fin</td>\n";
+			echo $tab."\t\t\t<td><input name=\"tsFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";	
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";	
 
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutPromotion'])) {
 				$nom = $_POST['nom'];
-				$nom_correct = true;
+				$nomCorrect = true;
 				$annee = $_POST['annee'];
 				$annee_correct = true;
 				$tsDebut = $_POST['tsDebut'];
 				$tsDebut_correct = true;
 				$tsFin = $_POST['tsFin'];
 				$tsFin_correct = true;
-				if ($nom_correct && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+				if ($nomCorrect && $annee_correct && $tsDebut_correct && $tsFin_correct) {
 					Promotion::ajouter_promotion($nom, $annee, $tsDebut, $tsFin);
-					array_push($messages_notifications, "La promotion a bien été ajouté");
+					array_push($messagesNotifications, "La promotion a bien été ajouté");
 				}
 				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
 				}
 			}
 			else if (isset($_POST['validerModificationPromotion'])) {
 				$id = $_POST['id']; 
-				$id_correct = Promotion::existe_promotion($id);
+				$idCorrect = Promotion::existe_promotion($id);
 				$nom = $_POST['nom'];
-				$nom_correct = true;
+				$nomCorrect = true;
 				$annee = $_POST['annee'];
 				$annee_correct = true;
 				$tsDebut = $_POST['tsDebut'];
 				$tsDebut_correct = true;
 				$tsFin = $_POST['tsFin'];
 				$tsFin_correct = true;
-				if ($id_correct && $nom_correct && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+				if ($idCorrect && $nomCorrect && $annee_correct && $tsDebut_correct && $tsFin_correct) {
 					Promotion::modifier_promotion($_GET['modifier_promotion'], $nom, $annee, $tsDebut, $tsFin);
-					array_push($messages_notifications, "La promotion a bien été modifié");
+					array_push($messagesNotifications, "La promotion a bien été modifié");
 				}
 				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Promotion::formulaireAjoutPromotion($nombreTabulations + 1);
-			echo "$tab<h2>Liste des promotions</h2>\n";
+			echo $tab."<h2>Liste des promotions</h2>\n";
 			Promotion::liste_promotion_to_table(true, $nombreTabulations + 1);
 		}
 		

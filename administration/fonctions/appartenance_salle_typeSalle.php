@@ -11,9 +11,9 @@ if (isset($_POST['appartient']) && isset($_POST['idSalle']) && isset($_POST['idT
 
 
 	if ($appartient == 1) { //Ajout du lien dans la table Appartenance_Salle_TypeSalle
-		try{
-			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-			$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		try {
+			$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+			$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 			$bdd->query("SET NAMES utf8");
 			$req = $bdd->prepare("INSERT INTO Appartient_Salle_TypeSalle VALUES(?, ?)");
 			
@@ -24,14 +24,14 @@ if (isset($_POST['appartient']) && isset($_POST['idSalle']) && isset($_POST['idT
 				)
 			);			
 		}
-		catch(Exception $e){
+		catch (Exception $e) {
 			echo "Erreur : ".$e->getMessage()."<br />";
 		}	
 	}
 	else { //Suppression du lien dans la table Appartenance_Salle_TypeSalle
-		try{
-			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-			$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+		try {
+			$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+			$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 			$bdd->query("SET NAMES utf8");
 			$req = $bdd->prepare("DELETE FROM Appartient_Salle_TypeSalle WHERE idSalle=? AND idTypeSalle = ?;");
 			$req->execute(
@@ -41,7 +41,7 @@ if (isset($_POST['appartient']) && isset($_POST['idSalle']) && isset($_POST['idT
 				)
 			);
 		}
-		catch(Exception $e){
+		catch (Exception $e) {
 			echo "Erreur : ".$e->getMessage()."<br />";
 		}	
 	}

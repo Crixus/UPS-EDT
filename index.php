@@ -21,8 +21,7 @@
 	if (!isset($_GET['semaine'])) {
 		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine(time());
 		header("Location: ./index.php?semaine=" . $debutSemaine);
-	}
-	else {
+	} else {
 		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']);
 		if ($debutSemaine != $_GET['semaine']) {
 			header("Location: ./index.php?semaine=" . $debutSemaine);

@@ -22,10 +22,10 @@
 				$bdd->query("SET NAMES utf8");
 				switch ($type) {
 					case "Etudiant":
-						$requete = "SELECT idCours AS id FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<? ;";
+						$requete = "SELECT idCours AS id FROM V_Infos_Cours_Etudiants WHERE idEtudiant=? AND tsDebut>? AND tsFin<?;";
 						break;
 					case "Intervenant":
-						$requete = "SELECT id AS id FROM Cours WHERE idIntervenant=? AND tsDebut>? AND tsFin<? ;";
+						$requete = "SELECT id AS id FROM Cours WHERE idIntervenant=? AND tsDebut>? AND tsFin<?;";
 						break;
 					default :
 						break;

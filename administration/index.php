@@ -1,8 +1,8 @@
 <?php
 	// Informations de base de données
 	include_once('../includes/infos_bdd.php');
-	$messages_notifications = Array();
-	$messages_erreurs = Array();
+	$messagesNotifications = Array();
+	$messagesErreurs = Array();
 	
 	// Importation des classes
 	$repertoire = opendir("../classes/");
@@ -15,16 +15,16 @@
 	// Test de sécurité
 	include_once("./securite.php");
 	
-	function afficher_notifications($nombreTabulations = 0) {
+	function afficherNotifications($nombreTabulations = 0) {
 		$tab = "";
 		for ($i = 0; $i < $nombreTabulations; $i++) {
 			$tab .= "\t";
 		}
 		
-		global $messages_notifications;
-		if (!empty($messages_notifications)) {
+		global $messagesNotifications;
+		if (!empty($messagesNotifications)) {
 			echo $tab . "<ul class=\"messages_notifications\">\n";
-			foreach ($messages_notifications as $mess) {
+			foreach ($messagesNotifications as $mess) {
 				echo $tab . "\t<li>Notification : " . $mess . "</li>\n";
 			}
 			echo $tab . "</ul>\n";
@@ -36,10 +36,10 @@
 			$tab .= "\t";
 		}
 		
-		global $messages_erreurs;
-		if (!empty($messages_erreurs)) {
+		global $messagesErreurs;
+		if (!empty($messagesErreurs)) {
 			echo $tab . "<ul class=\"messages_erreurs\">\n";
-			foreach ($messages_erreurs as $mess) {
+			foreach ($messagesErreurs as $mess) {
 				echo $tab . "\t<li>Erreur : " . $mess . "</li>\n";
 			}
 			echo $tab . "</ul>\n";
@@ -104,7 +104,7 @@
 			<div id="page_administration_haut">
 				<div id="page_administration_titre">
 					<h1><a href="./index.php<?php if (isset($_GET['idPromotion'])) { 
-						echo "?idPromotion={$_GET['idPromotion']}"; 
+						echo "?idPromotion=".$_GET['idPromotion']; 
 					} ?>">Administration</a></h1>
 				</div>
 				<div id="barre_selection_promotion">

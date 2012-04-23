@@ -6,7 +6,7 @@ include_once("../../classes/class_V_Infos_Cours.php");
 include_once("../../classes/class_Groupe_Cours.php");
 
 
-if (isset($_POST['appartient']) && isset($_POST['type']) ) {
+if (isset($_POST['appartient']) && isset($_POST['type'])) {
 
 	$appartient = $_POST['appartient'];
 	$type = $_POST['type'];
@@ -18,11 +18,11 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 			$idCours = $_POST['idCours'];
 			$idGroupeCours = $_POST['idGroupeCours'];
 			
-			if ( (V_Infos_Cours::existe_cours($idCours)) && (Groupe_Cours::existe_groupeCours($idGroupeCours)) ) { //Test de sécurité
+			if ((V_Infos_Cours::existe_cours($idCours)) && (Groupe_Cours::existe_groupeCours($idGroupeCours))) { //Test de sécurité
 				if ($appartient == 1) { //Ajout du lien dans la table Appartient_Cours_GroupeCours
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("INSERT INTO Appartient_Cours_GroupeCours VALUES(?, ?)");
 						
@@ -33,14 +33,14 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 							)
 						);			
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}	
 				}
 				else { //Suppression du lien dans la table Appartient_Cours_GroupeCours
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("DELETE FROM Appartient_Cours_GroupeCours WHERE idCours=? AND idGroupeCours=?;");
 						$req->execute(
@@ -50,7 +50,7 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 							)
 						);
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}	
 				}
@@ -69,11 +69,11 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 				$idPromotion = $_POST['idPromotion'];
 				$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
 				
-				foreach($liste_cours as $idCours) {
+				foreach ($liste_cours as $idCours) {
 				
-					try{
-						$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+					try {
+						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+						$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 						$bdd->query("SET NAMES utf8");
 						$req = $bdd->prepare("SELECT COUNT(*) AS nb FROM Appartient_Cours_GroupeCours WHERE idCours=? AND idGroupeCours=?;");
 						$req->execute(
@@ -89,9 +89,9 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 						
 						if ($appartient == 1) { //Ajout du lien dans la table Appartient_Cours_GroupeCours
 							if ($nb == 0) { 					
-								try{
-									$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+								try {
+									$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 									$bdd->query("SET NAMES utf8");
 									$req = $bdd->prepare("INSERT INTO Appartient_Cours_GroupeCours VALUES(?, ?)");
 									
@@ -102,16 +102,16 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 										)
 									);			
 								}
-								catch(Exception $e){
+								catch (Exception $e) {
 									echo "Erreur : ".$e->getMessage()."<br />";
 								}	
 							}					
 						}
 						else { //Suppression du lien dans la table Appartient_Cours_GroupeCours
 							if ($nb == 1) { 					
-								try{
-									$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdo_options);
+								try {
+									$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+									$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 									$bdd->query("SET NAMES utf8");
 									$req = $bdd->prepare("DELETE FROM Appartient_Cours_GroupeCours WHERE idCours=? AND idGroupeCours=?;");
 									$req->execute(
@@ -121,13 +121,13 @@ if (isset($_POST['appartient']) && isset($_POST['type']) ) {
 										)
 									);
 								}
-								catch(Exception $e){
+								catch (Exception $e) {
 									echo "Erreur : ".$e->getMessage()."<br />";
 								}
 							}	
 						}
 					}
-					catch(Exception $e){
+					catch (Exception $e) {
 						echo "Erreur : ".$e->getMessage()."<br />";
 					}				
 				}

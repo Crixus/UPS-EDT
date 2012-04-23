@@ -35,26 +35,26 @@
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";
 			
-			if ( ($nbre_etudiants == 0) || ($nbreGroupeEtudiants == 0) ) {
-				echo "$tab<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion et aucun etudiants n'y a été inscrits</h2>\n";
+			if (($nbre_etudiants == 0) || ($nbreGroupeEtudiants == 0)) {
+				echo $tab."<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion et aucun etudiants n'y a été inscrits</h2>\n";
 			}
 			else {
-				echo "$tab<table name=\"tabGestionGroupeEtudiants\" class=\"table_liste_administration\">\n";
+				echo $tab."<table name=\"tabGestionGroupeEtudiants\" class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2' style=\"border-top-color:white;border-left-color:white;border-top-style: solid;\"></th>\n";
-				echo "$tab\t\t<th colspan='{$nbreGroupeEtudiants}'>Nom des groupes d'étudiants</th>\n";
-				echo "$tab\t</tr>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2' style=\"border-top-color:white;border-left-color:white;border-top-style: solid;\"></th>\n";
+				echo $tab."\t\t<th colspan='{$nbreGroupeEtudiants}'>Nom des groupes d'étudiants</th>\n";
+				echo $tab."\t</tr>\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
-					echo "$tab\t\t<td>".$Groupe_Etudiants->getNom()."</td>\n";
+					echo $tab."\t\t<td>".$Groupe_Etudiants->getNom()."</td>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
-				echo "$tab\t<tr>\n";
-				echo "$tab\t<th class=\"fondGrisFonce\" rowspan='{$nbre_etudiants}'>Nom<br/>des<br/>étudiants</th>\n";
+				echo $tab."\t<tr>\n";
+				echo $tab."\t<th class=\"fondGrisFonce\" rowspan='{$nbre_etudiants}'>Nom<br/>des<br/>étudiants</th>\n";
 				$cpt = 0;
 				foreach ($liste_etudiants as $idEtudiant) {
 					if ($cpt == 0) { $couleurFond="fondBlanc"; }
@@ -62,39 +62,39 @@
 					$cpt++; $cpt %= 2;
 					
 					$Etudiant = new Etudiant($idEtudiant);
-					echo "$tab\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
 					
 					foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 						$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 						$nom_case = "case_GroupeEtudiants_".$idGroupeEtudiants;
 						if (Appartient_Etudiant_GroupeEtudiants::appartenance_etudiant_groupeEtudiants($idEtudiant, $idGroupeEtudiants))
-							$checked = "checked = \"checked\"" ;
+							$checked = "checked = \"checked\"";
 						else
 							$checked = "";
 								
-						echo "$tab\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_etudiant_groupeEtudiants({$idEtudiant},{$idGroupeEtudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						echo $tab."\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_etudiant_groupeEtudiants({$idEtudiant},{$idGroupeEtudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab\t<tr>\n";
-				echo "$tab\t<th class=\"fondGrisFonce\" colspan='2'>Toute la promotion</th>\n";
+				echo $tab."\t<tr>\n";
+				echo $tab."\t<th class=\"fondGrisFonce\" colspan='2'>Toute la promotion</th>\n";
 				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 					$nom_case = "case_promotion_".$idGroupeEtudiants;
 					if ($nbre_etudiants == Appartient_Etudiant_GroupeEtudiants::appartenance_promotion_groupeEtudiants($idGroupeEtudiants))
-						$checked = "checked = \"checked\"" ;
+						$checked = "checked = \"checked\"";
 					else
 						$checked = "";		
 						
-					echo "$tab\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_promotion_groupeEtudiants({$idPromotion},{$idGroupeEtudiants},{$nbre_etudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+					echo $tab."\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_promotion_groupeEtudiants({$idPromotion},{$idGroupeEtudiants},{$nbre_etudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 					
 				}
-				echo "$tab\t</tr>\n";
-				echo "$tab</table>\n";
+				echo $tab."\t</tr>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		

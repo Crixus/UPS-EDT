@@ -112,28 +112,28 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbre_type_cours == 0) {
-				echo "$tab<b>Aucun type de cours n'est enregistré</b>\n";
+				echo $tab."<b>Aucun type de cours n'est enregistré</b>\n";
 			}
 			else {
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th rowspan='2'>Nom</th>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th rowspan='2'>Nom</th>\n";
 				if ($nbre_type_salle != 0)
-					echo "$tab\t\t<th colspan='{$nbre_type_salle}'>Type de salles</th>\n";
+					echo $tab."\t\t<th colspan='{$nbre_type_salle}'>Type de salles</th>\n";
 				
 				if ($administration) {
-					echo "$tab\t\t<th rowspan='2'>Actions</th>\n";
+					echo $tab."\t\t<th rowspan='2'>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t</tr>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
 				foreach ($liste_type_salle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
-					echo "$tab\t\t<th>$nomType_Salle</th>\n";
+					echo $tab."\t\t<th>$nomType_Salle</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_type_cours as $idTypeCours) {
@@ -141,37 +141,37 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					foreach (Type_Cours::$attributs as $att) {
-						echo "$tab\t\t<td>".$Type_Cours->$att."</td>\n";
+						echo $tab."\t\t<td>".$Type_Cours->$att."</td>\n";
 					}
 					
 					foreach ($liste_type_salle as $idTypeSalle) {					
 						$Type_Salle = new Type_Salle($idTypeSalle);
 						$nomType_Salle = $Type_Salle->getNom();
 						if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
-							$checked = "checked = \"checked\"" ;
+							$checked = "checked = \"checked\"";
 						else
 							$checked = "";
 						$nomCheckbox = "{$idTypeCours}_{$nomType_Salle}";
-						echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idTypeCours}_{$nomType_Salle}\" value=\"{$idTypeSalle}\" onclick=\"appartenance_typeSalle_typeCours({$idTypeCours},{$idTypeSalle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
+						echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idTypeCours}_{$nomType_Salle}\" value=\"{$idTypeSalle}\" onclick=\"appartenance_typeSalle_typeCours({$idTypeCours},{$idTypeSalle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
 					}
 					
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutTypeCours&amp;modifier_type_cours=$idTypeCours";
 						$pageSuppression = "./index.php?page=ajoutTypeCours&amp;supprimer_type_cours=$idTypeCours";
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" style=\"cursor:pointer;\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le type de cours ?')\"><img src=\"../images/delete.png\" style=\"cursor:pointer;\" alt=\"icone de suppression\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" style=\"cursor:pointer;\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le type de cours ?')\"><img src=\"../images/delete.png\" style=\"cursor:pointer;\" alt=\"icone de suppression\" /></a>";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
@@ -258,7 +258,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_type_cours']}\" />";
 				$lienAnnulation = "index.php?page=ajoutTypeCours";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -269,78 +269,78 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Nom</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";		
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";		
 
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}				
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
 		}	
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutTypeCours']) || isset($_POST['validerModificationTypeCours'])) {
 				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
-				$nom_correct = PregMatch::est_nom($nom);
+				$nomCorrect = PregMatch::est_nom($nom);
 				
 				$validation_ajout = false;
 				if (isset($_POST['validerAjoutTypeCours'])) {
 					// Ajout d'un nouveau type de cours					
-					if ($nom_correct) {		
+					if ($nomCorrect) {		
 						Type_Cours::ajouter_type_cours($nom);
-						array_push($messages_notifications, "Le type de cours a bien été ajouté");
+						array_push($messagesNotifications, "Le type de cours a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
 				else {			
 					// Modification d'un type de cours	
 					$id = htmlentities($_POST['id']);
-					$id_correct = Type_Cours::existe_typeCours($id);
-					if ($id_correct && $nom_correct) {
+					$idCorrect = Type_Cours::existe_typeCours($id);
+					if ($idCorrect && $nomCorrect) {
 						Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
-						array_push($messages_notifications, "Le type de cours a bien été modifié");
+						array_push($messagesNotifications, "Le type de cours a bien été modifié");
 						$validation_ajout = true;
 					}
 				}
 				
 				// Traitement des erreurs
 				if (!$validation_ajout) {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if (isset($id_correct) && !$id_correct) {
-						array_push($messages_erreurs, "L'id du type de cours n'est pas correct, contacter un administrateur");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					if (isset($idCorrect) && !$idCorrect) {
+						array_push($messagesErreurs, "L'id du type de cours n'est pas correct, contacter un administrateur");
 					}
-					if (!$nom_correct) {
-						array_push($messages_erreurs, "Le nom n'est pas correct");
+					if (!$nomCorrect) {
+						array_push($messagesErreurs, "Le nom n'est pas correct");
 					}
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_type_cours'])) {	
 				if (Type_Cours::existe_typeCours($_GET['supprimer_type_cours'])) {
 					// Le type de cours existe
 					Type_Cours::supprimer_type_cours($_GET['supprimer_type_cours']);
-					array_push($messages_notifications, "Le type de cours a bien été supprimé");
+					array_push($messagesNotifications, "Le type de cours a bien été supprimé");
 				}
 				else {
 					// Le type de cours n'existe pas
-					array_push($messages_erreurs, "Le type de cours n'existe pas");
+					array_push($messagesErreurs, "Le type de cours n'existe pas");
 				}
 			}
 		}
@@ -348,7 +348,7 @@
 		public static function page_administration($nombreTabulations = 0) {
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			Type_Cours::formulaireAjoutTypeCours($nombreTabulations + 1);
-			echo "$tab<h2>Liste des types de cours</h2>\n";
+			echo $tab."<h2>Liste des types de cours</h2>\n";
 			Type_Cours::liste_type_cours_to_table($nombreTabulations + 1);
 		}
 		

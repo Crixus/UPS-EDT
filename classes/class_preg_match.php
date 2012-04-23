@@ -41,7 +41,7 @@
 		}
 		
 		public static function est_numero_etudiant($string) {
-			return ( (PregMatch::est_nombre($string)) && (strlen($string)==8) );
+			return ((PregMatch::est_nombre($string)) && (strlen($string)==8));
 		}
 		
 		public static function est_nbre_heures($string) {

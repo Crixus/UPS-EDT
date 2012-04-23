@@ -1,5 +1,8 @@
 <?php
-	class Utilisateur{
+	/** 
+	 * Classe Utilisateur - Permet de gerer les Utilisateurs
+	 */ 
+	class Utilisateur {
 		
 		public static $nomTable = "Utilisateur";
 		
@@ -11,11 +14,37 @@
 			"idCorrespondant"
 		);
 		
-		public function getId() { return $this->id; }
-		public function getLogin() { return $this->login; }
-		public function getMotDePasse() { return $this->motDePasse; }
-		public function getType() { return $this->type; }
-		public function getIdCorrespondant() { return $this->idCorrespondant; }
+		/**
+		 * Getter de l'id de l'Utilisateur
+		 * @return int id de l'Utilisateur
+		 */
+		public function getId() { 
+			return $this->id;
+		}
+		
+		/**
+		 * Getter du login
+		 * @return String du login
+		 */
+		public function getLogin() {
+			return $this->login;
+		}
+		
+		/**
+		 * Getter du motDePasse
+		 * @return String du motDePasse
+		 */
+		public function getMotDePasse() {
+			return $this->motDePasse;
+		}
+		
+		public function getType() {
+			return $this->type;
+		}
+		
+		public function getIdCorrespondant() {
+			return $this->idCorrespondant;
+		}
 		
 		public function Utilisateur($id) {
 			try {
@@ -30,25 +59,27 @@
 				$req->closeCursor();
 				
 				foreach (Utilisateur::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
 		
 		/**
 		 * Renvoi l'id de l'Utilisateur si le login et le motDePasse sont corrects, false sinon
-		 * */
+		 */
 		public static function identification($login, $motDePasse) {
 			$motDePasse = md5($motDePasse);
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login='$login' AND motDePasse='$motDePasse'";
-				$req = $bdd->query($requete);
+				$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login=? AND motDePasse=?";
+				$req = $bdd->prepare($requete);
+				$req->execute(
+					Array($login, $motDePasse)
+					);
 				$nbResultat = $req->rowCount();
 				switch ($nbResultat) {
 					case 0:
@@ -63,8 +94,7 @@
 						return false;
 						break;
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -79,8 +109,7 @@
 				$req->execute(
 					Array("", $login, $motDePasse, $type, $idCorrespondant)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -116,8 +145,7 @@
 						$id
 					)
 				);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -127,7 +155,7 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Utilisateur::$nomTable." WHERE id=? ;");
+				$req = $bdd->prepare("DELETE FROM ".Utilisateur::$nomTable." WHERE id=?;");
 				$req->execute(
 					Array($id)
 				);					
@@ -141,7 +169,7 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT id FROM ".Utilisateur::$nomTable." WHERE type=? AND idCorrespondant=? ;");
+				$req = $bdd->prepare("SELECT id FROM ".Utilisateur::$nomTable." WHERE type=? AND idCorrespondant=?;");
 				$req->execute(
 					Array($type, $idCorrespondant)
 					);
@@ -149,8 +177,7 @@
 				$req->closeCursor();
 				
 				return $ligne['id'];
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -168,8 +195,7 @@
 				$req->closeCursor();
 				
 				return $ligne['nb'] == 1;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -178,10 +204,10 @@
 			$login = strtolower($prenom)."_".strtolower($nom);
 			if (Utilisateur::existe_login($login)) {
 				$count = 2;
-				while (Utilisateur::existe_login($login."_$count")) {
+				while (Utilisateur::existe_login($login."_".$count)) {
 					$count++;
 				}
-				$login .= "_$count";
+				$login .= "_".$count;
 			}
 			return $login;
 		}

@@ -156,20 +156,20 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbreGroupeEtudiants == 0) {
-				echo "$tab<h2>Aucun groupe d'étudiants n'a été créés pour cette promotion</h2>\n";
+				echo $tab."<h2>Aucun groupe d'étudiants n'a été créés pour cette promotion</h2>\n";
 			}
 			else {			
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th>Nom</th>\n";
-				echo "$tab\t\t<th>Identifiant</th>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th>Nom</th>\n";
+				echo $tab."\t\t<th>Identifiant</th>\n";
 				
 			
 				if ($administration) {
-					echo "$tab\t\t<th>Actions</th>\n";
+					echo $tab."\t\t<th>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
@@ -177,27 +177,27 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					foreach (Groupe_Etudiants::$attributs as $att) {
-						echo "$tab\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
+						echo $tab."\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
 					}
 					
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutGroupeEtudiants&amp;modifier_groupeEtudiants=$idGroupeEtudiants";
 						$pageSuppression = "./index.php?page=ajoutGroupeEtudiants&amp;supprimer_groupeEtudiants=$idGroupeEtudiants";
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le groupe d\'étudiant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le groupe d\'étudiant ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
 						echo "</td>\n";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
@@ -218,7 +218,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeEtudiants']}\" />";
 				$lienAnnulation = "index.php?page=ajoutGroupeEtudiants";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -234,101 +234,101 @@
 				$hidden = "";
 			}		
 		
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" onChange=\"modification_identifiant('{$pre_identifiant}')\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Nom</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" onChange=\"modification_identifiant('{$pre_identifiant}')\" required {$nomModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Identifiant</label></td>\n";
-			echo "$tab\t\t\t<td><input name=\"identifiant\" type=\"text\" disabled=\"disabled\" required {$identifiantModif}/></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Identifiant</label></td>\n";
+			echo $tab."\t\t\t<td><input name=\"identifiant\" type=\"text\" disabled=\"disabled\" required {$identifiantModif}/></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";
 			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}			
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}			
 		}		
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])) {
 				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
-				$nom_correct = PregMatch::est_nom($nom);
+				$nomCorrect = PregMatch::est_nom($nom);
 				
 				$Promotion = new Promotion($_GET['idPromotion']);
 				$nom_promotion = $Promotion->getNom();
 				$annee_promotion = $Promotion->getAnnee();
 				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
 				$identifiant = $pre_identifiant.$nom;
-				$identifiant_correct = $nom_correct;
+				$identifiant_correct = $nomCorrect;
 				
 				$validation_ajout = false;
 				if (isset($_POST['validerAjoutGroupeEtudiants'])) {
 					// Ajout d'un nouveau groupe d'étudiants				
-					if ($nom_correct && $identifiant_correct) {	
+					if ($nomCorrect && $identifiant_correct) {	
 						Groupe_Etudiants::ajouter_groupeEtudiants($_GET['idPromotion'], $nom, $identifiant);
-						array_push($messages_notifications, "Le groupe d'étudiant a bien été ajouté");
+						array_push($messagesNotifications, "Le groupe d'étudiant a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
 				else {
 					// Modification d'un groupe d'étudiants
 					$id = htmlentities($_POST['id']);
-					$id_correct = Groupe_Etudiants::existe_groupeEtudiants($id);
-					if ($id_correct && $nom_correct && $identifiant_correct) {	
+					$idCorrect = Groupe_Etudiants::existe_groupeEtudiants($id);
+					if ($idCorrect && $nomCorrect && $identifiant_correct) {	
 						Groupe_Etudiants::modifier_groupeEtudiants($_GET['modifier_groupeEtudiants'], $_GET['idPromotion'], $nom, $identifiant);
-						array_push($messages_notifications, "Le groupe d'étudiant a bien été modifié");
+						array_push($messagesNotifications, "Le groupe d'étudiant a bien été modifié");
 						$validation_ajout = true;
 					}
 				}
 				
 				// Traitement des erreurs
 				if (!$validation_ajout) {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if (isset($id_correct) && !$id_correct) {
-						array_push($messages_erreurs, "L'id du groupe d'étudiants n'est pas correct, contacter un administrateur");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					if (isset($idCorrect) && !$idCorrect) {
+						array_push($messagesErreurs, "L'id du groupe d'étudiants n'est pas correct, contacter un administrateur");
 					}
-					if (!$nom_correct) {
-						array_push($messages_erreurs, "Le nom n'est pas correct");
+					if (!$nomCorrect) {
+						array_push($messagesErreurs, "Le nom n'est pas correct");
 					}
 					if (!$identifiant_correct) {
-						array_push($messages_erreurs, "L'identifiant n'est pas correct");
+						array_push($messagesErreurs, "L'identifiant n'est pas correct");
 					}
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_groupeEtudiants'])) {	
 				if (Groupe_Etudiants::existe_groupeEtudiants($_GET['supprimer_groupeEtudiants'])) {
 					// Le groupe d'étudiant existe
 					Groupe_Etudiants::supprimer_groupeEtudiants($_GET['supprimer_groupeEtudiants']);
-					array_push($messages_notifications, "Le groupe d'étudiant à bien été supprimé");
+					array_push($messagesNotifications, "Le groupe d'étudiant à bien été supprimé");
 				}
 				else {
 					// Le groupe d'étudiant n'existe pas
-					array_push($messages_erreurs, "Le groupe d'étudiant n'existe pas");
+					array_push($messagesErreurs, "Le groupe d'étudiant n'existe pas");
 				}
 			}
 		}		
 		
 		public static function page_administration($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Groupe_Etudiants::formulaireAjoutGroupeEtudiants($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h2>Liste des groupes d'étudiants</h2>\n";
+			echo $tab."<h2>Liste des groupes d'étudiants</h2>\n";
 			Groupe_Etudiants::liste_groupeEtudiants_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		

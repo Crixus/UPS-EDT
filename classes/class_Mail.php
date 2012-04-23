@@ -43,7 +43,7 @@
 			$message = "Bonjour, \r\n\r\n".
 					   "Votre compte UPS-EDT à été créé / modifié\r\n".
 					   "Votre login : " . $login . "\r\n".
-					   "Votre mot de passe : " . $mot_de_passe . "\r\n" ;
+					   "Votre mot de passe : " . $mot_de_passe . "\r\n";
 			return Mail::envoyer_email($sujet, $message, "ups-edt@ups-tlse3.com", $destinataires, $cc_destinataires, $bcc_destinataires);			
 		}
 		

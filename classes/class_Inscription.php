@@ -35,27 +35,27 @@
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";
 			
-			if ( ($nbre_etudiants == 0) || ($nbre_UE == 0) ) {
-				echo "$tab<h2>Aucun étudiant n'a été inscrit et/ou aucune UE n'a été créé pour cette promotion</h2>\n";
+			if (($nbre_etudiants == 0) || ($nbre_UE == 0)) {
+				echo $tab."<h2>Aucun étudiant n'a été inscrit et/ou aucune UE n'a été créé pour cette promotion</h2>\n";
 			}
 			else {
-				echo "$tab<table name=\"tabInscription\" class=\"table_liste_administration\">\n";
+				echo $tab."<table name=\"tabInscription\" class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";
-				echo "$tab\t\t<th rowspan='2'>Nbre<br/>d'UE</th>\n";
-				echo "$tab\t\t<th colspan='{$nbre_UE}'>Nom des UE</th>\n";
-				echo "$tab\t</tr>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th class=\"fondBlanc\" colspan='2' rowspan='2'></th>\n";
+				echo $tab."\t\t<th rowspan='2'>Nbre<br/>d'UE</th>\n";
+				echo $tab."\t\t<th colspan='{$nbre_UE}'>Nom des UE</th>\n";
+				echo $tab."\t</tr>\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				foreach ($liste_UE as $idUE) {
 					$UE = new UE($idUE);
-					echo "$tab\t\t<td>".$UE->getNom()."</td>\n";
+					echo $tab."\t\t<td>".$UE->getNom()."</td>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
-				echo "$tab\t<tr>\n";
-				echo "$tab\t<th class=\"fondGrisFonce\" rowspan='{$nbre_etudiants}'>Nom<br/>des<br/>étudiants</th>\n";
+				echo $tab."\t<tr>\n";
+				echo $tab."\t<th class=\"fondGrisFonce\" rowspan='{$nbre_etudiants}'>Nom<br/>des<br/>étudiants</th>\n";
 				$cpt = 0;
 				foreach ($liste_etudiants as $idEtudiant) {
 					if ($cpt == 0) { $couleurFond="fondBlanc"; }
@@ -63,40 +63,40 @@
 					$cpt++; $cpt %= 2;
 					
 					$Etudiant = new Etudiant($idEtudiant);
-					echo "$tab\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
-					echo "$tab\t\t<td class=\"$couleurFond\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
+					echo $tab."\t\t<td class=\"$couleurFond\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
 					
 					foreach ($liste_UE as $idUE) {
 						$UE = new UE($idUE);
 
 						$nom_case = "case_UE_".$idUE;
 						if (Inscription::est_inscrit($idEtudiant, $idUE))
-							$checked = "checked = \"checked\"" ;
+							$checked = "checked = \"checked\"";
 						else
 							$checked = "";
 								
-						echo "$tab\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE({$idEtudiant},{$idUE},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						echo $tab."\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE({$idEtudiant},{$idUE},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab\t<tr>\n";
-				echo "$tab\t<th class=\"fondGrisFonce\" colspan='3'>Toute la promotion</th>\n";
+				echo $tab."\t<tr>\n";
+				echo $tab."\t<th class=\"fondGrisFonce\" colspan='3'>Toute la promotion</th>\n";
 				foreach ($liste_UE as $idUE) {
 					$UE = new UE($idUE);
 
 					$nom_case = "case_promotion_".$idUE;
 					if ($nbre_etudiants == Inscription::est_inscrit_promotion($idUE))
-						$checked = "checked = \"checked\"" ;
+						$checked = "checked = \"checked\"";
 					else
 						$checked = "";		
 						
-					echo "$tab\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE_promotion({$idPromotion},{$idUE},{$nbre_etudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+					echo $tab."\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE_promotion({$idPromotion},{$idUE},{$nbre_etudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 					
 				}
-				echo "$tab\t</tr>\n";
-				echo "$tab</table>\n";
+				echo $tab."\t</tr>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		

@@ -221,7 +221,7 @@
 		}
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if (isset($_POST[$name_formulaire])) {
 				// Formulaire de modification (seul possible)
@@ -237,10 +237,10 @@
 					}
 					else {
 						// La couleur est incorrecte
-						array_push($messages_erreurs, $_POST[$nom]." n'est pas une couleur valide");
+						array_push($messagesErreurs, $_POST[$nom]." n'est pas une couleur valide");
 					}
 				}
-				array_push($messages_notifications, "Les couleurs ont bien étes appliquées");
+				array_push($messagesNotifications, "Les couleurs ont bien étes appliquées");
 			}
 		}
 	}

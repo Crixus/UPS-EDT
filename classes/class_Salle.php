@@ -36,7 +36,7 @@
 			}
 		}
 		
-		public static function ajouter_salle($nom, $nomBatiment, $capacite) {
+		public static function ajouterSalle($nom, $nomBatiment, $capacite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -57,7 +57,7 @@
 			}
 		}
 		
-		public static function modifier_salle($idSalle, $nom, $nomBatiment, $capacite) {
+		public static function modifierSalle($idSalle, $nom, $nomBatiment, $capacite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -77,7 +77,7 @@
 			}
 		}
 		
-		public static function supprimer_salle($idSalle) {
+		public static function supprimerSalle($idSalle) {
 			if ($idSalle != 0) {
 				Cours::modifier_salle_tout_cours($idSalle, 0);
 				try {
@@ -116,7 +116,7 @@
 			return $listeIdSalle;
 		}
 		
-		public static function existe_salle($id) {
+		public static function existeSalle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -216,22 +216,22 @@
 		}
 		
 		public function formulaireAjoutModificationSalle($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$liste_nom_batiment = Salle::listeNomBatiment();
 			$nbBatiment = sizeof($liste_nom_batiment);
 			
 			if (isset($_GET['modifier_salle'])) { 
 				$titre = "Modifier une salle";
-				$Salle = new Salle($_GET['modifier_salle']);
-				$nomModif = "value=\"{$Salle->getNom()}\"";
-				$nomBatimentModif = $Salle->getNomBatiment();
-				$capaciteModif = "value=\"{$Salle->getCapacite()}\"";
+				$_salle = new Salle($_GET['modifier_salle']);
+				$nomModif = "value=\"{$_salle->getNom()}\"";
+				$nomBatimentModif = $_salle->getNomBatiment();
+				$capaciteModif = "value=\"{$_salle->getCapacite()}\"";
 				$valueSubmit = "Modifier la salle";
 				$nameSubmit = "validerModificationSalle";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_salle']}\" />";
 				$lienAnnulation = "index.php?page=ajoutSalle";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -245,68 +245,68 @@
 			}
 			
 			if ($nbBatiment <= 1)
-				echo "$tab<h2>Vous devez d'aboir créer des batiments avant de créer des salles</h2><br/><br/>\n";
+				echo $tab."<h2>Vous devez d'aboir créer des batiments avant de créer des salles</h2><br/><br/>\n";
 			else {
-				echo "$tab<h2>$titre</h2>\n";
-				echo "$tab<form method=\"post\">\n";
-				echo "$tab\t<table>\n";
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-				echo "$tab\t\t\t<td>\n";
-				echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-				echo "$tab\t\t\t</td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab."<h2>$titre</h2>\n";
+				echo $tab."<form method=\"post\">\n";
+				echo $tab."\t<table>\n";
+				echo $tab."\t\t<tr>\n";
+				echo $tab."\t\t\t<td><label>Nom</label></td>\n";
+				echo $tab."\t\t\t<td>\n";
+				echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+				echo $tab."\t\t\t</td>\n";
+				echo $tab."\t\t</tr>\n";
 				
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td><label>Capacité</label></td>\n";
-				echo "$tab\t\t\t<td>\n";
-				echo "$tab\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"1\" max=\"999\" required {$capaciteModif}/>\n";
-				echo "$tab\t\t\t</td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab."\t\t<tr>\n";
+				echo $tab."\t\t\t<td><label>Capacité</label></td>\n";
+				echo $tab."\t\t\t<td>\n";
+				echo $tab."\t\t\t\t<input name=\"capacite\" type=\"number\" min=\"1\" max=\"999\" required {$capaciteModif}/>\n";
+				echo $tab."\t\t\t</td>\n";
+				echo $tab."\t\t</tr>\n";
 				
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td><label>Bâtiment</label></td>\n";
-				echo "$tab\t\t\t<td>\n";
-				echo "$tab\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
+				echo $tab."\t\t<tr>\n";
+				echo $tab."\t\t\t<td><label>Bâtiment</label></td>\n";
+				echo $tab."\t\t\t<td>\n";
+				echo $tab."\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
 				
 				foreach ($liste_nom_batiment as $nom_batiment) {
 					if ($nom_batiment != 'DEFAULT') {
 						if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-						echo "$tab\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+						echo $tab."\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
 					}
 				}
-				echo "$tab\t\t\t\t</select>\n";
-				echo "$tab\t\t\t</td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab."\t\t\t\t</select>\n";
+				echo $tab."\t\t\t</td>\n";
+				echo $tab."\t\t</tr>\n";
 				
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td></td>\n";
-				echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"$valueSubmit\"></td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab."\t\t<tr>\n";
+				echo $tab."\t\t\t<td></td>\n";
+				echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"$valueSubmit\"></td>\n";
+				echo $tab."\t\t</tr>\n";
 				
-				echo "$tab\t</table>\n";
-				echo "$tab</form>\n";		
+				echo $tab."\t</table>\n";
+				echo $tab."</form>\n";		
 				
-				if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+				if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 			}
 		}	
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSalle'])) {
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
-				$nom_correct = true;
+				$nomCorrect = true;
 				$capacite_correct = PregMatch::est_nombre($capacite);
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
-				$salle_inexistante = !Salle::existe_salle_nomSalle_nomBatiment($nom, $nomBatiment);
-				if ($nom_correct && $capacite_correct && $nomBatiment_correct && $salle_inexistante) {
-					Salle::ajouter_salle($nom, $nomBatiment, $capacite);
-					array_push($messages_notifications, "La salle a bien été ajouté");
+				$_salle_inexistante = !Salle::existe_salle_nomSalle_nomBatiment($nom, $nomBatiment);
+				if ($nomCorrect && $capacite_correct && $nomBatiment_correct && $_salle_inexistante) {
+					Salle::ajouterSalle($nom, $nomBatiment, $capacite);
+					array_push($messagesNotifications, "La salle a bien été ajouté");
 				}
 				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
 				}
 			}
 			else if (isset($_POST['validerModificationSalle'])) {
@@ -314,128 +314,128 @@
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
-				$id_correct = Salle::existe_salle($id);
-				$nom_correct = true; 
+				$idCorrect = Salle::existeSalle($id);
+				$nomCorrect = true; 
 				$capacite_correct = PregMatch::est_nombre($capacite);
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
-				if ($id_correct && $nom_correct && $capacite_correct && $nomBatiment_correct) {
-					Salle::modifier_salle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
-					array_push($messages_notifications, "La salle a bien étée modifiée");
+				if ($idCorrect && $nomCorrect && $capacite_correct && $nomBatiment_correct) {
+					Salle::modifierSalle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
+					array_push($messagesNotifications, "La salle a bien étée modifiée");
 				}
 				else {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
 				}
 			}
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_salle'])) {
-				if (Salle::existe_salle($_GET['supprimer_salle'])) { // Test de saisie
-					Salle::supprimer_salle($_GET['supprimer_salle']);
-					array_push($messages_notifications, "La salle à bien été supprimée");
+				if (Salle::existeSalle($_GET['supprimer_salle'])) { // Test de saisie
+					Salle::supprimerSalle($_GET['supprimer_salle']);
+					array_push($messagesNotifications, "La salle à bien été supprimée");
 				}
 			}
 		}
 		
 		public static function table_administration_batiments($administration, $nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			$liste_id_salles = Salle::liste_id_salles();
 			$nbSalles = sizeof($liste_id_salles);
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			
 			if ($nbSalles <= 1) {
-				echo "$tab<b>Aucunes salles n'est enregistrées</b>\n";
+				echo $tab."<b>Aucunes salles n'est enregistrées</b>\n";
 			}
 			else {			
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th rowspan=\"2\">Nom</th>\n";
-				echo "$tab\t\t<th rowspan=\"2\">Batiment</th>\n";
-				echo "$tab\t\t<th rowspan=\"2\">Salle</th>\n";
-				echo "$tab\t\t<th rowspan=\"2\">Capacité</th>\n";
-				echo "$tab\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th rowspan=\"2\">Nom</th>\n";
+				echo $tab."\t\t<th rowspan=\"2\">Batiment</th>\n";
+				echo $tab."\t\t<th rowspan=\"2\">Salle</th>\n";
+				echo $tab."\t\t<th rowspan=\"2\">Capacité</th>\n";
+				echo $tab."\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
 				if ($administration) {
-					echo "$tab\t\t<th rowspan=\"2\">Actions</th>\n";
+					echo $tab."\t\t<th rowspan=\"2\">Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t</tr>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
 				foreach ($liste_type_salle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
-					echo "$tab\t\t<th>$nomType_Salle</th>\n";
+					echo $tab."\t\t<th>$nomType_Salle</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_id_salles as $idSalle) {
 					if ($idSalle != 0) {
-						$Salle = new Salle($idSalle);
+						$_salle = new Salle($idSalle);
 						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
-						$lienInfosSalle = "./index.php?page=infosSalle&amp;idSalle={$Salle->getId()}";
+						$lienInfosSalle = "./index.php?page=infosSalle&amp;idSalle={$_salle->getId()}";
 						if (isset($_GET['idPromotion'])) {
-							$lienInfosSalle .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$lienInfosSalle .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
 						
-						echo "$tab\t<tr class=\"$couleurFond\">\n";
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$lienInfosSalle\">{$Salle->getNomBatiment()} - {$Salle->getNom()}</a>";
+						echo $tab."\t<tr class=\"$couleurFond\">\n";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"$lienInfosSalle\">{$_salle->getNomBatiment()} - {$_salle->getNom()}</a>";
 						echo "</td>\n";
-						echo "$tab\t\t<td>{$Salle->getNomBatiment()}</td>\n";
-						echo "$tab\t\t<td>{$Salle->getNom()}</td>\n";
-						echo "$tab\t\t<td>{$Salle->getCapacite()}</td>\n";
+						echo $tab."\t\t<td>{$_salle->getNomBatiment()}</td>\n";
+						echo $tab."\t\t<td>{$_salle->getNom()}</td>\n";
+						echo $tab."\t\t<td>{$_salle->getCapacite()}</td>\n";
 										
 						foreach ($liste_type_salle as $idType_Salle) {					
 							$Type_Salle = new Type_Salle($idType_Salle);
 							$nomType_Salle = $Type_Salle->getNom();
 							if (Type_Salle::appartient_salle_typeSalle($idSalle, $idType_Salle)) 
-								$checked = "checked = \"checked\"" ;
+								$checked = "checked = \"checked\"";
 							else
 								$checked = "";
 							$nomCheckbox = "{$idSalle}_{$nomType_Salle}";
-							echo "$tab\t\t<td><input type=\"checkbox\" name= \"{$idSalle}_{$nomType_Salle}\" value=\"{$idType_Salle}\" onclick=\"appartenance_salle_typeSalle({$idSalle},{$idType_Salle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
+							echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idSalle}_{$nomType_Salle}\" value=\"{$idType_Salle}\" onclick=\"appartenance_salle_typeSalle({$idSalle},{$idType_Salle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
 						}
 					
 						if ($administration) {
 							$pageModification = "./index.php?page=ajoutSalle&amp;modifier_salle=$idSalle";
 							$pageSuppression = "./index.php?page=ajoutSalle&amp;supprimer_salle=$idSalle";
 							if (isset($_GET['idPromotion'])) {
-								$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-								$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+								$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+								$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 							}
-							echo "$tab\t\t<td>";
-							echo "<a href=\"$pageModification\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
-							echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer la salle ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
+							echo $tab."\t\t<td>";
+							echo "<a href=\"".$pageModification."\"><img alt=\"icone modification\" src=\"../images/modify.png\"></a>";
+							echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer la salle ?')\"><img alt=\"icone suppression\" src=\"../images/delete.png\" /></a>";
 							echo "</td>";
 						}
-						echo "$tab\t</tr>\n";
+						echo $tab."\t</tr>\n";
 					}
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Salle::formulaireAjoutModificationSalle($nombreTabulations);
-			echo "$tab<h2>Liste des salles</h2>\n";
+			echo $tab."<h2>Liste des salles</h2>\n";
 			Salle::table_administration_batiments($nombreTabulations);
 		}
 		
 		public function page_informations($nombreTabulations = 0) {
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$Batiment = Batiment::Batiment_from_nom($this->getNomBatiment());
-			echo "$tab<h2>Salle {$this->getNomBatiment()} - {$this->getNom()}</h2>\n";
-			echo "$tab<h3>Informations</h3>\n";
-			echo "$tab<ul>\n";
-			echo "$tab\t<li>Nom : {$this->getNom()}</li>\n";
-			echo "$tab\t<li>Batiment : {$this->getNomBatiment()}</li>\n";
-			echo "$tab\t<li>Capacite : {$this->getCapacite()}</li>\n";
-			echo "$tab</ul>\n";
+			echo $tab."<h2>Salle {$this->getNomBatiment()} - {$this->getNom()}</h2>\n";
+			echo $tab."<h3>Informations</h3>\n";
+			echo $tab."<ul>\n";
+			echo $tab."\t<li>Nom : {$this->getNom()}</li>\n";
+			echo $tab."\t<li>Batiment : {$this->getNomBatiment()}</li>\n";
+			echo $tab."\t<li>Capacite : {$this->getCapacite()}</li>\n";
+			echo $tab."</ul>\n";
 			$Batiment->page_informations($nombreTabulations);
 		}
 	}

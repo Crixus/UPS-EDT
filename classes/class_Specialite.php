@@ -141,7 +141,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_specialite']}\" />";
 				$lienAnnulation = "index.php?page=ajoutSpecialite";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -153,98 +153,98 @@
 				$hidden = "";
 			}
 		
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Nom</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Nom</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" required {$nomModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label>Intitulé</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<input name=\"intitule\" type=\"text\" required {$intituleModif}/>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label>Intitulé</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<input name=\"intitule\" type=\"text\" required {$intituleModif}/>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";	
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";	
 
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}				
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
 		}	
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSpecialite']) || isset($_POST['validerModificationSpecialite'])) {
 				// Vérification des champs				
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
-				$nom_correct = PregMatch::est_nom($nom);
+				$nomCorrect = PregMatch::est_nom($nom);
 				$intitule = htmlentities($_POST['intitule'],ENT_QUOTES,'UTF-8');
 				$intitule_correct = PregMatch::est_intitule($intitule);
 				
 				$validation_ajout = false;
 				if (isset($_POST['validerAjoutSpecialite'])) {
 					// Ajout d'une nouvelle spécialité
-					if ($nom_correct && $intitule_correct) {
+					if ($nomCorrect && $intitule_correct) {
 						Specialite::ajouter_specialite($nom, $intitule, $_GET['idPromotion']);
-						array_push($messages_notifications, "La spécialité a bien été ajouté");
+						array_push($messagesNotifications, "La spécialité a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
 				else {
 					// Modification d'une nouvelle spécialité
 					$id = htmlentities($_POST['id']); 
-					$id_correct = Specialite::existe_specialite($id);
-					if ($id_correct && $nom_correct && $intitule_correct) {
+					$idCorrect = Specialite::existe_specialite($id);
+					if ($idCorrect && $nomCorrect && $intitule_correct) {
 						Specialite::modifier_specialite($_GET['modifier_specialite'], $nom, $intitule, $_GET['idPromotion']);
-						array_push($messages_notifications, "La spécialité a bien été modifié");
+						array_push($messagesNotifications, "La spécialité a bien été modifié");
 						$validation_ajout = true;
 					}				
 				}
 				
 				// Traitement des erreurs
 				if (!$validation_ajout) {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if (isset($id_correct) && !$id_correct) {
-						array_push($messages_erreurs, "L'id de la spécialité n'est pas correct, contacter un administrateur");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					if (isset($idCorrect) && !$idCorrect) {
+						array_push($messagesErreurs, "L'id de la spécialité n'est pas correct, contacter un administrateur");
 					}
-					if (!$nom_correct) {
-						array_push($messages_erreurs, "Le nom n'est pas correct");
+					if (!$nomCorrect) {
+						array_push($messagesErreurs, "Le nom n'est pas correct");
 					}
 					if (!$intitule_correct) {
-						array_push($messages_erreurs, "L'intitulé n'est pas correct");
+						array_push($messagesErreurs, "L'intitulé n'est pas correct");
 					}
 				}
 			}			
 		}
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_specialite'])) {	
 				if (Specialite::existe_specialite($_GET['supprimer_specialite'])) {
 					// La spécialité existe
 					Specialite::supprimer_specialite($_GET['supprimer_specialite']);
-					array_push($messages_notifications, "La spécialité à bien été supprimé");
+					array_push($messagesNotifications, "La spécialité à bien été supprimé");
 				}
 				else {
 					// La spécialité n'existe pas
-					array_push($messages_erreurs, "La spécialité n'existe pas");
+					array_push($messagesErreurs, "La spécialité n'existe pas");
 				}
 			}
 		}
 		
 		public static function page_administration($nombreTabulations = 0) {			
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Specialite::formulaireAjoutSpecialite($_GET['idPromotion'], $nombreTabulations + 1);
-			echo "$tab<h2>Liste des spécialités</h2>\n";
+			echo $tab."<h2>Liste des spécialités</h2>\n";
 			Specialite::liste_specialite_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		
@@ -276,20 +276,20 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbSpecialite == 0) {
-				echo "$tab<b>Aucune spécialité n'est enregistré pour cette promotion</b>\n";
+				echo $tab."<b>Aucune spécialité n'est enregistré pour cette promotion</b>\n";
 			}
 			else {
 			
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
-				echo "$tab\t\t<th>Nom</th>\n";
-				echo "$tab\t\t<th>Intitulé</th>\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t\t<th>Nom</th>\n";
+				echo $tab."\t\t<th>Intitulé</th>\n";
 				
 				if ($administration) {
-					echo "$tab\t\t<th>Actions</th>\n";
+					echo $tab."\t\t<th>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_specialite as $idSpecialite) {
@@ -297,27 +297,27 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					foreach (Specialite::$attributs as $att) {
-						echo "$tab\t\t<td>".$Specialite->$att."</td>\n";
+						echo $tab."\t\t<td>".$Specialite->$att."</td>\n";
 					}
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutSpecialite&amp;modifier_specialite=$idSpecialite";
 						$pageSuppression = "./index.php?page=ajoutSpecialite&amp;supprimer_specialite=$idSpecialite";
 						
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer la specialite ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer la specialite ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
 						echo "</td>\n";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		

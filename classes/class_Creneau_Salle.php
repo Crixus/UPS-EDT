@@ -148,21 +148,21 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCreneauSalle == 0) {
-				echo "$tab<b>Aucunes disponibilités n'a été enregistrés</b>\n";
+				echo $tab."<b>Aucunes disponibilités n'a été enregistrés</b>\n";
 			}
 			else {
 			
-				echo "$tab<table class=\"table_liste_administration\">\n";
+				echo $tab."<table class=\"table_liste_administration\">\n";
 				
-				echo "$tab\t<tr class=\"fondGrisFonce\">\n";
+				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				echo "$tab\t\t<th>Salle</th>\n";
-				echo "$tab\t\t<th>Date</th>\n";
+				echo $tab."\t\t<th>Salle</th>\n";
+				echo $tab."\t\t<th>Date</th>\n";
 				
 				if ($administration) {
-					echo "$tab\t\t<th>Actions</th>\n";
+					echo $tab."\t\t<th>Actions</th>\n";
 				}
-				echo "$tab\t</tr>\n";
+				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
 				foreach ($liste_creneauSalle as $idCreneauSalle) {
@@ -170,7 +170,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo "$tab\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"$couleurFond\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -180,19 +180,19 @@
 						else if ($cptBoucle == 2) {
 							$valTemp2 = $Creneau_Salle->$att;
 							$val = "De ".$valTemp." à ".$valTemp2;
-							echo "$tab\t\t<td>";
+							echo $tab."\t\t<td>";
 							Creneau_Salle::dateCreneauSalle($valTemp, $valTemp2);
 							echo "</td>\n";
 						}
 						else if ($cptBoucle == 3) {
 							$idSalle = $Creneau_Salle->$att;
 							if ($idSalle == 0)
-								echo "$tab\t\t<td></td>\n";
+								echo $tab."\t\t<td></td>\n";
 							else {
-								$Salle = new V_Liste_Salles($idSalle);
-								$nomBatiment = $Salle->getNomBatiment();
-								$nomSalle = $Salle->getNomSalle();
-								echo "$tab\t\t<td>".$nomBatiment." ".$nomSalle."</td>\n";
+								$_salle = new V_Liste_Salles($idSalle);
+								$nomBatiment = $_salle->getNomBatiment();
+								$nomSalle = $_salle->getNomSalle();
+								echo $tab."\t\t<td>".$nomBatiment." ".$nomSalle."</td>\n";
 							}
 						}
 						$cptBoucle++;
@@ -201,19 +201,19 @@
 						$pageModification = "./index.php?page=ajoutCreneauSalle&modifier_creneauSalle=$idCreneauSalle";
 						$pageSuppression = "./index.php?page=ajoutCreneauSalle&supprimer_creneauSalle=$idCreneauSalle";
 						if (isset($_GET['idPromotion'])) {
-							$pageModification .= "&amp;idPromotion={$_GET['idPromotion']}";
-							$pageSuppression .= "&amp;idPromotion={$_GET['idPromotion']}";
+							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
+							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
 						
-						echo "$tab\t\t<td>";
-						echo "<a href=\"$pageModification\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"$pageSuppression\" onclick=\"return confirm('Supprimer le creneau Salle ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo $tab."\t\t<td>";
+						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le creneau Salle ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
 						echo "</td>\n";
 					}
-					echo "$tab\t</tr>\n";
+					echo $tab."\t</tr>\n";
 				}
 				
-				echo "$tab</table>\n";
+				echo $tab."</table>\n";
 			}
 		}
 		
@@ -309,7 +309,7 @@
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_creneauSalle']}\" />";
 				$lienAnnulation = "index.php?page=ajoutCreneauSalle";
 				if (isset($_GET['idPromotion'])) {
-					$lienAnnulation .= "&amp;idPromotion={$_GET['idPromotion']}";
+					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
 			}
 			else {
@@ -321,29 +321,29 @@
 				$hidden = "";
 			}
 			
-			echo "$tab<h2>$titre</h2>\n";
-			echo "$tab<form method=\"post\">\n";
-			echo "$tab\t<table>\n";
+			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<form method=\"post\">\n";
+			echo $tab."\t<table>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td><label for=\"Salle\">Salle</label></td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"Salle\" id=\"Salle\">\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td><label for=\"Salle\">Salle</label></td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<select name=\"Salle\" id=\"Salle\">\n";
 			
 			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach ($liste_Salle as $idSalle) {
 				if ($idSalle != 0) {
-					$Salle = new V_Liste_Salles($idSalle);
-					$nomBatiment = $Salle->getNomBatiment();
-					$nomSalle = $Salle->getNomSalle();
+					$_salle = new V_Liste_Salles($idSalle);
+					$nomBatiment = $_salle->getNomBatiment();
+					$nomSalle = $_salle->getNomSalle();
 					if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo "$tab\t\t\t\t\t<option value=\"$idSalle\" $selected>$nomBatiment $nomSalle</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"$idSalle\" $selected>$nomBatiment $nomSalle</option>\n";
 				}
 			}
-			echo "$tab\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t\t\t</select>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsDebutModif)) {
 				$explode = explode(" ", $tsDebutModif);
@@ -357,49 +357,49 @@
 				$valueHeureDebut = "";
 				$valueMinuteDebut = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Debut</td>\n";
-			echo "$tab\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Debut</td>\n";
+			echo $tab."\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Debut</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Heure Debut</td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
 			for ($cpt=0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureDebut)
 					$selected = " selected";
-				else if ( ($cpt == 7) && ($valueHeureDebut == "") )
+				else if (($cpt == 7) && ($valueHeureDebut == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
-				else if ( ($cpt == 3) && ($valueMinuteDebut == "") )
+				else if (($cpt == 3) && ($valueMinuteDebut == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+					echo $tab."\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			if (isset($tsFinModif)) {
 				$explode = explode(" ", $tsFinModif);
@@ -413,79 +413,79 @@
 				$valueHeureFin = "";
 				$valueMinuteFin = "";
 			}
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Date Fin</td>\n";
-			echo "$tab\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
-			echo "$tab\t\t</tr>\n";
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td>Heure Fin</td>\n";
-			echo "$tab\t\t\t<td>\n";
-			echo "$tab\t\t\t\t<select name=\"heureFin\">\n";			
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Date Fin</td>\n";
+			echo $tab."\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
+			echo $tab."\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td>Heure Fin</td>\n";
+			echo $tab."\t\t\t<td>\n";
+			echo $tab."\t\t\t\t<select name=\"heureFin\">\n";			
 			for ($cpt=0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureFin)
 					$selected = " selected";
-				else if ( ($cpt == 9) && ($valueHeureFin == "") )
+				else if (($cpt == 9) && ($valueHeureFin == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo "$tab\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t\t<select name=\"minuteFin\">\n";		
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t\t<select name=\"minuteFin\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
 			for ($cpt=0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
-				else if ( ($cpt == 3) && ($valueMinuteFin == "") )
+				else if (($cpt == 3) && ($valueMinuteFin == ""))
 					$selected = " selected";
 				else
 					$selected = "";
 					
 				if ($cpt == 0)
-					echo "$tab\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0{$tab_minute[$cpt]}\" {$selected}>0{$tab_minute[$cpt]}</option>\n";
 				else
-					echo "$tab\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
+					echo $tab."\t\t\t\t\t<option value=\"{$tab_minute[$cpt]}\" {$selected}>{$tab_minute[$cpt]}</option>\n";						
 			}
-			echo "$tab\t\t\t\t\t</select>\n";
-			echo "$tab\t\t\t</td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t\t\t\t</select>\n";
+			echo $tab."\t\t\t</td>\n";
+			echo $tab."\t\t</tr>\n";
 			
 			
 			if (! isset($_GET['modifier_creneauSalle'])) { 
-				echo "$tab\t\t<tr>\n";
-				echo "$tab\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
-				echo "$tab\t\t\t<td>\n";
-				echo "$tab\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
+				echo $tab."\t\t<tr>\n";
+				echo $tab."\t\t\t<td><label for=\"recursivite\">Récursivité</label></td>\n";
+				echo $tab."\t\t\t<td>\n";
+				echo $tab."\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
 				
-				echo "$tab\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
+				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
 				for ($i=1; $i<=52; $i++) {
-					echo "$tab\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+					echo $tab."\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
 				}
-				echo "$tab\t\t\t\t</select> (en semaines)\n";
-				echo "$tab\t\t\t</td>\n";
-				echo "$tab\t\t</tr>\n";
+				echo $tab."\t\t\t\t</select> (en semaines)\n";
+				echo $tab."\t\t\t</td>\n";
+				echo $tab."\t\t</tr>\n";
 			}			
 			
-			echo "$tab\t\t<tr>\n";
-			echo "$tab\t\t\t<td></td>\n";
-			echo "$tab\t\t\t<td>$hidden<input type=\"submit\" name=\"$nameSubmit\" value=\"{$valueSubmit}\"></td>\n";
-			echo "$tab\t\t</tr>\n";
+			echo $tab."\t\t<tr>\n";
+			echo $tab."\t\t\t<td></td>\n";
+			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t</tr>\n";
 			
-			echo "$tab\t</table>\n";
-			echo "$tab</form>\n";
+			echo $tab."\t</table>\n";
+			echo $tab."</form>\n";
 			
-			if (isset($lienAnnulation)) {echo "$tab<p><a href=\"$lienAnnulation\">Annuler modification</a></p>";}	
+			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
 		
 		public static function prise_en_compte_formulaire() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCreneauSalle']) || isset($_POST['validerModificationCreneauSalle'])) {
 				// Vérification des champs
 				$idSalle = $_POST['Salle'];
@@ -510,29 +510,29 @@
 					$recursivite_correct = true;
 					if ($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Salle::ajouter_creneauSalle($idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
-						array_push($messages_notifications, "Le creneau Salle a bien été ajouté");
+						array_push($messagesNotifications, "Le creneau Salle a bien été ajouté");
 						$validation_ajout = true;
 					}
 				}
 				else  {
 					// Modification d'un creneau Salle
 					$id = htmlentities($_POST['id']); 
-					$id_correct = Creneau_Salle::existe_creneauSalle($id);
+					$idCorrect = Creneau_Salle::existe_creneauSalle($id);
 					if ($idSalle_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Salle::modifier_creneauSalle($_GET['modifier_creneauSalle'], $idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
-						array_push($messages_notifications, "Le creneau Salle a bien été modifié");
+						array_push($messagesNotifications, "Le creneau Salle a bien été modifié");
 						$validation_ajout = true;
 					}
 				}
 				
 				// Traitement des erreurs
 				if (!$validation_ajout) {
-					array_push($messages_erreurs, "La saisie n'est pas correcte");
-					if (isset($id_correct) && !$id_correct) {
-						array_push($messages_erreurs, "L'id du creneau Salle n'est pas correct, contacter un administrateur");
+					array_push($messagesErreurs, "La saisie n'est pas correcte");
+					if (isset($idCorrect) && !$idCorrect) {
+						array_push($messagesErreurs, "L'id du creneau Salle n'est pas correct, contacter un administrateur");
 					}
 					if (!$idSalle_correct) {
-						array_push($messages_erreurs, "L'Salle n'est pas correcte");
+						array_push($messagesErreurs, "L'Salle n'est pas correcte");
 					}
 				}
 			}
@@ -540,23 +540,23 @@
 		
 		
 		public static function prise_en_compte_suppression() {
-			global $messages_notifications, $messages_erreurs;
+			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_creneauSalle'])) {	
 				if (Creneau_Salle::existe_creneauSalle($_GET['supprimer_creneauSalle'])) {
 					Creneau_Salle::supprimer_creneauSalle($_GET['supprimer_creneauSalle']);
-					array_push($messages_notifications, "Le creneau Salle à bien été supprimé");
+					array_push($messagesNotifications, "Le creneau Salle à bien été supprimé");
 				}
 				else {
-					array_push($messages_erreurs, "Le creneau Salle n'existe pas");
+					array_push($messagesErreurs, "Le creneau Salle n'existe pas");
 				}
 			}
 		}
 		
 		
 		public static function page_administration($nombreTabulations = 0) {			
-			$tab = ""; for ($i = 0 ; $i < $nombreTabulations ; $i++) { $tab .= "\t"; }
+			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Creneau_Salle::formulaireAjoutCreneauSalle($nombreTabulations + 1);
-			echo "$tab<h2>Liste des creneaux de disponibilités des salles</h2>\n";
+			echo $tab."<h2>Liste des creneaux de disponibilités des salles</h2>\n";
 			Creneau_Salle::liste_creneauSalle_to_table($nombreTabulations + 1);
 		}
 	}
