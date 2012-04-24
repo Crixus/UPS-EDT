@@ -3,4 +3,3 @@
 	afficherNotifications(5);
 	afficher_erreurs(5);
 	Inscription::liste_inscription();
-?>

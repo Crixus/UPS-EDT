@@ -35,7 +35,7 @@
 				$req->closeCursor();
 				
 				foreach (V_Infos_Cours::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -195,23 +195,23 @@
 		}
 		
 		public function getHeureDebut() {
-			$explode = explode(" ",$this->tsDebut);
+			$explode = explode(" ", $this->tsDebut);
 			$heureDebut = $explode[1];
-			$explode = explode(":",$heureDebut);
+			$explode = explode(":", $heureDebut);
 			$heureDebut = "$explode[0]:$explode[1]";
 			return $heureDebut;
 		}
 		
 		public function getHeureFin() {
-			$explode = explode(" ",$this->tsFin);
+			$explode = explode(" ", $this->tsFin);
 			$heureFin = $explode[1];
-			$explode = explode(":",$heureFin);
+			$explode = explode(":", $heureFin);
 			$heureFin = "$explode[0]:$explode[1]";
 			return $heureFin;
 		}
 		
 		public function commence_a_heure($heure) {
-			$explode = explode(" ",$this->tsDebut);
+			$explode = explode(" ", $this->tsDebut);
 			$heureDebut = $explode[1];
 			return ($heure == $heureDebut);
 		}

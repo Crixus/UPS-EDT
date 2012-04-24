@@ -24,7 +24,7 @@
 				$req->closeCursor();
 				
 				foreach (Type_Salle::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -140,7 +140,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt = ($cpt + 1)%2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					echo $tab."\t\t<td>{$Type_Salle->getNom()}</td>\n";
 					
 					foreach ($liste_type_cours as $idTypeCours) {				
@@ -152,7 +152,7 @@
 							$checked = "";
 						$nameCheckbox = "{$idTypeCours}_{$nomType_Cours}";
 						echo $tab."\t\t<td>";
-						echo "<input type=\"checkbox\" name=\"$nameCheckbox\" value=\"$idTypeSalle\" onclick=\"appartenance_typeSalle_typeCours($idTypeCours,$idTypeSalle,this)\" $checked />";
+						echo "<input type=\"checkbox\" name=\"$nameCheckbox\" value=\"$idTypeSalle\" onclick=\"appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle,this)\" $checked />";
 						echo "</td>\n";
 					}
 					
@@ -235,7 +235,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -247,7 +247,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"$valueSubmit\" /></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"$valueSubmit\" /></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";

@@ -25,7 +25,7 @@
 				$req->closeCursor();
 				
 				foreach (Groupe_Etudiants::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -177,7 +177,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (Groupe_Etudiants::$attributs as $att) {
 						echo $tab."\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
 					}
@@ -234,7 +234,7 @@
 				$hidden = "";
 			}		
 		
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -251,7 +251,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";

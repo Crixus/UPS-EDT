@@ -19,7 +19,7 @@
 				$req->closeCursor();
 				
 				foreach (Appartient_Etudiant_GroupeEtudiants::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -73,7 +73,7 @@
 						else
 							$checked = "";
 								
-						echo $tab."\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_etudiant_groupeEtudiants({$idEtudiant},{$idGroupeEtudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						echo $tab."\t\t<td class=\"".$couleurFond."\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_etudiant_groupeEtudiants({$idEtudiant},{$idGroupeEtudiants},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						
 					}
 					echo $tab."\t</tr>\n";

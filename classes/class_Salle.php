@@ -28,7 +28,7 @@
 				$req->closeCursor();
 				
 				foreach (Salle::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -187,7 +187,7 @@
 				$req->closeCursor();
 				
 				foreach (Salle::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -247,7 +247,7 @@
 			if ($nbBatiment <= 1)
 				echo $tab."<h2>Vous devez d'aboir créer des batiments avant de créer des salles</h2><br/><br/>\n";
 			else {
-				echo $tab."<h2>$titre</h2>\n";
+				echo $tab."<h2>".$titre."</h2>\n";
 				echo $tab."<form method=\"post\">\n";
 				echo $tab."\t<table>\n";
 				echo $tab."\t\t<tr>\n";
@@ -281,7 +281,7 @@
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td></td>\n";
-				echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"$valueSubmit\"></td>\n";
+				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"$valueSubmit\"></td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t</table>\n";
@@ -380,7 +380,7 @@
 							$lienInfosSalle .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
 						
-						echo $tab."\t<tr class=\"$couleurFond\">\n";
+						echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 						echo $tab."\t\t<td>";
 						echo "<a href=\"$lienInfosSalle\">{$_salle->getNomBatiment()} - {$_salle->getNom()}</a>";
 						echo "</td>\n";

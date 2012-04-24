@@ -25,7 +25,7 @@
 				$req->closeCursor();
 				
 				foreach (Specialite::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -153,7 +153,7 @@
 				$hidden = "";
 			}
 		
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -172,13 +172,15 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
 			echo $tab."</form>\n";	
 
-			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
+			if (isset($lienAnnulation)) {
+				echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";
+			}				
 		}	
 		
 		public static function prise_en_compte_formulaire() {
@@ -297,13 +299,13 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (Specialite::$attributs as $att) {
 						echo $tab."\t\t<td>".$Specialite->$att."</td>\n";
 					}
 					if ($administration) {
-						$pageModification = "./index.php?page=ajoutSpecialite&amp;modifier_specialite=$idSpecialite";
-						$pageSuppression = "./index.php?page=ajoutSpecialite&amp;supprimer_specialite=$idSpecialite";
+						$pageModification = "./index.php?page=ajoutSpecialite&amp;modifier_specialite=".$idSpecialite;
+						$pageSuppression = "./index.php?page=ajoutSpecialite&amp;supprimer_specialite=".$idSpecialite;
 						
 						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
@@ -319,13 +321,5 @@
 				
 				echo $tab."</table>\n";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Specialite::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
 		}
 	}

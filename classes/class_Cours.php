@@ -34,10 +34,9 @@
 				$req->closeCursor();
 				
 				foreach (Cours::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		}
@@ -61,8 +60,7 @@
 							$tsFin
 						)
 					);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
@@ -72,13 +70,13 @@
 		}
 		
 		public static function datePlusUneSemaine($tsDate) {
-			$tsDate_explode = explode(' ',$tsDate);
+			$tsDate_explode = explode(' ', $tsDate);
 			$tsDate_jma = $tsDate_explode[0];
 			$tsDate_hms = $tsDate_explode[1];
-			$tsDate_jma_explode = explode('-',$tsDate_jma);
-			$timestamp = mktime(0, 0, 0, $tsDate_jma_explode[1],$tsDate_jma_explode[2],$tsDate_jma_explode[0]);
+			$tsDate_jma_explode = explode('-', $tsDate_jma);
+			$timestamp = mktime(0, 0, 0, $tsDate_jma_explode[1], $tsDate_jma_explode[2], $tsDate_jma_explode[0]);
 			$timestamp_plus_une_semaine = $timestamp + (3600 * 24 * 7); //On ajoute une semaine
-			$date_jma = date('Y-m-d',$timestamp_plus_une_semaine);
+			$date_jma = date('Y-m-d', $timestamp_plus_une_semaine);
 			$date = $date_jma." ".$tsDate_hms;
 			return $date;
 		}
@@ -107,33 +105,16 @@
 		}
 		
 		public static function supprimer_cours($idCours) {
-			//Suppression des apparitions du cours dans la table "Appartient_Cours_GroupeCours"
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Appartient_Cours_GroupeCours::$nomTable." WHERE idCours=?;");
+				$req = $bdd->prepare("DELETE FROM ".Cours::$nomTable." WHERE id=?;");
 				$req->execute(
 					Array(
 						$idCours
 					)
-				);			
-			
-				//Suppression du cours
-				try {
-					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("DELETE FROM ".Cours::$nomTable." WHERE id=?;");
-					$req->execute(
-						Array(
-							$idCours
-						)
-					);
-				}
-				catch (Exception $e) {
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
+				);
 			}
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -201,7 +182,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -275,10 +256,12 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
-					$cptBoucle=0;
-					$valTemp="";
-					$valTemp2="";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
+					$cptBoucle = 0;
+					$valTemp = "";
+					$valTemp2 = "";
+					
+					// A REFAIRE
 					foreach (V_Infos_Cours::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
 							$valTemp = $Cours->$att;
@@ -299,8 +282,8 @@
 						$cptBoucle++;
 					}
 					if ($administration) {
-						$pageModification = "./index.php?page=ajoutCours&modifier_cours=$idCours";
-						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours=$idCours";
+						$pageModification = "./index.php?page=ajoutCours&modifier_cours=".$idCours;
+						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours".$idCours;
 						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
 							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
@@ -319,25 +302,25 @@
 		}
 	
 		public function dateCours($dateDebut, $dateFin) {
-			$chaineDateDebut = explode(' ',$dateDebut);
-			$chaineJMADebut = explode('-',$chaineDateDebut[0]);
-			$chaineHMSDebut = explode(':',$chaineDateDebut[1]);
+			$chaineDateDebut = explode(' ', $dateDebut);
+			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
+			$chaineHMSDebut = explode(':', $chaineDateDebut[1]);
 
-			$chaineDateFin = explode(' ',$dateFin);
-			$chaineJMAFin = explode('-',$chaineDateFin[0]);
-			$chaineHMSFin = explode(':',$chaineDateFin[1]);
+			$chaineDateFin = explode(' ', $dateFin);
+			$chaineJMAFin = explode('-', $chaineDateFin[0]);
+			$chaineHMSFin = explode(':', $chaineDateFin[1]);
 			
 			if ($chaineJMADebut[2] == $chaineJMAFin[2]) {
 				echo "Le ";
-				echo Cours::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Cours::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 				echo " de {$chaineHMSDebut[0]}h{$chaineHMSDebut[1]}";
 				echo " à {$chaineHMSFin[0]}h{$chaineHMSFin[1]}";
 			}
 			else {
 				echo "Du ";
-				echo Cours::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Cours::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 				echo " {$chaineHMSDebut[0]}h{$chaineHMSDebut[1]} au ";
-				echo Cours::getDate($chaineJMAFin[2],$chaineJMAFin[1],$chaineJMAFin[0]);
+				echo Cours::getDate($chaineJMAFin[2], $chaineJMAFin[1], $chaineJMAFin[0]);
 				echo " {$chaineHMSFin[0]}h{$chaineHMSFin[1]}";
 			}
 		}
@@ -413,7 +396,7 @@
 				$tsFinModif = $Cours->getTsFin();
 				$valueSubmit = "Modifier le cours"; 
 				$nameSubmit = "validerModificationCours";
-				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_cours']}\" />";
+				$hidden = "<input name=\"id\" type=\"hidden\" value=\"".$_GET['modifier_cours']."\" />";
 				$lienAnnulation = "index.php?page=ajoutCours";
 				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
@@ -433,7 +416,7 @@
 			else if ($nbTypeCours == 0)
 				echo $tab."<h2>Vous devez d'aboir créer des types de cours avant de créer des séances</h2><br/><br/>\n";
 			else {
-				echo $tab."<h2>$titre</h2>\n";
+				echo $tab."<h2>".$titre."</h2>\n";
 				echo $tab."<form method=\"post\">\n";
 				echo $tab."\t<table>\n";
 				echo $tab."\t\t<tr>\n";
@@ -444,7 +427,7 @@
 					$UE = new UE($idUE);
 					$nomUE = $UE->getNom();
 					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"".$idUE."\" $selected>$nomUE</option>\n";
 				}
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -613,7 +596,7 @@
 					
 					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
 					for ($i=1; $i<=10; $i++) {
-						echo $tab."\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+						echo $tab."\t\t\t\t\t<option value=\"".$i."\">$i</option>\n";					
 					}
 					echo $tab."\t\t\t\t</select> (en semaines)\n";
 					echo $tab."\t\t\t</td>\n";
@@ -622,7 +605,7 @@
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td></td>\n";
-				echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t</table>\n";
@@ -655,24 +638,24 @@
 				$idSalle = $_POST['salle'];
 				$idSalle_correct = true;
 				$idIntervenant = $_POST['intervenant'];
-				$idIntervenant_correct = true;
+				$idIntervenantCorrect = true;
 				$typeCours = $_POST['typeCours'];
 				$typeCours_correct = true;
 				$dateDebut = $_POST['dateDebut'];
-				$dateDebut_correct = true;
+				$dateDebutCorrect = true;
 				$heureDebut = $_POST['heureDebut'];
-				$heureDebut_correct = true;
+				$heureDebutCorrect = true;
 				$minuteDebut = $_POST['minuteDebut'];
-				$minuteDebut_correct = true;
+				$minuteDebutCorrect = true;
 				$dateFin = $_POST['dateFin'];
-				$dateFin_correct = true;
+				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
 				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
 				$recursivite = $_POST['recursivite'];
 				$recursivite_correct = true;
-				if ($idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
+				if ($idUE_correct && $idSalle_correct && $idIntervenantCorrect && $typeCours_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);				
 					array_push($messagesNotifications, "Le cours a bien été ajouté");
 				}
@@ -688,22 +671,22 @@
 				$idSalle = $_POST['salle'];
 				$idSalle_correct = true;
 				$idIntervenant = $_POST['intervenant'];
-				$idIntervenant_correct = true;
+				$idIntervenantCorrect = true;
 				$typeCours = $_POST['typeCours'];
 				$typeCours_correct = true;
 				$dateDebut = $_POST['dateDebut'];
-				$dateDebut_correct = true;
+				$dateDebutCorrect = true;
 				$heureDebut = $_POST['heureDebut'];
-				$heureDebut_correct = true;
+				$heureDebutCorrect = true;
 				$minuteDebut = $_POST['minuteDebut'];
-				$minuteDebut_correct = true;
+				$minuteDebutCorrect = true;
 				$dateFin = $_POST['dateFin'];
-				$dateFin_correct = true;
+				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
 				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
-				if ($idCorrect && $idUE_correct && $idSalle_correct && $idIntervenant_correct && $typeCours_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {
+				if ($idCorrect && $idUE_correct && $idSalle_correct && $idIntervenantCorrect && $typeCours_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {
 					Cours::modifier_cours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 					array_push($messagesNotifications, "Le cours a bien été modifié");
 				}

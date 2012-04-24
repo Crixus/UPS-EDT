@@ -1,5 +1,5 @@
 <?php
-	class Appartient_Salle_TypeSalle{
+	class Appartient_Salle_TypeSalle {
 		
 		public static $nomTable = "Appartient_Salle_TypeSalle";
 		
@@ -19,7 +19,7 @@
 				$req->closeCursor();
 				
 				foreach (Appartient_Salle_TypeSalle::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -30,16 +30,8 @@
 		public function toString() {
 			$string = "";
 			foreach (Appartient_Salle_TypeSalle::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
+				$string .= $att.":".$this->$att." ";
 			}
 			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Appartient_Salle_TypeSalle::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Appartient_Salle_TypeSalle::$nomTable);
 		}
 	}

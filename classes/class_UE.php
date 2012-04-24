@@ -234,7 +234,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
 					$val_temp = "";
 					foreach (V_Infos_UE::$attributs as $att) {
@@ -305,7 +305,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -358,12 +358,12 @@
 			echo $tab."\t\t\t\t<select name=\"idIntervenant\" id=\"idIntervenant\">\n";
 			
 			$selected = (isset($idResponsableModif) && ($idResponsableModif == 0)) ? "selected=\"selected\" " : "";
-			echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnue -----</option>\n";
+			echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnue -----</option>\n";
 			foreach ($liste_intervenant as $idIntervenant) {
 				if ($idIntervenant != 0) {
 					$Intervenant = new Intervenant($idIntervenant);
 					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
-					if (isset($idResponsableModif) && ($idResponsableModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
+					$selected = (isset($idResponsableModif) && ($idResponsableModif == $idIntervenant)) ? "selected=\"selected\" " : "";
 					echo $tab."\t\t\t\t\t<option value=\"".$idIntervenant."\" ".$selected.">".$nomIntervenant." ".$prenomIntervenant."</option>\n";
 				}
 			}

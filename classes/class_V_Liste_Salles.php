@@ -28,7 +28,7 @@
 				$req->closeCursor();
 				
 				foreach (V_Liste_Salles::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {

@@ -19,7 +19,7 @@
 				$req->closeCursor();
 				
 				foreach (Appartient_TypeSalle_TypeCours::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {

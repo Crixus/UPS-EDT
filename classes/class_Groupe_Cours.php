@@ -31,7 +31,7 @@
 				$req->closeCursor();
 				
 				foreach (Groupe_Cours::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -183,7 +183,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (Groupe_Cours::$attributs as $att) {
 						echo $tab."\t\t<td>".$Groupe_Cours->$att."</td>\n";
 					}

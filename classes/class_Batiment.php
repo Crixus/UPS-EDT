@@ -60,7 +60,7 @@
 				$req->closeCursor();
 				
 				foreach (Batiment::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -342,7 +342,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";

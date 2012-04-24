@@ -23,7 +23,7 @@
 				$req->closeCursor();
 				
 				foreach (Groupe_Administratif::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {

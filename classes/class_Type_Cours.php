@@ -22,7 +22,7 @@
 				$req->closeCursor();
 				
 				foreach (Type_Cours::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -131,7 +131,7 @@
 				foreach ($liste_type_salle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
-					echo $tab."\t\t<th>$nomType_Salle</th>\n";
+					echo $tab."\t\t<th>".$nomType_Salle."</th>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
@@ -141,7 +141,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (Type_Cours::$attributs as $att) {
 						echo $tab."\t\t<td>".$Type_Cours->$att."</td>\n";
 					}
@@ -158,8 +158,8 @@
 					}
 					
 					if ($administration) {
-						$pageModification = "./index.php?page=ajoutTypeCours&amp;modifier_type_cours=$idTypeCours";
-						$pageSuppression = "./index.php?page=ajoutTypeCours&amp;supprimer_type_cours=$idTypeCours";
+						$pageModification = "./index.php?page=ajoutTypeCours&amp;modifier_type_cours=".$idTypeCours;
+						$pageSuppression = "./index.php?page=ajoutTypeCours&amp;supprimer_type_cours=".$idTypeCours;
 						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
 							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
@@ -213,37 +213,19 @@
 		}
 		
 		public static function supprimer_type_cours($idTypeCours) {
-			//Suppression des entrées de la table "Appartient_TypeSalle_TypeCours
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("DELETE FROM ".Appartient_TypeSalle_TypeCours::$nomTable." WHERE idTypeCours=?;");
+				$req = $bdd->prepare("DELETE FROM ".Type_Cours::$nomTable." WHERE id=?;");
 				$req->execute(
 					Array(
 						$idTypeCours
 					)
 				);
-				
-				//Suppression du type de cours
-				try {
-					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
-					$bdd->query("SET NAMES utf8");
-					$req = $bdd->prepare("DELETE FROM ".Type_Cours::$nomTable." WHERE id=?;");
-					$req->execute(
-						Array(
-							$idTypeCours
-						)
-					);
-				}
-				catch (Exception $e) {
-					echo "Erreur : ".$e->getMessage()."<br />";
-				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
-			}	
+			}
 		}
 		
 		public function formulaireAjoutTypeCours($nombresTabulations = 0) {
@@ -269,7 +251,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -281,7 +263,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -374,21 +356,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}			
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Type_Cours::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Type_Cours::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Type_Cours::$nomTable);
 		}
 	}

@@ -55,7 +55,7 @@
 				$req->closeCursor();
 				
 				foreach (Options::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 				
 			} catch (Exception $e) {

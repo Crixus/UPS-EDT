@@ -38,7 +38,7 @@
 				$req->closeCursor();
 				
 				foreach (Promotion::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -189,7 +189,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -224,20 +224,20 @@
 		}
 		
 		public function dateCours($dateDebut, $dateFin) {
-			$chaineDateDebut = explode(' ',$dateDebut);
-			$chaineJMADebut = explode('-',$chaineDateDebut[0]);
+			$chaineDateDebut = explode(' ', $dateDebut);
+			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
 
-			$chaineDateFin = explode(' ',$dateFin);
-			$chaineJMAFin = explode('-',$chaineDateFin[0]);
+			$chaineDateFin = explode(' ', $dateFin);
+			$chaineJMAFin = explode('-', $chaineDateFin[0]);
 			
 			if ($chaineJMADebut[2] == $chaineJMAFin[2]) {
-				echo Promotion::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Promotion::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 			}
 			else {
 				echo "Du ";
-				echo Promotion::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Promotion::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 				echo " au ";
-				echo Promotion::getDate($chaineJMAFin[2],$chaineJMAFin[1],$chaineJMAFin[0]);
+				echo Promotion::getDate($chaineJMAFin[2], $chaineJMAFin[1], $chaineJMAFin[0]);
 			}
 		}
 		
@@ -319,7 +319,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -372,7 +372,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";

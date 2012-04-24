@@ -8,7 +8,6 @@
 	
 	// Informations de base de données + Utils
 	include_once('./includes/infos_bdd.php');
-	include_once('./classes/class_Utils_SQL.php');
 	
 	// Importation des classes (phase dev : a la fin les mettres 1 par 1 pour eviter de charger le serveur)
 	$repertoire = opendir("./classes/");
@@ -37,7 +36,7 @@
 		$_SESSION['Utilisateur'] = unserialize($_SESSION['Utilisateur_Serialize']);
 	}
 	
-	require('./fpdf.php');
+	require('./lib/fpdf.php');
 	
 	class EDT_PDF extends FPDF {
 		function Header() {

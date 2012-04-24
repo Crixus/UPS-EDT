@@ -11,10 +11,21 @@
 		);
 		
 		
-		public function getId() { return $this->id; }
-		public function getIdIntervenant() { return $this->idIntervenant; }
-		public function getTsDebut() { return $this->tsDebut; }
-		public function getTsFin() { return $this->tsFin; }
+		public function getId() { 
+			return $this->id; 
+		}
+		
+		public function getIdIntervenant() {
+			return $this->idIntervenant;
+		}
+		
+		public function getTsDebut() {
+			return $this->tsDebut;
+		}
+		
+		public function getTsFin() {
+			return $this->tsFin;
+		}
 		
 		
 		public function Creneau_Intervenant($id) {
@@ -30,7 +41,7 @@
 				$req->closeCursor();
 				
 				foreach (Creneau_Intervenant::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -170,7 +181,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -217,25 +228,25 @@
 		}
 		
 		public function dateCreneauIntervenant($dateDebut, $dateFin) {
-			$chaineDateDebut = explode(' ',$dateDebut);
-			$chaineJMADebut = explode('-',$chaineDateDebut[0]);
-			$chaineHMSDebut = explode(':',$chaineDateDebut[1]);
+			$chaineDateDebut = explode(' ', $dateDebut);
+			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
+			$chaineHMSDebut = explode(':', $chaineDateDebut[1]);
 
-			$chaineDateFin = explode(' ',$dateFin);
-			$chaineJMAFin = explode('-',$chaineDateFin[0]);
-			$chaineHMSFin = explode(':',$chaineDateFin[1]);
+			$chaineDateFin = explode(' ', $dateFin);
+			$chaineJMAFin = explode('-', $chaineDateFin[0]);
+			$chaineHMSFin = explode(':', $chaineDateFin[1]);
 			
 			if ($chaineJMADebut[2] == $chaineJMAFin[2]) {
 				echo "Le ";
-				echo Creneau_Intervenant::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Creneau_Intervenant::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 				echo " de {$chaineHMSDebut[0]}h{$chaineHMSDebut[1]}";
 				echo " à {$chaineHMSFin[0]}h{$chaineHMSFin[1]}";
 			}
 			else {
 				echo "Du ";
-				echo Creneau_Intervenant::getDate($chaineJMADebut[2],$chaineJMADebut[1],$chaineJMADebut[0]);
+				echo Creneau_Intervenant::getDate($chaineJMADebut[2], $chaineJMADebut[1], $chaineJMADebut[0]);
 				echo " {$chaineHMSDebut[0]}h{$chaineHMSDebut[1]} au ";
-				echo Creneau_Intervenant::getDate($chaineJMAFin[2],$chaineJMAFin[1],$chaineJMAFin[0]);
+				echo Creneau_Intervenant::getDate($chaineJMAFin[2], $chaineJMAFin[1], $chaineJMAFin[0]);
 				echo " {$chaineHMSFin[0]}h{$chaineHMSFin[1]}";
 			}
 		}
@@ -320,7 +331,7 @@
 				$hidden = "";
 			}
 			
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			
@@ -463,7 +474,7 @@
 				
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
 				for ($i=1; $i<=52; $i++) {
-					echo $tab."\t\t\t\t\t<option value=\"$i\">$i</option>\n";					
+					echo $tab."\t\t\t\t\t<option value=\"".$i."\">".$i."</option>\n";					
 				}
 				echo $tab."\t\t\t\t</select> (en semaines)\n";
 				echo $tab."\t\t\t</td>\n";
@@ -472,7 +483,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -487,15 +498,15 @@
 			if (isset($_POST['validerAjoutCreneauIntervenant']) || isset($_POST['validerModificationCreneauIntervenant'])) {
 				// Vérification des champs
 				$idIntervenant = $_POST['intervenant'];
-				$idIntervenant_correct = true;
+				$idIntervenantCorrect = true;
 				$dateDebut = $_POST['dateDebut'];
-				$dateDebut_correct = true;
+				$dateDebutCorrect = true;
 				$heureDebut = $_POST['heureDebut'];
-				$heureDebut_correct = true;
+				$heureDebutCorrect = true;
 				$minuteDebut = $_POST['minuteDebut'];
-				$minuteDebut_correct = true;
+				$minuteDebutCorrect = true;
 				$dateFin = $_POST['dateFin'];
-				$dateFin_correct = true;
+				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
 				$heureFin_correct = true;
 				$minuteFin = $_POST['minuteFin'];
@@ -506,7 +517,7 @@
 					// Ajout d'un nouveau creneau intervenant
 					$recursivite = $_POST['recursivite'];
 					$recursivite_correct = true;
-					if ($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
+					if ($idIntervenantCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Intervenant::ajouter_creneauIntervenant($idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
 						array_push($messagesNotifications, "Le creneau intervenant a bien été ajouté");
 						$validation_ajout = true;
@@ -516,7 +527,7 @@
 					// Modification d'un creneau intervenant
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = Creneau_Intervenant::existe_creneauIntervenant($id);
-					if ($idIntervenant_correct && $dateDebut_correct && $heureDebut_correct && $minuteDebut_correct && $dateFin_correct && $heureFin_correct && $minuteFin_correct) {	
+					if ($idIntervenantCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Intervenant::modifier_creneauIntervenant($_GET['modifier_creneauIntervenant'], $idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 						array_push($messagesNotifications, "Le creneau intervenant a bien été modifié");
 						$validation_ajout = true;
@@ -529,7 +540,7 @@
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id du creneau intervenant n'est pas correct, contacter un administrateur");
 					}
-					if (!$idIntervenant_correct) {
+					if (!$idIntervenantCorrect) {
 						array_push($messagesErreurs, "L'intervenant n'est pas correcte");
 					}
 				}

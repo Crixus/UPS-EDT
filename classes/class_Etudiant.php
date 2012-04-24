@@ -35,7 +35,7 @@
 				$req->closeCursor();
 				
 				foreach (Etudiant::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -102,7 +102,7 @@
 				$req->execute(
 					Array($idEtudiant)
 				);
-				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Etudiant",$idEtudiant);
+				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Etudiant", $idEtudiant);
 				Utilisateur::supprimer_utilisateur($idUtilisateur);
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -161,7 +161,7 @@
 				$hidden = "";
 			}
 		
-			echo $tab."<h2>$titre</h2>\n";
+			echo $tab."<h2>".$titre."</h2>\n";
 			echo $tab."<form method=\"post\">\n";
 			echo $tab."\t<table>\n";
 			echo $tab."\t\t<tr>\n";
@@ -218,7 +218,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";

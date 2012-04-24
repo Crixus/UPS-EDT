@@ -52,7 +52,7 @@
 				$req->closeCursor();
 				
 				foreach (V_Infos_Seance_Promotion::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {

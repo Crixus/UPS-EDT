@@ -38,7 +38,7 @@
 				$req->closeCursor();
 				
 				foreach (Seance::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -166,7 +166,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
@@ -265,7 +265,7 @@
 			else if ($nbTypeCours == 0)
 				echo $tab."<h2>Vous devez d'aboir créer des types de cours avant de créer des séances</h2><br/><br/>\n";
 			else {
-				echo $tab."<h2>$titre</h2>\n";
+				echo $tab."<h2>".$titre."</h2>\n";
 				echo $tab."<form method=\"post\">\n";
 				echo $tab."\t<table>\n";
 				echo $tab."\t\t<tr>\n";
@@ -360,7 +360,7 @@
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td></td>\n";
-				echo $tab."\t\t\t<td>$hidden<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t</table>\n";
@@ -384,7 +384,7 @@
 				$typeCours = $_POST['typeCours'];
 				$typeCours_correct = true;
 				$idIntervenant = $_POST['intervenant'];
-				$idIntervenant_correct = true;
+				$idIntervenantCorrect = true;
 				$idSalle = $_POST['salle'];
 				$idSalle_correct = true;
 				$idSeancePrecedente = $_POST['seancePrecedente'];
@@ -393,7 +393,7 @@
 				$validation_ajout = false;
 				if (isset($_POST['validerAjoutSeance'])) {
 					// Ajout d'une nouvelle seance
-					if ($nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
 						Seance::ajouter_seance($nom, $duree, 0, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);				
 						array_push($messagesNotifications, "La séance a bien été ajouté");
 						$validation_ajout = true;
@@ -403,7 +403,7 @@
 					// Modification d'une nouvelle seance
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($idCorrect && $nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenant_correct && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($idCorrect && $nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
 						Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
 						array_push($messagesNotifications, "La séance a bien été modifié");
 						$validation_ajout = true;

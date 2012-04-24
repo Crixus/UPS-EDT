@@ -19,7 +19,7 @@
 				$req->closeCursor();
 				
 				foreach (Appartient_Etudiant_GroupeAdministratif::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {

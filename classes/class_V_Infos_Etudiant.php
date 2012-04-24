@@ -28,7 +28,7 @@
 				$req->closeCursor();
 				
 				foreach (V_Infos_Etudiant::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -127,7 +127,7 @@
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
-					echo $tab."\t<tr class=\"$couleurFond\">\n";
+					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (V_Infos_Etudiant::$attributs as $att) {
 						if ($att == "notificationsActives") { 
 							$checked = ($Etudiant->$att) ? "checked = \"checked\"" : "";

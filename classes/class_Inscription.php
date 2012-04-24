@@ -19,7 +19,7 @@
 				$req->closeCursor();
 				
 				foreach (Inscription::$attributs as $att) {
-					$this->$att = $ligne["$att"];
+					$this->$att = $ligne[$att];
 				}
 			}
 			catch (Exception $e) {
@@ -64,7 +64,7 @@
 					
 					$Etudiant = new Etudiant($idEtudiant);
 					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
-					echo $tab."\t\t<td class=\"$couleurFond\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
+					echo $tab."\t\t<td class=\"".$couleurFond."\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
 					
 					foreach ($liste_UE as $idUE) {
 						$UE = new UE($idUE);
@@ -75,7 +75,7 @@
 						else
 							$checked = "";
 								
-						echo $tab."\t\t<td class=\"$couleurFond\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE({$idEtudiant},{$idUE},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+						echo $tab."\t\t<td class=\"".$couleurFond."\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"inscription_UE({$idEtudiant},{$idUE},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						
 					}
 					echo $tab."\t</tr>\n";
