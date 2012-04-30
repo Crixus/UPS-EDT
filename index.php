@@ -7,16 +7,12 @@
 	}
 	
 	// Informations de base de données + Utils
-	include_once('./includes/infos_bdd.php');
-	include_once('./classes/class_Utils_SQL.php');
+	require_once('./includes/infos_bdd.php');
+	require_once('./includes/infos_motDePasse.php');
 	
-	// Importation des classes (phase dev : a la fin les mettres 1 par 1 pour eviter de charger le serveur)
-	$repertoire = opendir("./classes/");
-	while ($fichier = readdir($repertoire)) {
-		if ($fichier != '..' && $fichier != '.') {
-			include_once("./classes/" . $fichier);
-		}
-	}
+	require_once('./includes/fonctions.php');
+	
+	importerClasses();
 	
 	if (!isset($_GET['semaine'])) {
 		$debutSemaine = EmploiDuTemps::timestamp_debut_semaine(time());

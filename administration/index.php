@@ -1,16 +1,12 @@
 <?php
 	// Informations de base de données
 	include_once('../includes/infos_bdd.php');
+	require_once('../includes/fonctions.php');
+	
 	$messagesNotifications = Array();
 	$messagesErreurs = Array();
 	
-	// Importation des classes
-	$repertoire = opendir("../classes/");
-	while ($fichier = readdir($repertoire)) {
-		if ($fichier != '..' && $fichier != '.') {
-			include_once("../classes/" . $fichier);
-		}
-	}
+	importerClasses();
 	
 	// Test de sécurité
 	include_once("./securite.php");

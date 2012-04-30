@@ -69,17 +69,26 @@
 		/**
 		 * Renvoi l'id de l'Utilisateur si le login et le motDePasse sont corrects, false sinon
 		 */
-		public static function identification($login, $motDePasse) {
+		public static function identification($login, $motDePasse = null) {
 			$motDePasse = md5($motDePasse);
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login=? AND motDePasse=?";
-				$req = $bdd->prepare($requete);
-				$req->execute(
-					Array($login, $motDePasse)
+				if (defined('MOT_DE_PASSE_ACTIF') && MOT_DE_PASSE_ACTIF == 1) {
+					$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login=? AND motDePasse=?";
+					$req = $bdd->prepare($requete);
+					$req->execute(
+						Array($login, $motDePasse)
 					);
+				}
+				else {
+					$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login=?";
+					$req = $bdd->prepare($requete);
+					$req->execute(
+						Array($login)
+					);
+				}
 				$nbResultat = $req->rowCount();
 				switch ($nbResultat) {
 					case 0:

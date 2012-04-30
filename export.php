@@ -8,14 +8,9 @@
 	
 	// Informations de base de données + Utils
 	include_once('./includes/infos_bdd.php');
+	include_once('./includes/fonctions.php');
 	
-	// Importation des classes (phase dev : a la fin les mettres 1 par 1 pour eviter de charger le serveur)
-	$repertoire = opendir("./classes/");
-	while ($fichier = readdir($repertoire)) {
-		if ($fichier != '..' && $fichier != '.') {
-			include_once("./classes/" . $fichier);
-		}
-	}
+	importerClasses();
 	
 	// Serialisation / Unserialisation / Variable de Session Utilisateur (necessaire quand la variable de session est un objet
 	// ATTENTION SI MISE A JOUR D'ETUDIANT !!!
