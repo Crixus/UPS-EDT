@@ -2,4 +2,4 @@
 <?php
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Creneau_Intervenant::page_administration(5); 
+	Creneau_Intervenant::pageAdministration(5); 

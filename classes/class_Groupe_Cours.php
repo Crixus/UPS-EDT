@@ -330,7 +330,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Groupe_Cours::formulaireAjoutGroupeCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des groupes de cours</h2>\n";

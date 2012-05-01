@@ -2,4 +2,4 @@
 <?php
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Cours::page_administration(1);
+	Cours::pageAdministration(1);

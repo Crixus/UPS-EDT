@@ -2,4 +2,4 @@
 <?php 
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Batiment::page_administration(5); 
+	Batiment::pageAdministration(5); 

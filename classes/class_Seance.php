@@ -226,7 +226,7 @@
 			$nbUE = sizeof($liste_UE_promotion);
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbTypeCours = sizeof($liste_type_cours);
-			$liste_intervenant = Intervenant::liste_intervenant();
+			$liste_intervenant = Intervenant::listeIdIntervenants();
 			$liste_seance_precedente_promotion = V_Infos_Seance_Promotion::liste_seance($idPromotion);
 			
 			if (isset($_GET['modifier_seance'])) { 
@@ -439,7 +439,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Seance::formulaireAjoutSeance($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des séances enregistrée</h2>\n";

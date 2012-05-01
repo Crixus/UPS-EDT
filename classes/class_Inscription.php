@@ -62,8 +62,8 @@
 					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
-					$Etudiant = new Etudiant($idEtudiant);
-					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
+					$_etudiant = new Etudiant($idEtudiant);
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_etudiant->getPrenom()." ".$_etudiant->getNom()."</td>\n";
 					echo $tab."\t\t<td class=\"".$couleurFond."\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
 					
 					foreach ($liste_UE as $idUE) {

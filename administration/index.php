@@ -67,6 +67,7 @@
 	Type_Salle::prise_en_compte_suppression();
 	UE::prise_en_compte_formulaire();
 	UE::prise_en_compte_suppression();
+	Utilisateur::priseEnCompteFormulaires();
 	
 	Creneau_Intervenant::prise_en_compte_formulaire();
 	Creneau_Intervenant::prise_en_compte_suppression();

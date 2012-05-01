@@ -306,7 +306,7 @@
 		// Formulaire
 		public function formulaireAjoutCreneauIntervenant($nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
-			$liste_intervenant = Intervenant::liste_intervenant();
+			$liste_intervenant = Intervenant::listeIdIntervenants();
 			
 			if (isset($_GET['modifier_creneauIntervenant'])) { 
 				$titre = "Modifier un creneau de disponibilité pour un intervenant";
@@ -562,7 +562,7 @@
 		}
 		
 		
-		public static function page_administration($nombreTabulations = 0) {			
+		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Creneau_Intervenant::formulaireAjoutCreneauIntervenant($nombreTabulations + 1);
 			echo $tab."<h2>Liste des creneaux de disponibilités des intervenants</h2>\n";

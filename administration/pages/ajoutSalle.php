@@ -2,4 +2,4 @@
 <?php 
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Salle::page_administration(5); 
+	Salle::pageAdministration(5); 

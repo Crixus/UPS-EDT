@@ -327,7 +327,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			Type_Cours::formulaireAjoutTypeCours($nombreTabulations + 1);
 			echo $tab."<h2>Liste des types de cours</h2>\n";

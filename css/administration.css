@@ -109,6 +109,10 @@ div#page_administration section table.table_liste_administration td{
 	padding:5px;
 }
 
+div#page_administration section table.table_liste_administration th {
+	background-color:#cfcfcf;
+}
+
 div#page_administration section form{
 	margin: 0px 0px 10px 0px;
 }

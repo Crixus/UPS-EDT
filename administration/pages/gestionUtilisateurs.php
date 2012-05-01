@@ -2,5 +2,5 @@
 <?php
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Utilisateur::page_administration(1); 
+	Utilisateur::pageAdministration(1); 
 

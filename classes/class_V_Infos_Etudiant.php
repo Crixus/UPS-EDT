@@ -123,19 +123,19 @@
 				
 				$cpt = 0;
 				foreach ($liste_etudiant as $idEtudiant) {
-					$Etudiant = new V_Infos_Etudiant($idEtudiant);
+					$_etudiant = new V_Infos_Etudiant($idEtudiant);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (V_Infos_Etudiant::$attributs as $att) {
 						if ($att == "notificationsActives") { 
-							$checked = ($Etudiant->$att) ? "checked = \"checked\"" : "";
+							$checked = ($_etudiant->$att) ? "checked = \"checked\"" : "";
 							$nomCheckbox = "{$idEtudiant}_notifications";
 							echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idEtudiant}_notifications\" value=\"{$idEtudiant}\" onclick=\"etudiant_notificationsActives({$idEtudiant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						}
 						else
-							echo $tab."\t\t<td>".$Etudiant->$att."</td>\n";
+							echo $tab."\t\t<td>".$_etudiant->$att."</td>\n";
 					}
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutEtudiant&amp;modifier_etudiant=$idEtudiant";

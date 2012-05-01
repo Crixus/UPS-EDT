@@ -438,7 +438,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			JourNonOuvrable::formulaireAjoutJourNonOuvrable($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des jours non ouvrables enregistrée</h2>\n";

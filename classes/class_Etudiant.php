@@ -151,6 +151,30 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste d'id des Etudiants
+		 */
+		public static function listeIdEtudiants($orderBy = "nom, prenom") {
+			$listeId = Array();
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$bdd->query("SET NAMES utf8");
+				$req = $bdd->prepare("SELECT id FROM ".Etudiant::$nomTable." ORDER BY ?");
+				$req->execute(
+					Array($orderBy)
+					);
+				while ($ligne = $req->fetch()) {
+					array_push($listeId, $ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch (Exception $e) {
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeId;
+		}
+		
 		public function formulaireAjoutEtudiant($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_specialite = Specialite::liste_specialite($idPromotion);			
@@ -328,7 +352,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {			
+		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Etudiant::formulaireAjoutEtudiant($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des étudiants</h2>\n";

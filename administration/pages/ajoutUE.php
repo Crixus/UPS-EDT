@@ -2,4 +2,4 @@
 <?php
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	UE::page_administration(5); 
+	UE::pageAdministration(5); 

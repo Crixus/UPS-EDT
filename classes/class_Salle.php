@@ -419,7 +419,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Salle::formulaireAjoutModificationSalle($nombreTabulations);
 			echo $tab."<h2>Liste des salles</h2>\n";

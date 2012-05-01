@@ -381,7 +381,7 @@
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
 			$nbUE = sizeof($liste_UE_promotion);
-			$liste_intervenant = Intervenant::liste_intervenant();
+			$liste_intervenant = Intervenant::listeIdIntervenants();
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbTypeCours = sizeof($liste_type_cours);
 			
@@ -711,7 +711,7 @@
 			}
 		}
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des cours à venir</h2>\n";

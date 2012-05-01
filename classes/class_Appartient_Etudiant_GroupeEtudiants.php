@@ -61,8 +61,8 @@
 					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
-					$Etudiant = new Etudiant($idEtudiant);
-					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Etudiant->getPrenom()." ".$Etudiant->getNom()."</td>\n";
+					$_etudiant = new Etudiant($idEtudiant);
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_etudiant->getPrenom()." ".$_etudiant->getNom()."</td>\n";
 					
 					foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
 						$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);

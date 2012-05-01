@@ -2,4 +2,4 @@
 <?php
 	afficherNotifications(5);
 	afficher_erreurs(5);
-	Promotion::page_administration(1); 
+	Promotion::pageAdministration(1); 

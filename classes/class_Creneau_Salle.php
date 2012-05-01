@@ -553,7 +553,7 @@
 		}
 		
 		
-		public static function page_administration($nombreTabulations = 0) {			
+		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Creneau_Salle::formulaireAjoutCreneauSalle($nombreTabulations + 1);
 			echo $tab."<h2>Liste des creneaux de disponibilités des salles</h2>\n";

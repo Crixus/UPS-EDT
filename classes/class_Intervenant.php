@@ -185,7 +185,7 @@
 			return $listeIdUE;		
 		}
 		
-		public static function liste_intervenant() {
+		public static function listeIdIntervenants() {
 			$listeId = Array();
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -204,7 +204,7 @@
 		}
 		
 		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0) {
-			$liste_intervenant = Intervenant::liste_intervenant();			
+			$liste_intervenant = Intervenant::listeIdIntervenants();			
 			$nbre_intervenant = sizeof($liste_intervenant);
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
@@ -424,7 +424,7 @@
 			}
 		}		
 		
-		public static function page_administration($nombreTabulations = 0) {
+		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Intervenant::formulaireAjoutIntervenant($nombreTabulations);
 			echo $tab."<h2>Liste des intervenants</h2>\n";
