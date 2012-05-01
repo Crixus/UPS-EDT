@@ -55,7 +55,7 @@ div#page_administration nav ul{
 
 div#page_administration section{
 	background-color:white;
-	min-height:450px;
+	min-height:600px;
 	padding: 20px;
 	border-left: solid 1px black;
 	overflow-x:auto;

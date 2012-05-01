@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Etudiant - Permet de gérer les Etudiants
+	 */ 
 	class Etudiant {
 		
 		public static $nomTable = "Etudiant";
@@ -14,13 +17,33 @@
 			"idPromotion"
 		);
 		
-		public function getId() { return $this->id; }
-		public function getNumeroEtudiant() { return $this->numeroEtudiant; }
-		public function getNom() { return $this->nom; }
-		public function getPrenom() { return $this->prenom; }
-		public function getEmail() { return $this->email; }
-		public function getTelephone() { return $this->telephone; }
-		public function getIdSpecialite() { return $this->idSpecialite; }
+		public function getId() {
+			return $this->id; 
+		}
+		
+		public function getNumeroEtudiant() {
+			return $this->numeroEtudiant;
+		}
+		
+		public function getNom() {
+			return $this->nom;
+		}
+		
+		public function getPrenom() {
+			return $this->prenom;
+		}
+		
+		public function getEmail() {
+			return $this->email;
+		}
+		
+		public function getTelephone() {
+			return $this->telephone;
+		}
+		
+		public function getIdSpecialite() {
+			return $this->idSpecialite;
+		}
 		
 		public function Etudiant($id) {
 			try {
@@ -64,7 +87,7 @@
 				);
 				
 				//On créé maintenant l'Utilisateur associé
-				Utilisateur::creer_utilisateur($prenom, $nom, "Etudiant", $bdd->lastInsertId());
+				Utilisateur::creerUtilisateur($prenom, $nom, "Etudiant", $bdd->lastInsertId());
 			}
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -102,8 +125,8 @@
 				$req->execute(
 					Array($idEtudiant)
 				);
-				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Etudiant", $idEtudiant);
-				Utilisateur::supprimer_utilisateur($idUtilisateur);
+				$idUtilisateur = Utilisateur::idDepuisTypeEtIdCorrespondant("Etudiant", $idEtudiant);
+				Utilisateur::supprimerUtilisateur($idUtilisateur);
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
@@ -134,13 +157,13 @@
 			
 			if (isset($_GET['modifier_etudiant'])) { 
 				$titre = "Modifier un étudiant";
-				$Etudiant = new Etudiant($_GET['modifier_etudiant']);
-				$numeroEtudiantModif = "value=\"{$Etudiant->getNumeroEtudiant()}\"";
-				$nomModif = "value=\"{$Etudiant->getNom()}\"";
-				$prenomModif = "value=\"{$Etudiant->getPrenom()}\"";
-				$emailModif = "value=\"{$Etudiant->getEmail()}\"";
-				$telephoneModif = "value=\"{$Etudiant->getTelephone()}\"";
-				$idSpecialiteModif = $Etudiant->getIdSpecialite();
+				$_etudiant = new Etudiant($_GET['modifier_etudiant']);
+				$numeroEtudiantModif = "value=\"{$_etudiant->getNumeroEtudiant()}\"";
+				$nomModif = "value=\"{$_etudiant->getNom()}\"";
+				$prenomModif = "value=\"{$_etudiant->getPrenom()}\"";
+				$emailModif = "value=\"{$_etudiant->getEmail()}\"";
+				$telephoneModif = "value=\"{$_etudiant->getTelephone()}\"";
+				$idSpecialiteModif = $_etudiant->getIdSpecialite();
 				$valueSubmit = "Modifier l'étudiant"; 
 				$nameSubmit = "validerModificationEtudiant";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_etudiant']}\" />";

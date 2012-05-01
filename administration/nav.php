@@ -53,6 +53,17 @@
 						</li>
 					</ul>
 					
+					<h1>Gestion des utilisateurs</h1>
+					<ul>
+						<li>
+							<a href="?page=gestionUtilisateurs<?php if (isset($_GET['idPromotion'])) {
+								echo "&amp;idPromotion=" . $_GET['idPromotion'];
+							}?>" >
+								Gestion des utilisateurs
+							</a>
+						</li>
+					</ul>
+					
 					<h1>Gestion des intervenants</h1>
 					<ul>
 						<li>

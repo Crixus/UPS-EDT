@@ -63,7 +63,7 @@
 				);
 				
 				//On créé maintenant l'Utilisateur associé
-				Utilisateur::creer_utilisateur($prenom, $nom, "Intervenant", $bdd->lastInsertId());
+				Utilisateur::creerUtilisateur($prenom, $nom, "Intervenant", $bdd->lastInsertId());
 			}
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
@@ -118,8 +118,8 @@
 					Array($idIntervenant)
 				);
 				
-				$idUtilisateur = Utilisateur::id_depuis_type_et_idCorrespondant("Intervenant", $idIntervenant);
-				Utilisateur::supprimer_utilisateur($idUtilisateur);
+				$idUtilisateur = Utilisateur::idDepuisTypeEtIdCorrespondant("Intervenant", $idIntervenant);
+				Utilisateur::supprimerUtilisateur($idUtilisateur);
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}

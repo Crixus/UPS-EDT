@@ -10,13 +10,13 @@
 			"id",
 			"login",
 			"motDePasse",
-			"type", // Etudiant, Intervenant
+			"type", // Etudiant, Intervenant, Administrateur
 			"idCorrespondant"
 		);
 		
 		/**
 		 * Getter de l'id de l'Utilisateur
-		 * @return int id de l'Utilisateur
+		 * @return int : id de l'Utilisateur
 		 */
 		public function getId() { 
 			return $this->id;
@@ -24,7 +24,7 @@
 		
 		/**
 		 * Getter du login
-		 * @return String du login
+		 * @return String : login
 		 */
 		public function getLogin() {
 			return $this->login;
@@ -32,20 +32,33 @@
 		
 		/**
 		 * Getter du motDePasse
-		 * @return String du motDePasse
+		 * @return String : motDePasse
 		 */
 		public function getMotDePasse() {
 			return $this->motDePasse;
 		}
 		
+		/**
+		 * Getter du type
+		 * @return String : type de l'utilisateur
+		 */
 		public function getType() {
 			return $this->type;
 		}
 		
+		/**
+		 * Getter de l'idCorrespondant 
+		 * @return int : idCorrespondant
+		 */
 		public function getIdCorrespondant() {
 			return $this->idCorrespondant;
 		}
 		
+		/**
+		 * Constructeur de la classe Utilisateur depuis l'id
+		 * Récupère les informations de Utilisateur dans la base de données depuis l'id
+		 * @param $id int : id de l'Utilisateur
+		 */
 		public function Utilisateur($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -68,6 +81,9 @@
 		
 		/**
 		 * Renvoi l'id de l'Utilisateur si le login et le motDePasse sont corrects, false sinon
+		 * @param $login string : login de l'utilisateur
+		 * @param $motDePasse : motDePasse de l'utilisateur
+		 * @return int : id de l'Utilisateur, false sinon
 		 */
 		public static function identification($login, $motDePasse = null) {
 			$motDePasse = md5($motDePasse);
@@ -81,8 +97,7 @@
 					$req->execute(
 						Array($login, $motDePasse)
 					);
-				}
-				else {
+				} else {
 					$requete = "SELECT id FROM ".Utilisateur::$nomTable." WHERE login=?";
 					$req = $bdd->prepare($requete);
 					$req->execute(
@@ -108,7 +123,14 @@
 			}
 		}
 		
-		public static function ajouter_Utilisateur($login, $motDePasse, $type, $idCorrespondant) {
+		/**
+		 * Ajoute un utilisateur dans la base de données
+		 * @param $login String : login de l'utilisateur
+		 * @param $motDePasse String : motDePasse de l'utilisateur (md5)
+		 * @param $type String : type de l'utilisateur
+		 * @param $idCorrespondant int : idCorrespondant
+		 */
+		public static function ajouterUtilisateur($login, $motDePasse, $type, $idCorrespondant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -123,23 +145,15 @@
 			}
 		}
 		
-		public static function creer_utilisateur($prenom, $nom, $type, $idCorrespondant) {
-			switch ($type) {
-				case "Etudiant":
-					$Destinataire = new Etudiant($idCorrespondant);
-					break;
-				case "Intervenant":
-					$Destinataire = new Intervenant($idCorrespondant);
-					break;
-			}
-			$login = Utilisateur::gererer_login($prenom, $nom);
-			$motDePasse = MotDePasse::genererMotDePasse();
-			Mail::envoyer_creation_utilisateur($Destinataire->getEmail(), $login, $motDePasse);
-			$motDePasse = MotDePasse::crypterMd5($motDePasse); 
-			Utilisateur::ajouter_Utilisateur($login, $motDePasse, $type, $idCorrespondant);
-		}
-		
-		public static function modifier_Utilisateur($id, $login, $motDePasse, $type, $idCorrespondant) {
+		/**
+		 * Modifi un utilisateur dans la base de données 
+		 * @param $id int : id de l'utilisateur à modifier
+		 * @param $login String : login de l'utilisateur
+		 * @param $motDePasse String : motDePasse de l'utilisateur (md5)
+		 * @param $type String : type de l'utilisateur
+		 * @param $idCorrespondant int : idCorrespondant
+		 */
+		public static function modifierUtilisateur($id, $login, $motDePasse, $type, $idCorrespondant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -159,7 +173,11 @@
 			}
 		}
 		
-		public static function supprimer_utilisateur($id) {
+		/**
+		 * Supprime un utilisateur dans la base de données
+		 * @param $id int : id de l'utilisateur
+		 */
+		public static function supprimerUtilisateur($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -173,7 +191,13 @@
 			}
 		}
 		
-		public static function id_depuis_type_et_idCorrespondant($type, $idCorrespondant) {
+		/**
+		 * Retourne l'id de l'Utilisateur depuis son type et son idCorrespondant
+		 * @return int : id de l'utilisateur
+		 * @param $type string : type de l'utilisateur
+		 * @param $idCorrespondant int : idCorrespondant de l'utilisateur
+		 */
+		public static function idDepuisTypeEtIdCorrespondant($type, $idCorrespondant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -191,7 +215,39 @@
 			}
 		}
 		
-		public static function existe_login($login) {
+		/**
+		 * Creer un utilisateur (generation de login et mot de passe)
+		 * @return boolean : true si l'utilisateur est créé, false sinon
+		 * @param $prenom String : prenom de l'utilisateur
+		 * @param $nom String : nom de l'utilisateur
+		 * @param $type String : type de l'utilisateur
+		 * @param $idCorrespondant int : idCorrespondant de l'utilisateur
+		 */
+		public static function creerUtilisateur($prenom, $nom, $type, $idCorrespondant) {
+			switch ($type) {
+				case "Etudiant":
+					$destinataire = new Etudiant($idCorrespondant);
+					break;
+				case "Intervenant":
+					$destinataire = new Intervenant($idCorrespondant);
+					break;
+				default:
+					return false;
+			}
+			$login = Utilisateur::genererLogin($prenom, $nom);
+			$motDePasse = MotDePasse::genererMotDePasse();
+			Mail::envoyer_creation_utilisateur($destinataire->getEmail(), $login, $motDePasse);
+			$motDePasse = MotDePasse::crypterMd5($motDePasse); 
+			Utilisateur::ajouterUtilisateur($login, $motDePasse, $type, $idCorrespondant);
+			return true;
+		}
+		
+		/**
+		 * Verifi si un login existe
+		 * @return boolean : true si le login existe, false sinon
+		 * @param $login String : login à tester
+		 */
+		public static function existeLogin($login) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -202,18 +258,24 @@
 					);
 				$ligne = $req->fetch();
 				$req->closeCursor();
-				
 				return $ligne['nb'] == 1;
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
+				return false;
 			}
 		}
 		
-		public static function gererer_login($prenom, $nom) {
+		/**
+		 * Génère un login à partir d'un nom et prénom avec gestion des conflits
+		 * @return String : login généré
+		 * @param $prenom String : prenom de l'Utilisateur
+		 * @param $nom String : nom de l'Utilisateur
+		 */
+		public static function genererLogin($prenom, $nom) {
 			$login = strtolower($prenom)."_".strtolower($nom);
-			if (Utilisateur::existe_login($login)) {
+			if (Utilisateur::existeLogin($login)) {
 				$count = 2;
-				while (Utilisateur::existe_login($login."_".$count)) {
+				while (Utilisateur::existeLogin($login."_".$count)) {
 					$count++;
 				}
 				$login .= "_".$count;

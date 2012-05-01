@@ -16,7 +16,7 @@
 		"ajoutBatiment.php", "ajoutIntervenant.php", "ajoutPromotion.php", "ajoutSalle.php",
 		"ajoutTypeSalle.php", "ajoutUE.php", "ajoutTypeCours.php", "listeInscriptionsUE.php",
 		"styleTypeCours.php", "infosBatiment.php", "infosSalle.php", "ajoutCreneauSalle.php",
-		"ajoutCreneauIntervenant.php"
+		"ajoutCreneauIntervenant.php", "gestionUtilisateurs.php"
 	);
 	
 	// Test des pages accessible : promotion choisie ou non

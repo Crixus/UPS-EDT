@@ -28,10 +28,6 @@
 					   "X-Mailer: PHP/" . phpversion() . "\r\n".
 					   "Content-Type: text/plain; charset=\"UTF-8\"\r\n"; 
 			$message = $contenu;
-			echo "to :\n$to<br />";
-			echo "subject :$sujet<br />";
-			echo "headers :$headers<br />";
-			echo "message :$message<br />";
 			return mail($to, $subject, $message, $headers);
 		}
 		
