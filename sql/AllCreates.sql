@@ -11,6 +11,7 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `Options`;
 
+DROP TABLE IF EXISTS `Appartient_Utilisateur_Promotion`;
 DROP TABLE IF EXISTS `Utilisateur`;
 
 DROP TABLE IF EXISTS `Inscription`;
@@ -124,6 +125,14 @@ CREATE TABLE IF NOT EXISTS `Utilisateur` (
   UNIQUE (`login`),
   UNIQUE (`type`, `idCorrespondant`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `Appartient_Utilisateur_Promotion` (
+  `idUtilisateur` int(11) NOT NULL,
+  `idPromotion` int(11) NOT NULL,
+  PRIMARY KEY (`idUtilisateur`,`idPromotion`),
+  FOREIGN KEY (`idUtilisateur`) REFERENCES Utilisateur(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `Etudiant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
