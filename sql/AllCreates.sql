@@ -11,7 +11,6 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `Options`;
 
-DROP TABLE IF EXISTS `Appartient_Utilisateur_Promotion`;
 DROP TABLE IF EXISTS `Utilisateur`;
 
 DROP TABLE IF EXISTS `Inscription`;
@@ -55,6 +54,7 @@ DROP VIEW IF EXISTS `V_Liste_Specialite`;
 DROP VIEW IF EXISTS `V_Infos_UE`;
 DROP VIEW IF EXISTS `V_Infos_Cours_Etudiants`;
 DROP VIEW IF EXISTS `V_Infos_Seance_Promotion`;
+DROP VIEW IF EXISTS `V_Cours_Promotion`;
 
 CREATE TABLE IF NOT EXISTS `Promotion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -126,14 +126,6 @@ CREATE TABLE IF NOT EXISTS `Utilisateur` (
   UNIQUE (`type`, `idCorrespondant`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
-CREATE TABLE IF NOT EXISTS `Appartient_Utilisateur_Promotion` (
-  `idUtilisateur` int(11) NOT NULL,
-  `idPromotion` int(11) NOT NULL,
-  PRIMARY KEY (`idUtilisateur`,`idPromotion`),
-  FOREIGN KEY (`idUtilisateur`) REFERENCES Utilisateur(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`idPromotion`) REFERENCES Promotion(`id`) ON DELETE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 CREATE TABLE IF NOT EXISTS `Etudiant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `numeroEtudiant` int(11) NOT NULL,
@@ -191,6 +183,8 @@ CREATE TABLE IF NOT EXISTS `UE` (
   FOREIGN KEY (`idPromotion`) REFERENCES Promotion (`id`) ,
   UNIQUE (`nom`, `idPromotion`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+INSERT INTO `UE` (`id`, `nom`, `intitule`, `nbHeuresCours`, `nbHeuresTD`, `nbHeuresTP`, `ECTS`, `idResponsable`, `idPromotion`) VALUES
+(0, 'DEFAULT', 'DEFAULT', 0, 0, 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `Batiment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -242,6 +236,8 @@ CREATE TABLE IF NOT EXISTS `Type_Cours` (
   PRIMARY KEY (`id`),
   UNIQUE (`nom`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+INSERT INTO `Type_Cours` (`id`, `nom`) VALUES
+(0, 'DEFAULT');
 
 CREATE TABLE IF NOT EXISTS `Cours` (
    -- Si la salle est supprimée, alors on met la salle par defaut (vérifier que la salle par défaut est dans la BD)
@@ -267,18 +263,21 @@ CREATE TABLE IF NOT EXISTS `Seance` (
   `nom` varchar(50) NOT NULL,
   `duree` int(11) NOT NULL,
   `effectue` int(11) NOT NULL DEFAULT 0,
-  `idUE` int(11) NOT NULL,
+  `idUE` int(11) NOT NULL DEFAULT 0,
   `idSalle` int(11) NOT NULL DEFAULT 0,
   `idIntervenant` int(11) NOT NULL DEFAULT 0,
-  `idTypeCours` int(11) NOT NULL,
+  `idTypeCours` int(11) NOT NULL DEFAULT 0,
   `idSeancePrecedente` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`idUE`) REFERENCES UE(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`idSalle`) REFERENCES Salle(`id`),
   FOREIGN KEY (`idIntervenant`) REFERENCES Intervenant(`id`),
-  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`idSeancePrecedente`) REFERENCES Seance(`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+INSERT INTO `Seance` (`id`, `nom`, `duree`, `effectue`, `idUE`, `idSalle`, `idIntervenant`, `idTypeCours`, `idSeancePrecedente`) VALUES
+(0, '.....', 0, 0, 0, 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `Publication` (
   -- Si le groupe d'etudiant est supprimé, alors on supprime la publication
@@ -450,4 +449,21 @@ JOIN `Promotion` ON `UE`.`idPromotion` = `Promotion`.`id`
 GROUP BY `Seance`.`id`
 ORDER BY `idPromotion`, `nom`;
 
-
+CREATE VIEW `V_Cours_Promotion` AS
+SELECT DISTINCT Cours.id AS idCours, Promotion.id AS idPromotion, Cours.tsDebut AS tsDebut, Cours.tsFin as tsFin
+FROM Promotion
+	JOIN Etudiant 
+		ON Etudiant.idPromotion = Promotion.id
+	JOIN Appartient_Etudiant_GroupeEtudiants 
+		ON Appartient_Etudiant_GroupeEtudiants.idEtudiant = Etudiant.id
+	JOIN Groupe_Etudiants
+		ON Groupe_Etudiants.id = Appartient_Etudiant_GroupeEtudiants.idGroupeEtudiants
+	JOIN Publication
+		ON Publication.idGroupeEtudiants = Groupe_Etudiants.id
+	JOIN Groupe_Cours 
+		ON Groupe_Cours.id = Publication.idGroupeCours
+	JOIN Appartient_Cours_GroupeCours
+		ON Appartient_Cours_GroupeCours.idGroupeCours = Groupe_Cours.id
+	JOIN Cours
+		ON Cours.id = Appartient_Cours_GroupeCours.idCours
+ORDER BY Cours.tsDebut;

@@ -22,7 +22,9 @@
 			"idPromotion"
 		);
 		
-		public function getId() {return $this->id;}
+		public function getId() {
+			return $this->id;
+		}
 		public function getNom() {return $this->nom;}
 		public function getDuree() { return $this->duree; }
 		public function getEffectue() { return $this->effectue; }

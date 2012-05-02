@@ -11,9 +11,17 @@
 			"lon"
 		);
 		
-		public function getId() {return $this->id;}
-		public function getNomSalle() {return $this->nomSalle;}
-		public function getNomBatiment() {return $this->nomBatiment;}
+		public function getId() {
+			return $this->id;
+		}
+		
+		public function getNomSalle() {
+			return $this->nomSalle;
+		}
+		
+		public function getNomBatiment() {
+			return $this->nomBatiment;
+		}
 		
 		public function V_Liste_Salles($id) {
 			try {
