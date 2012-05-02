@@ -53,8 +53,8 @@
 		public function getTsDebut() { return $this->tsDebut; }
 		
 		/**
-		 * Getter de TsDebut du Cours
-		 * @return timestamp : TsDebut
+		 * Getter de tsFin du Cours
+		 * @return timestamp : tsFin
 		 */
 		public function getTsFin() { return $this->tsFin; }
 		
