@@ -45,6 +45,30 @@
 			return $listeId;
 		}
 		
+		public static function liste_id_cours_promotion_entre_dates($idPromotion, $tsDebut, $tsFin) {
+			$listeId = Array();
+			$tsDebut = date('Y-m-d', $tsDebut);
+			$tsFin = date('Y-m-d', $tsFin);
+			try {
+				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
+				$bdd->query("SET NAMES utf8");
+				$requete = "SELECT idCours FROM V_Cours_Promotion WHERE tsDebut > '" . $tsDebut . "' AND tsFin < '" . $tsFin . "' AND idPromotion=" . $idPromotion . " ORDER BY tsDebut;";
+				$req = $bdd->prepare($requete);
+				$req->execute(
+					Array($id, $tsDebut, $tsFin)
+				);
+				while ($ligne = $req->fetch()) {
+					array_push($listeId, $ligne['id']);
+				}
+				$req->closeCursor();
+			}
+			catch (Exception $e) {
+				echo "Erreur : ".$e->getMessage()."<br />";
+			}
+			return $listeId;
+		}
+		
 		/**
 		 * Renvoi le timestamp correspondant au lundi 00:00:00 (début de semaine) du timestamp en argument
 		 * @return int timestamp du debut de la semaine
@@ -68,6 +92,28 @@
 					"Mon" => Array(), "Tue" => Array(), "Wed" => Array(), "Thu" => Array(), "Fri" => Array(), "Sat" => Array(), "Sun" => Array()
 				);
 			$listeIdCoursSemaine = EmploiDuTemps::liste_id_cours_entre_dates($type, $id, $tsDebut, $tsDebut + 604799);
+			
+			foreach ($listeIdCoursSemaine as $idCours) {
+				$_cours = new Cours($idCours);
+				$jourDebut = date("D", strtotime($_cours->getTsDebut()));
+				$jourFin = date("D", strtotime($_cours->getTsFin()));
+				if ($jourDebut == $jourFin) {
+					array_push($joursDeLaSemaine[$jourDebut], $_cours->getId());
+				}
+				else {
+					// Gerer les cours sur plusieurs jours (les diviser)
+				}
+			}
+			return $joursDeLaSemaine;
+		}
+		
+		public static function cours_semaine_promotion($idPromotion, $tsDebut) {
+			// DIVISER LES COURS DE PLUSIEURS JOURS !!!
+			$joursDeLaSemaine = 
+				Array(
+					"Mon" => Array(), "Tue" => Array(), "Wed" => Array(), "Thu" => Array(), "Fri" => Array(), "Sat" => Array(), "Sun" => Array()
+				);
+			$listeIdCoursSemaine = EmploiDuTemps::liste_id_cours_promotion_entre_dates($idPromotion, $tsDebut, $tsDebut + 604799);
 			
 			foreach ($listeIdCoursSemaine as $idCours) {
 				$_cours = new Cours($idCours);
@@ -193,6 +239,11 @@
 		 */ 
 		public static function affichage_edt_semaine_table($type, $id, $tsDebut) {
 			$_cours_semaine = EmploiDuTemps::cours_semaine($type, $id, $tsDebut);
+			EmploiDuTemps::liste_cours_vers_affichage_semaine($_cours_semaine);
+		}
+		
+		public static function affichage_edt_semaine_promotion_table($idPromotion, $id, $tsDebut) {
+			$_cours_semaine = EmploiDuTemps::cours_semaine_promotion($idPromotion, $tsDebut);
 			EmploiDuTemps::liste_cours_vers_affichage_semaine($_cours_semaine);
 		}
 	}

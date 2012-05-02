@@ -45,6 +45,10 @@
 			return $this->idSpecialite;
 		}
 		
+		public function getIdPromotion() {
+			return $this->idPromotion;
+		}
+		
 		public function Etudiant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
