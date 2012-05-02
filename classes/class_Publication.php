@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Publication - Interface entre les groupes d'étudiants et les groupes de cours
+	 */ 
 	class Publication{
 		
 		public static $nomTable = "Publication";
@@ -8,6 +11,10 @@
 			"idGroupeCours"
 		);
 		
+		/**
+		 * Constructeur de la classe Publication
+		 * Récupère les informations de Publication dans la base de données depuis l'id
+		 */
 		public function Publication() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -27,10 +34,18 @@
 			}
 		}
 		
+		/**
+		 * Fonction gérant la publication
+		 * Affichage du tableau listant les groupes de cours et groupes d'étudiants avec la possibilités de lier les différents groupes en cochant les cases
+		 */
 		public function liste_publication() {
 			$idPromotion = $_GET['idPromotion'];
+			
+			//liste des groupes de cours de la promotion
 			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
 			$nbre_groupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
+			
+			//liste des groupes d'étudiants de la promotion
 			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbre_groupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab="";
@@ -81,6 +96,12 @@
 			}
 		}
 		
+		/**
+		 * Test de l'existence du lien entre le groupe d'étudiants et le groupe de cours
+		 * @param $idGroupe_Cours : int idGroupe_Cours
+		 * @param $idGroupeEtudiants : int idGroupeEtudiants
+		 * @return appartenance : 1 si le lien existe, 0 sinon
+		 */
 		public function appartenance_publication ($idGroupe_Cours, $idGroupe_Etudiants) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -104,22 +125,5 @@
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 		
-		}
-		
-		
-		public function toString() {
-			$string = "";
-			foreach (Publication::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Publication::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Publication::$nomTable);
 		}
 	}

@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Appartient_Utilisateur_Promotion - Interface entre les utilisateurs et les promotions
+	 */ 
 	class Appartient_Utilisateur_Promotion{
 		
 		public static $nomTable = "Appartient_Utilisateur_Promotion";
@@ -8,6 +11,10 @@
 			"idPromotion"
 		);
 		
+		/**
+		 * Constructeur de la classe Appartient_Utilisateur_Promotion
+		 * Récupère les informations de Appartient_Utilisateur_Promotion dans la base de données depuis l'id
+		 */
 		public function Appartient_Utilisateur_Promotion () {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -25,21 +32,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Appartient_Utilisateur_Promotion::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Appartient_Utilisateur_Promotion::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Appartient_Utilisateur_Promotion::$nomTable);
 		}
 	}

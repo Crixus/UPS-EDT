@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Appartient_Etudiant_GroupeEtudiants - Interface entre les groupes d'étudiants et les étudiants
+	 */ 
 	class Appartient_Etudiant_GroupeEtudiants{
 		
 		public static $nomTable = "Appartient_Etudiant_GroupeEtudiants";
@@ -8,6 +11,10 @@
 			"idGroupeEtudiants"
 		);
 		
+		/**
+		 * Constructeur de la classe Appartient_Etudiant_GroupeEtudiants
+		 * Récupère les informations de Appartient_Etudiant_GroupeEtudiants dans la base de données depuis l'id
+		 */
 		public function Appartient_Etudiant_GroupeEtudiants() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -27,10 +34,17 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour la gestion de l'association entre le groupe d'étudiants et l'étudiant
+		 */
 		public function liste_appartenance_etudiant_groupeEtudiants() {
 			$idPromotion = $_GET['idPromotion'];
+			
+			//liste des groupes d'étudiants de la promotion
 			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
+			
+			//liste des étudiants de la promotion
 			$liste_etudiants = V_Infos_Etudiant::liste_etudiant($idPromotion);
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";
@@ -98,6 +112,12 @@
 			}
 		}
 		
+		/**
+		 * Test de l'existence du lien entre le groupe d'étudiants et l'étudiant
+		 * @param $idEtudiant : int idEtudiant
+		 * @param $idGroupeEtudiants : int idGroupeEtudiants
+		 * @return appartenance : 1 si le lien existe, 0 sinon
+		 */
 		public function appartenance_etudiant_groupeEtudiants($idEtudiant, $idGroupeEtudiants) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -122,6 +142,11 @@
 			}
 		}
 		
+		/**
+		 * Test de l'existence du lien entre le groupe d'étudiants et l'étudiant
+		 * @param $idGroupeEtudiants : int idGroupeEtudiants
+		 * @return appartenance : nombre de lien correspondant au groupe de cours
+		 */
 		public function appartenance_promotion_groupeEtudiants($idGroupeEtudiants) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -143,21 +168,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Appartient_Etudiant_GroupeEtudiants::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Appartient_Etudiant_GroupeEtudiants::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Appartient_Etudiant_GroupeEtudiants::$nomTable);
 		}
 	}
