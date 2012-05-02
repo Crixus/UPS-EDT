@@ -56,10 +56,10 @@
 				$requete = "SELECT idCours FROM V_Cours_Promotion WHERE tsDebut > '" . $tsDebut . "' AND tsFin < '" . $tsFin . "' AND idPromotion=" . $idPromotion . " ORDER BY tsDebut;";
 				$req = $bdd->prepare($requete);
 				$req->execute(
-					Array($id, $tsDebut, $tsFin)
+					Array($tsDebut, $tsFin, $idPromotion)
 				);
 				while ($ligne = $req->fetch()) {
-					array_push($listeId, $ligne['id']);
+					array_push($listeId, $ligne['idCours']);
 				}
 				$req->closeCursor();
 			}
@@ -242,7 +242,7 @@
 			EmploiDuTemps::liste_cours_vers_affichage_semaine($_cours_semaine);
 		}
 		
-		public static function affichage_edt_semaine_promotion_table($idPromotion, $id, $tsDebut) {
+		public static function affichage_edt_semaine_promotion_table($idPromotion, $tsDebut) {
 			$_cours_semaine = EmploiDuTemps::cours_semaine_promotion($idPromotion, $tsDebut);
 			EmploiDuTemps::liste_cours_vers_affichage_semaine($_cours_semaine);
 		}
