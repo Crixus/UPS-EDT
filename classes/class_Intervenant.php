@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Intervenant - Permet de gérer les Intervenants
+	 */ 
 	class Intervenant{
 		
 		public static $nomTable = "Intervenant";
@@ -13,14 +16,53 @@
 			"actif"
 		);
 		
+		/**
+		 * Getter de l'id de l'intervenant
+		 * @return int : id de l'intervenant
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom de l'intervenant
+		 * @return string : nom de l'intervenant
+		 */
 		public function getNom() { return $this->nom; }
+		
+		/**
+		 * Getter du prenom de l'intervenant
+		 * @return string : prenom de l'intervenant
+		 */
 		public function getPrenom() { return $this->prenom; }
+		
+		/**
+		 * Getter du email de l'intervenant
+		 * @return string : email de l'intervenant
+		 */
 		public function getEmail() { return $this->email; }
+		
+		/**
+		 * Getter du telephone de l'intervenant
+		 * @return string : telephone de l'intervenant
+		 */
 		public function getTelephone() { return $this->telephone; }
+		
+		/**
+		 * Getter de notificationsActives de l'intervenant
+		 * @return boolean : notificationsActives de l'intervenant
+		 */
 		public function getNotificationsActives() { return $this->notificationsActives; }
+		
+		/**
+		 * Getter de actif de l'intervenant
+		 * @return boolean : actif de l'intervenant
+		 */
 		public function getActif () { return $this->actif; }
 		
+		/**
+		 * Constructeur de la classe Intervenant
+		 * Récupère les informations de Intervenant dans la base de données depuis l'id
+		 * @param $id : int id du Intervenant
+		 */
 		public function Intervenant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -42,6 +84,13 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un intervenant dans la base de données
+		 * @param $nom : nom de l'intervenant
+		 * @param $prenom : prenom de l'intervenant
+		 * @param $email : email de l'intervenant
+		 * @param $telephone : telephone de l'intervenant
+		 */
 		public static function ajouter_intervenant($nom, $prenom, $email, $telephone) {
 			try {
 				//On ajoute d'abord l'Intervenant
@@ -70,6 +119,14 @@
 			}
 		}
 		
+		/**
+		 * Modifier un intervenant dans la base de données
+		 * @param $idIntervenant : int id de l'intervenant a modifié
+		 * @param $nom : nom de l'intervenant
+		 * @param $prenom : prenom de l'intervenant
+		 * @param $email : email de l'intervenant
+		 * @param $telephone : telephone de l'intervenant
+		 */
 		public static function modifier_intervenant($idIntervenant, $nom, $prenom, $email, $telephone) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -94,6 +151,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un intervenant dans la base de données
+		 * @param $idIntervenant int : id de l'intervenant a supprimé
+		 */
 		public static function supprimer_intervenant($idIntervenant) {
 		
 			//MAJ de la table "Cours" on met idIntervenant à 0 pour l'idIntervenant correspondant
@@ -125,6 +186,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un intervenant
+		 * @param id : int id de l'intervenant
+		 */
 		public static function existe_intervenant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -144,7 +209,11 @@
 			}
 		}
 		
-		// Methode à refaire car nom incorrect
+		/**
+		 * Fonction renvoyant la chaine de caractères comprenant le prénom et le nom de l'intervenant
+		 * @param id : int id de l'intervenant
+		 * @return string : string prenom et nom de l'intervenant
+		 */
 		public static function getIntervenant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -165,6 +234,10 @@
 			return $nomIntervenant;
 		}
 		
+		/**
+		 * Renvoi la liste des UE où l'intervenant est le responsable
+		 * @return List<UE> liste des UE dont l'intervenant est le responsable
+		 */
 		public function liste_id_UE() {
 			$listeIdUE = Array();
 			try {
@@ -185,6 +258,10 @@
 			return $listeIdUE;		
 		}
 		
+		/**
+		 * Renvoi la liste d'id des intervenants
+		 * @return List<Intervenant> liste des intervenants
+		 */
 		public static function listeIdIntervenants() {
 			$listeId = Array();
 			try {
@@ -203,7 +280,13 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des intervenants 
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0) {
+			// Liste des intervenants enregistrée dans la base de donnée
 			$liste_intervenant = Intervenant::listeIdIntervenants();			
 			$nbre_intervenant = sizeof($liste_intervenant);
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
@@ -231,6 +314,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations de l'intervenant
 				foreach ($liste_intervenant as $idIntervenant) {
 					if ($idIntervenant != 0) {
 						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
@@ -263,6 +347,7 @@
 						}
 						echo "</td>\n";
 						
+						// Création des liens pour la modification et la suppression des intervenants et gestion de l'URL 
 						if ($administration) {
 							$pageModification = "./index.php?page=ajoutIntervenant&amp;modifier_intervenant=$idIntervenant";
 							$pageSuppression = "./index.php?page=ajoutIntervenant&amp;supprimer_intervenant=$idIntervenant";
@@ -283,9 +368,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un intervenant
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutIntervenant($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un intervenant
 			if (isset($_GET['modifier_intervenant'])) { 
 				$titre = "Modifier un intervenant";
 				$Intervenant = new Intervenant($_GET['modifier_intervenant']);
@@ -354,6 +444,9 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}		
 		}		
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])) {
@@ -409,6 +502,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un intervenant, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_intervenant'])) {	
@@ -424,6 +520,9 @@
 			}
 		}		
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un intervenant ainsi que l'affichage des intervenants enregistrées dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Intervenant::formulaireAjoutIntervenant($nombreTabulations);

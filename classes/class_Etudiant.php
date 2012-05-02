@@ -17,34 +17,67 @@
 			"idPromotion"
 		);
 		
+		/**
+		 * Getter de l'id de l'étudiant
+		 * @return int : id de l'étudiant
+		 */
 		public function getId() {
 			return $this->id; 
 		}
 		
+		/**
+		 * Getter du numéro de l'étudiant
+		 * @return int : numéro de l'étudiant
+		 */
 		public function getNumeroEtudiant() {
 			return $this->numeroEtudiant;
 		}
 		
+		/**
+		 * Getter du nom de l'étudiant
+		 * @return string : nom de l'étudiant
+		 */
 		public function getNom() {
 			return $this->nom;
 		}
 		
+		/**
+		 * Getter du prenom de l'étudiant
+		 * @return string : prenom de l'étudiant
+		 */
 		public function getPrenom() {
 			return $this->prenom;
 		}
 		
+		/**
+		 * Getter du email de l'étudiant
+		 * @return string : email de l'étudiant
+		 */
 		public function getEmail() {
 			return $this->email;
 		}
 		
+		/**
+		 * Getter du telephone de l'étudiant
+		 * @return string : telephone de l'étudiant
+		 */
 		public function getTelephone() {
 			return $this->telephone;
 		}
 		
+		/**
+		 * Getter de l'idSpecialite de l'étudiant
+		 * @return int : idSpecialite de l'étudiant
+		 */
 		public function getIdSpecialite() {
 			return $this->idSpecialite;
 		}
 		
+		/**
+		 * Constructeur de la classe Etudiant
+		 * Récupère les informations de Etudiant dans la base de données depuis l'id
+		 * @param $id : int id du Etudiant
+		 */
 		public function Etudiant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -65,6 +98,16 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un etudiant dans la base de données
+		 * @param $numeroEtudiant : int id de l'étudiant
+		 * @param $nom : nom de l'étudiant
+		 * @param $prenom : prenom de l'étudiant
+		 * @param $email : email de l'étudiant
+		 * @param $telephone : telephone de l'étudiant
+		 * @param $idPromotion : int idPromotion dde l'étudiant
+		 * @param $idSpecialite : int idSpecialite de l'étudiant
+		 */
 		public static function ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $idPromotion, $idSpecialite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -94,6 +137,16 @@
 			}
 		}
 		
+		/**
+		 * Modifier un etudiant dans la base de données
+		 * @param $idEtudiant : int id de l'étudiant a modifié
+		 * @param $numeroEtudiant : int id de l'étudiant
+		 * @param $nom : nom de l'étudiant
+		 * @param $prenom : prenom de l'étudiant
+		 * @param $email : email de l'étudiant
+		 * @param $telephone : telephone de l'étudiant
+		 * @param $idSpecialite : int idSpecialite de l'étudiant
+		 */
 		public static function modifier_etudiant($idEtudiant, $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -116,6 +169,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un étudiant dans la base de données
+		 * @param $idEtudiant int : id de l'étudiant a supprimé
+		 */
 		public static function supprimer_etudiant($idEtudiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -132,6 +189,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un étudiant
+		 * @param id : int id de l'étudiant
+		 */
 		public static function existe_etudiant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -152,7 +213,8 @@
 		}
 		
 		/**
-		 * Renvoi la liste d'id des Etudiants
+		 * Renvoi la liste d'id des étudiants
+		 * @return List<Etudiant> liste des étudiants
 		 */
 		public static function listeIdEtudiants($orderBy = "nom, prenom") {
 			$listeId = Array();
@@ -175,10 +237,18 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un étudiant
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutEtudiant($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			
+			// Liste des spécialités de la promotion enregistrée dans la base de donnée
 			$liste_specialite = Specialite::liste_specialite($idPromotion);			
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un étudiant
 			if (isset($_GET['modifier_etudiant'])) { 
 				$titre = "Modifier un étudiant";
 				$_etudiant = new Etudiant($_GET['modifier_etudiant']);
@@ -274,6 +344,9 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}			
 		}		
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutEtudiant']) || isset($_POST['validerModificationEtudiant'])) {
@@ -339,6 +412,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un étudiant, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_etudiant'])) {	
@@ -352,19 +428,13 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un étudiant ainsi que l'affichage des étudiants de la promotion enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Etudiant::formulaireAjoutEtudiant($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des étudiants</h2>\n";
 			V_Infos_Etudiant::liste_etudiant_to_table($_GET['idPromotion'], $nombreTabulations + 1);
-		}
-		
-		
-		public function toUl() {
-			$string = "<ul>\n";
-			foreach (Etudiant::$attributs as $att) {
-				$string .= "<li>$att : ".$this->$att."</li>\n";
-			}
-			return "$string</ul>\n";
 		}
 	}
