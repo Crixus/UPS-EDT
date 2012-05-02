@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Appartient_TypeSalle_TypeCours - Interface entre les types de cours et les types de salles
+	 */ 
 	class Appartient_TypeSalle_TypeCours{
 		
 		public static $nomTable = "Appartient_TypeSalle_TypeCours";
@@ -8,7 +11,11 @@
 			"idTypeSalle"
 		);
 		
-		public function Appartient_Salle_TypeSalle() {
+		/**
+		 * Constructeur de la classe Appartient_Salle_TypeSalle
+		 * Récupère les informations de Appartient_Salle_TypeSalle dans la base de données depuis l'id
+		 */
+		public function Appartient_TypeSalle_TypeCours() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -25,21 +32,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Appartient_TypeSalle_TypeCours::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Appartient_TypeSalle_TypeCours::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Appartient_TypeSalle_TypeCours::$nomTable);
 		}
 	}

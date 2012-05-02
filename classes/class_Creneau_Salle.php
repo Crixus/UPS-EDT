@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Creneau_Salle - Permet de gerer les disponibilités des salles en enregistrant leur creneau de disponibilité
+	 */ 
 	class Creneau_Salle{
 		
 		public static $nomTable = "Creneau_Salle";
@@ -10,13 +13,35 @@
 			"idSalle"
 		);
 		
-		
+		/**
+		 * Getter de l'id du créneau salle
+		 * @return int : id du créneau salle
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter de l'idSalle du créneau salle
+		 * @return int : idSalle du créneau salle
+		 */
 		public function getIdSalle() { return $this->idSalle; }
+		
+		/**
+		 * Getter de TsDebut du créneau salle
+		 * @return timestamp : TsDebut
+		 */
 		public function getTsDebut() { return $this->tsDebut; }
+		
+		/**
+		 * Getter de tsFin du créneau salle
+		 * @return timestamp : tsFin
+		 */
 		public function getTsFin() { return $this->tsFin; }
 		
-		
+		/**
+		 * Constructeur de la classe Creneau_Salle
+		 * Récupère les informations de Creneau_Salle dans la base de données depuis l'id
+		 * @param $id : int id du créneau salle
+		 */
 		public function Creneau_Salle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -38,6 +63,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un créneau salle
+		 * @param $id : int id du créneau salle
+		 */
 		public static function existe_creneauSalle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -57,8 +86,18 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un creneau salle dans la base de données
+		 * @param $idSalle : int id de la salle
+		 * @param $tsDebut : timestamp tsDebut du creneau salle correspondant à la date de début du creneau salle
+		 * @param $tsFin : timestamp tsFin du creneau salle correspondant à la date de fin du creneau salle
+		 * @param $recursivite : int correspondant au nombre de fois que le creneau se créé récursivement la semaine suivante celle de la semaine courante (ex: recursivite=2 signifie que le creneau créé va être également créer avec les mêmes informations pour les 2 semaines qui suivra)
+		 */
 		public static function ajouter_creneauSalle($idSalle, $tsDebut, $tsFin, $recursivite) {
-		
+			
+			/**
+			* Boucle de création récursive des creneau salle
+			*/
 			for ($i=0; $i<=$recursivite; $i++) {
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -78,11 +117,21 @@
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
+				/**
+				* Modification de $tsDebut et $tsFin pour passer à la semaine suivante pour la prochaine itération
+				*/
 				$tsDebut = Cours::datePlusUneSemaine($tsDebut);
 				$tsFin = Cours::datePlusUneSemaine($tsFin);
 			}			
 		}
 		
+		/**
+		 * Modification du creneau salle dans la base de données
+		 * @param $idCreneauIntervenant : int id du creneau salle a modifié
+		 * @param $idSalle : int id de la salle
+		 * @param $tsDebut : timestamp tsDebut du creneau salle correspondant à la date de début du creneau salle
+		 * @param $tsFin : timestamp tsFin du creneau salle correspondant à la date de fin du creneau salle
+		 */
 		public static function modifier_creneauSalle($idCreneauSalle, $idSalle, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -103,6 +152,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un creneau salle dans la base de données
+		 * @param $idCreneauSalle int : id du creneau salle a supprimé
+		 */
 		public static function supprimer_creneauSalle($idCreneauSalle) {
 			//Suppression du creneau pour l'Salle
 			try {
@@ -121,7 +174,10 @@
 			}
 		}
 		
-		
+		/**
+		 * Renvoi la liste des creneau salle
+		 * @return List<Creneau_Salle> liste des creneau salle
+		 */
 		public static function liste_creneauSalle() {
 			$listeId = Array();
 			try {
@@ -141,8 +197,13 @@
 			return $listeId;
 		}
 		
-		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des creneau salle
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_creneauSalle_to_table($administration, $nombreTabulations = 0) {
+			//Liste des creneau salle enregistrés
 			$liste_creneauSalle = Creneau_Salle::liste_creneauSalle();
 			$nbCreneauSalle = sizeof($liste_creneauSalle);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -174,6 +235,8 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
+					
+					// Gestion de l'affichage des informations du creneau
 					foreach (Creneau_Salle::$attributs as $att) {
 						if ($cptBoucle == 1)
 							$valTemp = $Creneau_Salle->$att;
@@ -197,6 +260,8 @@
 						}
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des creneau et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCreneauSalle&modifier_creneauSalle=$idCreneauSalle";
 						$pageSuppression = "./index.php?page=ajoutCreneauSalle&supprimer_creneauSalle=$idCreneauSalle";
@@ -217,6 +282,11 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la date d'un creneau 
+		 * @param $dateDebut timestamp : correspond à la date de début du creneau
+		 * @param $dateFin timestamp : correspond à la date de fin du creneau
+		 */
 		public function dateCreneauSalle($dateDebut, $dateFin) {
 			$chaineDateDebut = explode(' ', $dateDebut);
 			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
@@ -241,6 +311,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée par la fonction dateCreneauIntervenant pour l'affichage de la date d'un creneau 
+		 * @param $jour timestamp : int correspondant au nombre de jours d'une date
+		 * @param $mois timestamp : int correspondant au nombre de mois d'une date
+		 * @param $annee timestamp : int correspondant au nombre d'années d'une date
+		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
 				$numero_jour = '1er';
@@ -293,11 +369,17 @@
 		}
 		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un creneau salle
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutCreneauSalle($nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			
+			// Liste des salles enregistrée dans la base de donnée
 			$liste_Salle = V_Liste_Salles::liste_salles();
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un creneau salle
 			if (isset($_GET['modifier_creneauSalle'])) { 
 				$titre = "Modifier un creneau de disponibilité pour une salle";
 				$Creneau_Salle = new Creneau_Salle($_GET['modifier_creneauSalle']);
@@ -480,10 +562,13 @@
 			echo $tab."\t</table>\n";
 			echo $tab."</form>\n";
 			
+			// Lien permettant de terminer la modification d'un creneau et de revenir au formulaire pour l'ajout d'un nouveau creneau
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCreneauSalle']) || isset($_POST['validerModificationCreneauSalle'])) {
@@ -538,7 +623,9 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un creneau salle, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_creneauSalle'])) {	
@@ -552,7 +639,9 @@
 			}
 		}
 		
-		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un creneau salle ainsi que l'affichage des creneau salle enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Creneau_Salle::formulaireAjoutCreneauSalle($nombreTabulations + 1);

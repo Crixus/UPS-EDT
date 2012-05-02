@@ -183,6 +183,10 @@
 			return $listeSalle;
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un batiment
+		 * @param $id : int id du batiment
+		 */
 		public static function existeBatiment($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -201,6 +205,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un batiment avec le nom
+		 * @param nom : string nom du batiment
+		 */
 		public static function existe_nom_batiment($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -219,6 +227,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction affichant la liste des salles avec nom et capacite
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function table_salles($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$liste_salles = $this->liste_salles();
@@ -246,6 +258,10 @@
 			}
 		}
 
+		/**
+		 * Fonction permettant d'enregistrer dans une liste les batiments enregistrés dans la base de donnée
+		 * @return List<Batiment> liste des batiment
+		 */
 		public static function liste_batiment() {
 			$listeId = Array();
 			try {
@@ -264,6 +280,10 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction affichant la liste des batiments enregistrées en base de données
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function table_administration_batiments($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$liste_batiment = Batiment::liste_batiment();			
@@ -315,9 +335,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un batiment
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutBatiment($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un batiment
 			if (isset($_GET['modifier_batiment'])) { 
 				$titre = "Modifier un batiment";
 				$_batiment = new Batiment($_GET['modifier_batiment']);
@@ -373,12 +398,17 @@
 			
 			echo $tab."\t</table>\n";
 			echo $tab."</form>\n";	
+			
+			// Lien permettant de terminer la modification d'un batiment et de revenir au formulaire pour l'ajout d'un nouveau batiment
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}
 		}	
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
-			if (isset($_POST['validerAjoutBatiment'])) {
+			if (isset($_POST['validerAjoutBatiment'])) { //pour l'Ajout d'un batiment
 				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])) {
 					array_push($messagesErreurs, "Problème de formulaire");
 				}
@@ -401,7 +431,7 @@
 					}
 				}
 			}
-			if (isset($_POST['validerModificationBatiment'])) {
+			if (isset($_POST['validerModificationBatiment'])) { //pour la modification d'un batiment
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 				$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
@@ -424,6 +454,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un batiment, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_batiment'])) {			
@@ -435,6 +468,10 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un batiment ainsi que l'affichage des batiment enregistrée dans la base de données
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Batiment::formulaireAjoutBatiment($nombreTabulations);
@@ -442,6 +479,10 @@
 			Batiment::table_administration_batiments($nombreTabulations);
 		}
 		
+		/**
+		* Fonction pour l'affichage des infos du batiment et de la liste de ses salles 
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public function page_informations($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$latitude = ($this->getLat() == NULL) ? "<span class=\"erreur\">Pas de latitude saisie</span>" : $this->getLat();

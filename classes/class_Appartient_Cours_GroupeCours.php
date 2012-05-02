@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Appartient_Cours_GroupeCours - Interface entre les groupes de cours et les cours
+	 */ 
 	class Appartient_Cours_GroupeCours{
 		
 		public static $nomTable = "Appartient_Cours_GroupeCours";
@@ -8,6 +11,10 @@
 			"idGroupeCours"
 		);
 		
+		/**
+		 * Constructeur de la classe Appartient_Cours_GroupeCours
+		 * Récupère les informations de Appartient_Cours_GroupeCours dans la base de données depuis l'id
+		 */
 		public function Appartient_Cours_GroupeCours() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -27,10 +34,17 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour la gestion de l'association entre les cours et les groupes de cours
+		 */
 		public function liste_appartenance_cours_groupeCours() {
 			$idPromotion = $_GET['idPromotion'];
+			
+			//liste des groupes de cours de la promotion
 			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
 			$nbreGroupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
+			
+			//liste des futur cours de la promotion
 			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbre_cours = V_Infos_Cours::getNbreCoursFutur($idPromotion);
 			$tab="";
@@ -97,6 +111,12 @@
 			}
 		}
 		
+		/**
+		 * Test de l'existence du lien entre le cours et le groupe de cours
+		 * @param $idCours : int idCours
+		 * @param $idGroupeCours : int idGroupeCours
+		 * @return appartenance : 1 si le lien existe, 0 sinon
+		 */
 		public function appartenance_cours_groupeCours($idCours, $idGroupeCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -121,6 +141,11 @@
 			}
 		}
 		
+		/**
+		 * Test de l'existence du lien entre le groupe de cours et tous les cours de la promotion
+		 * @param $idGroupeCours : int idGroupeCours
+		 * @return appartenance : nombre de lien correspondant au groupe de cours
+		 */
 		public function appartenance_promotion_groupe_Cours($idGroupeCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -142,21 +167,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Appartient_Cours_GroupeCours::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Appartient_Cours_GroupeCours::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Appartient_Cours_GroupeCours::$nomTable);
 		}
 	}

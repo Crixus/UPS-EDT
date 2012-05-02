@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Creneau_Intervenant - Permet de gerer les disponibilités des intervenants en enregistrant leur creneau de disponibilité
+	 */ 
 	class Creneau_Intervenant{
 		
 		public static $nomTable = "Creneau_Intervenant";
@@ -10,24 +13,43 @@
 			"idIntervenant"
 		);
 		
-		
+		/**
+		 * Getter de l'id du créneau intervenant
+		 * @return int : id du créneau intervenant
+		 */
 		public function getId() { 
 			return $this->id; 
 		}
 		
+		/**
+		 * Getter de l'idIntervenant du créneau intervenant
+		 * @return int : idIntervenant du créneau intervenant
+		 */
 		public function getIdIntervenant() {
 			return $this->idIntervenant;
 		}
 		
+		/**
+		 * Getter de TsDebut du créneau intervenant
+		 * @return timestamp : TsDebut
+		 */
 		public function getTsDebut() {
 			return $this->tsDebut;
 		}
 		
+		/**
+		 * Getter de tsFin du créneau intervenant
+		 * @return timestamp : tsFin
+		 */
 		public function getTsFin() {
 			return $this->tsFin;
 		}
 		
-		
+		/**
+		 * Constructeur de la classe Creneau_Intervenant
+		 * Récupère les informations de Creneau_Intervenant dans la base de données depuis l'id
+		 * @param $id : int id du créneau intervenant
+		 */
 		public function Creneau_Intervenant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -49,6 +71,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un créneau intervenant
+		 * @param $id : int id du créneau intervenant
+		 */
 		public static function existe_creneauIntervenant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -68,8 +94,18 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un creneau intervenant dans la base de données
+		 * @param $idIntervenant : int id de l'intervenant
+		 * @param $tsDebut : timestamp tsDebut du creneau intervenant correspondant à la date de début du creneau intervenant
+		 * @param $tsFin : timestamp tsFin du creneau intervenant correspondant à la date de fin du creneau intervenant
+		 * @param $recursivite : int correspondant au nombre de fois que le creneau se créé récursivement la semaine suivante celle de la semaine courante (ex: recursivite=2 signifie que le creneau créé va être également créer avec les mêmes informations pour les 2 semaines qui suivra)
+		 */
 		public static function ajouter_creneauIntervenant($idIntervenant, $tsDebut, $tsFin, $recursivite) {
 		
+			/**
+			* Boucle de création récursive des creneau intervenant
+			*/
 			for ($i=0; $i<=$recursivite; $i++) {
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -89,11 +125,21 @@
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
+				/**
+				* Modification de $tsDebut et $tsFin pour passer à la semaine suivante pour la prochaine itération
+				*/
 				$tsDebut = Cours::datePlusUneSemaine($tsDebut);
 				$tsFin = Cours::datePlusUneSemaine($tsFin);
 			}			
 		}
 		
+		/**
+		 * Modification du creneau intervenant dans la base de données
+		 * @param $idCreneauIntervenant : int id du creneau intervenant a modifié
+		 * @param $idIntervenant : int id de l'intervenant
+		 * @param $tsDebut : timestamp tsDebut du cours correspondant à la date de début du cours
+		 * @param $tsFin : timestamp tsFin du cours correspondant à la date de fin du cours
+		 */
 		public static function modifier_creneauIntervenant($idCreneauIntervenant, $idIntervenant, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -114,6 +160,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un creneau intervenant dans la base de données
+		 * @param $idCreneauIntervenant int : id du creneau intervenant a supprimé
+		 */
 		public static function supprimer_creneauIntervenant($idCreneauIntervenant) {
 			//Suppression du creneau pour l'intervenant
 			try {
@@ -132,7 +182,10 @@
 			}
 		}
 		
-		
+		/**
+		 * Renvoi la liste des creneau intervenant
+		 * @return List<Creneau_Intervenant> liste des creneau intervenant
+		 */
 		public static function liste_creneauIntervenant() {
 			$listeId = Array();
 			try {
@@ -152,8 +205,13 @@
 			return $listeId;
 		}
 		
-		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des creneau intervenant
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_creneauIntervenant_to_table($administration, $nombreTabulations = 0) {
+			//Liste des creneau intervenant enregistrés
 			$liste_creneauIntervenant = Creneau_Intervenant::liste_creneauIntervenant();
 			$nbCreneauIntervenant = sizeof($liste_creneauIntervenant);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -185,6 +243,8 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
+					
+					// Gestion de l'affichage des informations du creneau
 					foreach (Creneau_Intervenant::$attributs as $att) {
 						if ($cptBoucle == 1)
 							$valTemp = $Creneau_Intervenant->$att;
@@ -207,6 +267,8 @@
 						}
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des creneau et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCreneauIntervenant&modifier_creneauIntervenant=$idCreneauIntervenant";
 						$pageSuppression = "./index.php?page=ajoutCreneauIntervenant&supprimer_creneauIntervenant=$idCreneauIntervenant";
@@ -227,6 +289,11 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la date d'un creneau 
+		 * @param $dateDebut timestamp : correspond à la date de début du creneau
+		 * @param $dateFin timestamp : correspond à la date de fin du creneau
+		 */
 		public function dateCreneauIntervenant($dateDebut, $dateFin) {
 			$chaineDateDebut = explode(' ', $dateDebut);
 			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
@@ -251,6 +318,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée par la fonction dateCreneauIntervenant pour l'affichage de la date d'un creneau 
+		 * @param $jour timestamp : int correspondant au nombre de jours d'une date
+		 * @param $mois timestamp : int correspondant au nombre de mois d'une date
+		 * @param $annee timestamp : int correspondant au nombre d'années d'une date
+		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
 				$numero_jour = '1er';
@@ -303,11 +376,17 @@
 		}
 		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un creneau intervenant
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutCreneauIntervenant($nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			
+			// Liste des intervenants enregistrée dans la base de donnée
 			$liste_intervenant = Intervenant::listeIdIntervenants();
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un creneau intervenant
 			if (isset($_GET['modifier_creneauIntervenant'])) { 
 				$titre = "Modifier un creneau de disponibilité pour un intervenant";
 				$Creneau_Intervenant = new Creneau_Intervenant($_GET['modifier_creneauIntervenant']);
@@ -489,10 +568,13 @@
 			echo $tab."\t</table>\n";
 			echo $tab."</form>\n";
 			
+			// Lien permettant de terminer la modification d'un creneau et de revenir au formulaire pour l'ajout d'un nouveau creneau
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCreneauIntervenant']) || isset($_POST['validerModificationCreneauIntervenant'])) {
@@ -547,7 +629,9 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un creneau intervenant, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_creneauIntervenant'])) {	
@@ -561,7 +645,9 @@
 			}
 		}
 		
-		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un creneau intervenant ainsi que l'affichage des creneau intervenant enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Creneau_Intervenant::formulaireAjoutCreneauIntervenant($nombreTabulations + 1);

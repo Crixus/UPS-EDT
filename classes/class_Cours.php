@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Cours - Permet de gerer les cours
+	 */ 
 	class Cours{
 		
 		public static $nomTable = "Cours";
@@ -13,14 +16,53 @@
 			"tsFin"
 		);
 		
+		/**
+		 * Getter de l'id du Cours
+		 * @return int : id du Cours
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter de idUE du Cours
+		 * @return int : idUE
+		 */
 		public function getIdUE() { return $this->idUE; }
+		
+		/**
+		 * Getter de idSalle du Cours
+		 * @return int : idSalle
+		 */
 		public function getIdSalle() { return $this->idSalle; }
+		
+		/**
+		 * Getter de idIntervenant du Cours
+		 * @return int : idIntervenant
+		 */
 		public function getIdIntervenant() { return $this->idIntervenant; }
+		
+		/**
+		 * Getter de idTypeCours du Cours
+		 * @return int : idTypeCours
+		 */
 		public function getIdTypeCours() { return $this->idTypeCours; }
+		
+		/**
+		 * Getter de TsDebut du Cours
+		 * @return timestamp : TsDebut
+		 */
 		public function getTsDebut() { return $this->tsDebut; }
+		
+		/**
+		 * Getter de tsFin du Cours
+		 * @return timestamp : tsFin
+		 */
 		public function getTsFin() { return $this->tsFin; }
 		
+		/**
+		 * Constructeur de la classe Cours
+		 * Récupère les informations de Cours dans la base de données depuis l'id
+		 * @param $id : int id du Cours
+		 */
 		public function Cours($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -41,8 +83,21 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un cours dans la base de données
+		 * @param $idUE : int id de l'UE
+		 * @param $idSalle : int id de la salle
+		 * @param $idIntervenant : int id de l'intervenant
+		 * @param $type : int id du type de cours
+		 * @param $tsDebut : timestamp tsDebut du cours correspondant à la date de début du cours
+		 * @param $tsFin : timestamp tsFin du cours correspondant à la date de fin du cours
+		 * @param $recursivite : int correspondant au nombre de fois que le cours se créé récursivement la semaine suivante celle de la semaine courante (ex: recursivite=2 signifie que le cours créé va être également créer avec les mêmes informations pour les 2 semaines qui suivra)
+		 */
 		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite) {
-		
+			
+			/**
+			* Boucle de création récursive des cours
+			*/
 			for ($i=0; $i<=$recursivite; $i++) {
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -64,11 +119,19 @@
 					echo "Erreur : ".$e->getMessage()."<br />";
 				}
 				
+				/**
+				* Modification de $tsDebut et $tsFin pour passer à la semaine suivante pour la prochaine itération
+				*/
 				$tsDebut = Cours::datePlusUneSemaine($tsDebut);
 				$tsFin = Cours::datePlusUneSemaine($tsFin);
 			}			
 		}
 		
+		/**
+		 * Fonction utilisée pour l'ajout des cours dans le cas de l'utilisation de la récursivité
+		 * @param $tsDebut : timestamp d'une date
+		 * @return timestam^p : retourne la date de la semaine suivante (tsDebut + 7 jours)
+		 */
 		public static function datePlusUneSemaine($tsDate) {
 			$tsDate_explode = explode(' ', $tsDate);
 			$tsDate_jma = $tsDate_explode[0];
@@ -81,6 +144,16 @@
 			return $date;
 		}
 		
+		/**
+		 * Modification du cours dans la base de données
+		 * @param $idCours : int id du cours a modifié
+		 * @param $idUE : int id de l'UE
+		 * @param $idSalle : int id de la salle
+		 * @param $idIntervenant : int id de l'intervenant
+		 * @param $type : int id du type de cours
+		 * @param $tsDebut : timestamp tsDebut du cours correspondant à la date de début du cours
+		 * @param $tsFin : timestamp tsFin du cours correspondant à la date de fin du cours
+		 */
 		public static function modifier_cours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -104,6 +177,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un cours dans la base de données
+		 * @param $idCours int : id du cours a supprimé
+		 */
 		public static function supprimer_cours($idCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -121,6 +198,11 @@
 			}
 		}
 		
+		/**
+		 * Modifie la salle liée à un cours dans la base de données
+		 * @param $idCours int : id du cours où l'on modifie la salle
+		 * @param $idSalle int : id de la nouvelle salle affectée
+		 */
 		public static function modifierSalle($idCours, $idSalle) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -136,6 +218,11 @@
 			}
 		}
 		
+		/**
+		 * Modifie la salle liée à tous les cours étant affectée à la salle a modifié (modification de la table Cours dans la base de donnée)
+		 * @param $idSalleSrc int : id de l'ancienne salle à changer
+		 * @param $idSalleDst int : id de la nouvelle salle affectée
+		 */
 		public static function modifier_salle_tout_cours($idSalleSrc, $idSalleDst) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -151,7 +238,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des cours créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des cours de la promotion enregistrée dans la base de donnée
 			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
 			$nbCours = sizeof($liste_cours);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -186,6 +280,8 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
+					
+					// Gestion de l'affichage des informations du cours
 					foreach (V_Infos_Cours::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
 							$valTemp = $Cours->$att;
@@ -205,6 +301,8 @@
 						}
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des cours et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCours&modifier_cours=$idCours";
 						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours=$idCours";
@@ -225,7 +323,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des futur cours créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_cours_futurs_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des futurs cours de la promotion enregistrée dans la base de donnée
 			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbCours = sizeof($liste_cours);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -261,7 +366,7 @@
 					$valTemp = "";
 					$valTemp2 = "";
 					
-					// A REFAIRE
+					// Gestion de l'affichage des informations du cours
 					foreach (V_Infos_Cours::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
 							$valTemp = $Cours->$att;
@@ -281,6 +386,8 @@
 						}
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des cours et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutCours&modifier_cours=".$idCours;
 						$pageSuppression = "./index.php?page=ajoutCours&supprimer_cours".$idCours;
@@ -301,6 +408,11 @@
 			}
 		}
 	
+		/**
+		 * Fonction utilisée pour l'affichage de la date d'un cours 
+		 * @param $dateDebut timestamp : correspond à la date de début du cours
+		 * @param $dateFin timestamp : correspond à la date de fin du cours
+		 */
 		public function dateCours($dateDebut, $dateFin) {
 			$chaineDateDebut = explode(' ', $dateDebut);
 			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
@@ -325,6 +437,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée par la fonction dateCours pour l'affichage de la date d'un cours 
+		 * @param $jour timestamp : int correspondant au nombre de jours d'une date
+		 * @param $mois timestamp : int correspondant au nombre de mois d'une date
+		 * @param $annee timestamp : int correspondant au nombre d'années d'une date
+		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
 				$numero_jour = '1er';
@@ -376,15 +494,26 @@
 			echo $numero_jour." ".$nom_mois." ".$annee;
 		}		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un cours
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutCours($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			
+			// Liste des UE de la promotion enregistrée dans la base de donnée
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
 			$nbUE = sizeof($liste_UE_promotion);
+			
+			// Liste des intervenants enregistrée dans la base de donnée
 			$liste_intervenant = Intervenant::listeIdIntervenants();
+			
+			// Liste des type de cours enregistrée dans la base de donnée
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbTypeCours = sizeof($liste_type_cours);
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un cours
 			if (isset($_GET['modifier_cours'])) { 
 				$titre = "Modifier un cours";
 				$Cours = new Cours($_GET['modifier_cours']);
@@ -582,6 +711,7 @@
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
 				
+				// Affichage des salles suivant le type de cours sélectionée
 				Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
 				
 				echo $tab."\t\t\t\t</select>\n";
@@ -611,10 +741,16 @@
 				echo $tab."\t</table>\n";
 				echo $tab."</form>\n";
 				
+				// Lien permettant de terminer la modification d'un cours et de revenir au formulaire pour l'ajout d'un nouveau cours
 				if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 			}
 		}
 		
+		/**
+		 * Liste des salles suivant le type de cours sélectionné
+		 * @param $idSalleModif int : id de la salle pour le formulaire de modification du cours
+		 * @param $idTypeCours int : correspond au type de cours sélectionné
+		 */
 		public static function liste_salle_suivant_typeCours($idSalleModif, $idTypeCours) {
 			$tab = "";
 			$liste_salle = V_Liste_Salles::liste_salles_appartenant_typeCours($idTypeCours);
@@ -630,9 +766,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
-			if (isset($_POST['validerAjoutCours'])) {
+			if (isset($_POST['validerAjoutCours'])) { //pour l'Ajout d'un cours
 				$idUE = $_POST['UE'];
 				$idUE_correct = true;
 				$idSalle = $_POST['salle'];
@@ -663,7 +802,7 @@
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 				}
 			}
-			else if (isset($_POST['validerModificationCours'])) {	
+			else if (isset($_POST['validerModificationCours'])) { //pour la modification d'un cours
 				$id = $_POST['id']; 
 				$idCorrect = V_Infos_Cours::existe_cours($id);			
 				$idUE = $_POST['UE'];
@@ -696,6 +835,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un cours, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_cours'])) {	
@@ -711,12 +853,19 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un cours ainsi que l'affichage des cours de la promotion enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
+			//Affichage du formulaire
 			Cours::formulaireAjoutCours($_GET['idPromotion'], $nombreTabulations + 1);
+			
+			//Affichage des cours à venir
 			echo $tab."<h2>Liste des cours à venir</h2>\n";
 			Cours::liste_cours_futurs_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
-			//echo $tab."<h2>Liste des cours (a cacher : JS)</h2>\n";
+			
+			// Commande test pour l'affichage de tous les cours de la promotion
 			//Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}		
 	}

@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Appartient_Salle_TypeSalle - Interface entre les salles et les types de salles
+	 */ 
 	class Appartient_Salle_TypeSalle {
 		
 		public static $nomTable = "Appartient_Salle_TypeSalle";
@@ -8,6 +11,10 @@
 			"idTypeSalle"
 		);
 		
+		/**
+		 * Constructeur de la classe Appartient_Salle_TypeSalle
+		 * Récupère les informations de Appartient_Salle_TypeSalle dans la base de données depuis l'id
+		 */
 		public function Appartient_Salle_TypeSalle() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -25,13 +32,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Appartient_Salle_TypeSalle::$attributs as $att) {
-				$string .= $att.":".$this->$att." ";
-			}
-			return $string;
 		}
 	}
