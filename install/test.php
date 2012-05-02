@@ -9,5 +9,5 @@
 	
 	if (CREER_BD) {
 		Utils_SQL::sql_from_file("../sql/AllCreates.sql");
-		Utils_SQL::sql_from_file("../sql/AllInserts.sql");
+		Utils_SQL::sql_from_file("../sql/baseTest.sql");
 	}

@@ -14,7 +14,6 @@ INSERT INTO `Promotion` (`nom`, `annee`, `tsDebut`, `tsFin`) VALUES
 ('M2 Informatique', 2011, '2011-09-01 00:00:00', '2012-05-31 00:00:00');
 
 INSERT INTO `Specialite` (`idPromotion`, `nom`, `intitule`) VALUES
--- idPromotion 4 = Master 1 Informatique
 (4, 'DL', 'Développement Logiciel'),
 (4, 'IHM', 'Interaction Homme-Machine'),
 (4, 'IA&RF', 'Intelligence Artificielle et Reconnaissance des Formes'),
@@ -32,67 +31,6 @@ INSERT INTO `Etudiant` (`numeroEtudiant`, `nom`, `prenom`, `email`, `telephone`,
 (20700000, 'Sans D''Aggut', 'Thomas', 'mail8@mail.com', '', 1, 4, 2),
 (20800000, 'Collet', 'Lois', 'mail9@mail.com', '', 1, 4, 1),
 (20900000, 'Weissebeck', 'Thierry', 'mail10@mail.com', '', 1, 4, 1);
-
-INSERT INTO `Batiment` (`nom`, `lat`, `lon`) VALUES
-("1A", 43.562186, 1.467211),
-("1CN", 43.561237, 1.466922),
-("1R1", 43.561222, 1.466289),
-("1R2", 43.561751, 1.466407),
-("1R3", 43.561681, 1.465945),
-("1TP1", 43.561906, 1.466879),
-("2A", NULL, NULL),
-("2R1", NULL, NULL),
-("2TP1", NULL, NULL),
-("2TP2", NULL, NULL),
-("2TP3", NULL, NULL),
-("3A", NULL, NULL),
-("3PN", NULL, NULL),
-("3R1", NULL, NULL),
-("3R2", 43.561136, 1.468745),
-("3R3", NULL, NULL),
-("3SC", NULL, NULL),
-("3TP1", NULL, NULL),
-("4A", 43.558369, 1.470087),
-("4R3", NULL, NULL),
-("4TP1", NULL, NULL),
-("4TP2", NULL, NULL),
-("4TP4", NULL, NULL),
-("U1", 43.560343, 1.47029),
-("U2", 43.561284, 1.470537),
-("U3", 43.562038, 1.470076),
-("U4", 43.562722, 1.469378);
-
-
-INSERT INTO `Salle` (`nom`, `nomBatiment`, `capacite`) VALUES
-('A16', '1A', 30),
-('010', '1R1', 30),
-('017', '1R1', 30),
-('B7', '1TP1', 30),
-('BMIG', '1TP1', 30),
-('213', 'U2', 30),
-('112', 'U3', 20),
-('210', 'U3', 20),
-('211', 'U3', 20),
-('212', 'U3', 20),
-('213', 'U3', 20),
-('214', 'U3', 20),
-('215', 'U3', 20),
-('216', 'U3', 20),
-('302', 'U4', 30),
-('312', 'U4', 30);
-
-INSERT INTO `Type_Cours` (`nom`) VALUES
-('Cours'),
-('TD'),
-('TP'),
-('Examen'),
-('Reunion'),
-('Autre');
-
-INSERT INTO `Type_Salle` (`nom`) VALUES
-('Amphi'),
-('Salle de TD'),
-('Salle de TP');
 
 INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
 (1, 1),

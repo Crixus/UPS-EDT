@@ -198,6 +198,35 @@ CREATE TABLE IF NOT EXISTS `Batiment` (
 INSERT INTO `Batiment` (`id`, `nom`, `lat`, `lon`) VALUES
 (0, 'DEFAULT', NULL, NULL);
 
+INSERT INTO `Batiment` (`nom`, `lat`, `lon`) VALUES
+("1A", 43.562186, 1.467211),
+("1CN", 43.561237, 1.466922),
+("1R1", 43.561222, 1.466289),
+("1R2", 43.561751, 1.466407),
+("1R3", 43.561681, 1.465945),
+("1TP1", 43.561906, 1.466879),
+("2A", NULL, NULL),
+("2R1", NULL, NULL),
+("2TP1", NULL, NULL),
+("2TP2", NULL, NULL),
+("2TP3", NULL, NULL),
+("3A", NULL, NULL),
+("3PN", NULL, NULL),
+("3R1", NULL, NULL),
+("3R2", 43.561136, 1.468745),
+("3R3", NULL, NULL),
+("3SC", NULL, NULL),
+("3TP1", NULL, NULL),
+("4A", 43.558369, 1.470087),
+("4R3", NULL, NULL),
+("4TP1", NULL, NULL),
+("4TP2", NULL, NULL),
+("4TP4", NULL, NULL),
+("U1", 43.560343, 1.47029),
+("U2", 43.561284, 1.470537),
+("U3", 43.562038, 1.470076),
+("U4", 43.562722, 1.469378);
+
 
 CREATE TABLE IF NOT EXISTS `Type_Salle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -205,6 +234,12 @@ CREATE TABLE IF NOT EXISTS `Type_Salle` (
   PRIMARY KEY (`id`),
   UNIQUE KEY (`nom`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+INSERT INTO `Type_Salle` (`nom`) VALUES
+('Amphi'),
+('Salle de TD'),
+('Salle de TP'),
+('Gymnase');
 
 CREATE TABLE IF NOT EXISTS `Salle` (
   -- Si le Batiment est modifie, on modifier le nomBatiment de la salle (clé primaire)
@@ -221,6 +256,25 @@ CREATE TABLE IF NOT EXISTS `Salle` (
 INSERT INTO `Salle` (`id`, `nom`, `nomBatiment`, `capacite`) VALUES
 (0, 'Non assigné', 'DEFAULT', 999);
 
+INSERT INTO `Salle` (`nom`, `nomBatiment`, `capacite`) VALUES
+('Amphi Fermat', '1A', 200),
+('A16', '1A', 30),
+('010', '1R1', 30),
+('017', '1R1', 30),
+('B7', '1TP1', 30),
+('BMIG', '1TP1', 30),
+('213', 'U2', 30),
+('112', 'U3', 20),
+('210', 'U3', 20),
+('211', 'U3', 20),
+('212', 'U3', 20),
+('213', 'U3', 20),
+('214', 'U3', 20),
+('215', 'U3', 20),
+('216', 'U3', 20),
+('302', 'U4', 30),
+('312', 'U4', 30);
+
 CREATE TABLE IF NOT EXISTS `Creneau_Salle` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tsDebut` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -236,8 +290,17 @@ CREATE TABLE IF NOT EXISTS `Type_Cours` (
   PRIMARY KEY (`id`),
   UNIQUE (`nom`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
 INSERT INTO `Type_Cours` (`id`, `nom`) VALUES
 (0, 'DEFAULT');
+
+INSERT INTO `Type_Cours` (`nom`) VALUES
+('Cours'),
+('TD'),
+('TP'),
+('Examen'),
+('Reunion'),
+('Autre');
 
 CREATE TABLE IF NOT EXISTS `Cours` (
    -- Si la salle est supprimée, alors on met la salle par defaut (vérifier que la salle par défaut est dans la BD)
@@ -315,6 +378,24 @@ CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
   FOREIGN KEY (`idTypeSalle`) REFERENCES Type_Salle(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
+INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
+(1, 2),
+(2, 2),
+(3, 2),
+(4, 2),
+(5, 2),
+(6, 2),
+(7, 2),
+(8, 2),
+(9, 2),
+(10, 2),
+(11, 2),
+(12, 2),
+(13, 2),
+(14, 2),
+(15, 2),
+(16, 2);
+
 CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   `idTypeSalle` int(11) NOT NULL,
   `idTypeCours` int(11) NOT NULL,
@@ -323,12 +404,32 @@ CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   FOREIGN KEY (`idTypeCours`) REFERENCES Type_Cours(`id`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `Appartient_TypeSalle_TypeCours` (`idTypeSalle`, `idTypeCours`) VALUES
+(1, 1),
+(2, 1),
+(4, 1),
+(1, 2),
+(2, 2),
+(3, 2),
+(2, 3),
+(3, 3),
+(1, 4),
+(2, 4),
+(3, 4),
+(4, 4),
+(1, 5),
+(2, 5),
+(4, 5),
+(1, 6),
+(4, 6);
+
 
 CREATE TABLE IF NOT EXISTS `Options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   `valeur` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`nom`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 INSERT INTO `Options` (`nom`, `valeur`) VALUES
