@@ -74,6 +74,14 @@
 		}
 		
 		/**
+		 * Getter de l'idPromotion de l'étudiant
+		 * @return int : idPromotion de l'étudiant
+		 */
+		public function getIdPromotion() {
+			return $this->idPromotion;
+		}
+		
+		/**
 		 * Constructeur de la classe Etudiant
 		 * Récupère les informations de Etudiant dans la base de données depuis l'id
 		 * @param $id : int id du Etudiant

@@ -72,10 +72,18 @@
 			</table>
 			<section>
 <?php
-	EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Type'], $_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
+	if (!isset($_GET['type'])) {
+		EmploiDuTemps::affichage_edt_semaine_table($_SESSION['Type'], $_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));	
+	} else {
+		if ($_GET['type'] == "Promotion") {
+			EmploiDuTemps::affichage_edt_semaine_promotion_table($_SESSION['Utilisateur']->getIdPromotion(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));
+		}
+	}
 ?>
 			</section>
 			<footer>
+				<p><p><a href="./index.php?semaine=<?php echo $_GET['semaine']; ?>">Mon emploi du temps</a></p>
+				<p><p><a href="./index.php?type=Promotion&amp;semaine=<?php echo $_GET['semaine']; ?>">Emploi du temps de ma promotion</a></p>
 				<p><a href="./export.php?semaine=<?php echo $_GET['semaine']; ?>">Téléchargement PDF</a> - <a href="#">Téléchargement Google Agenda</a></p>
 				<p><a href="./manuels/Manuel_Utilisateur.pdf">Manuel Utilisateur</a></p>
 				<p><a href="./deconnexion.php">Deconnexion</a></p>
