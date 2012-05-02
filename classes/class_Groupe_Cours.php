@@ -11,13 +11,27 @@
 			"identifiant"
 		);
 		
+		/**
+		 * Getter du nom du Groupe_Cours
+		 * @return string : nom du Groupe_Cours
+		 */
 		public function getNom() {
 			return $this->nom;
 		}
+		
+		/**
+		 * Getter du identifiant du Groupe_Cours
+		 * @return string : identifiant du Groupe_Cours
+		 */
 		public function getIdentifiant() {
 			return $this->identifiant;
 		}
 		
+		/**
+		 * Constructeur de la classe Groupe_Cours
+		 * Récupère les informations de Groupe_Cours dans la base de données depuis l'id
+		 * @param $id : int id du Groupe_Cours
+		 */
 		public function Groupe_Cours($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -39,6 +53,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un groupe de cours
+		 * @param $id : int id du groupe de cours
+		 */
 		public static function existe_groupeCours($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -58,6 +76,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction renvoyant le nombre de groupe de cours de la promotion
+		 * @param $idPromotion : int idPromotion du groupe de cours
+		 */
 		public function getNbreGroupeCours($idPromotion) { 
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -77,6 +99,12 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un groupe de cours dans la base de données
+		 * @param $idPromotion : int idPromotion du groupe de cours
+		 * @param $nom : int nom du groupe de cours
+		 * @param $identifiant : int identifiant du groupe de cours
+		 */
 		public static function ajouter_groupeCours($idPromotion, $nom, $identifiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -98,6 +126,13 @@
 			}
 		}
 		
+		/**
+		 * Modifier un groupe de cours dans la base de données
+		 * @param $idGroupeCours : int id du groupe de cours a modifié
+		 * @param $idPromotion : int idPromotion du groupe de cours
+		 * @param $nom : int nom du groupe de cours
+		 * @param $identifiant : int identifiant du groupe de cours
+		 */
 		public static function modifier_groupeCours($idGroupeCours, $idPromotion, $nom, $identifiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -118,6 +153,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un groupe de cours dans la base de données
+		 * @param $idGroupeCours int : id du groupe de cours a supprimé
+		 */
 		public static function supprimer_groupeCours($idGroupeCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -135,6 +174,11 @@
 			}
 		}
 		
+		/**
+		 * Liste des groupes de cours de la promotion enregistrée dans la base de donnée
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @return List<Groupe_Cours> liste des groupes de cours
+		 */
 		public static function liste_groupeCours($idPromotion) {
 			$listeId = Array();
 			try {
@@ -156,7 +200,14 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des groupes de cours créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_groupeCours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des groupes de cours de la promotion enregistrée dans la base de donnée
 			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
 			$nbreGroupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -184,10 +235,13 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
+					
+					// Gestion de l'affichage des informations du groupe de cours
 					foreach (Groupe_Cours::$attributs as $att) {
 						echo $tab."\t\t<td>".$Groupe_Cours->$att."</td>\n";
 					}
 					
+					// Création des liens pour la modification et la suppression des groupes de cours et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutGroupeCours&amp;modifier_groupeCours=$idGroupeCours";
 						$pageSuppression = "./index.php?page=ajoutGroupeCours&amp;supprimer_groupeCours=$idGroupeCours";
@@ -207,9 +261,15 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un groupe de cours
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutGroupeCours($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie d'un groupe de cours
 			if (isset($_GET['modifier_groupeCours'])) { 
 				$titre = "Modifier un groupe de cours";
 				$Groupe_Cours = new Groupe_Cours($_GET['modifier_groupeCours']);
@@ -267,6 +327,9 @@
 				echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
 		}		
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutGroupeCours']) || isset($_POST['validerModificationGroupeCours'])) {
@@ -316,6 +379,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un groupe de cours, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_groupeCours'])) {	
@@ -323,25 +389,21 @@
 					// Le groupe de cours existe
 					Groupe_Cours::supprimer_groupeCours($_GET['supprimer_groupeCours']);
 					array_push($messagesNotifications, "Le groupe de cours à bien été supprimé");
-				} else {
+				} 
+				else {
 					// Le groupe de cours n'existe pas
 					array_push($messagesErreurs, "Le groupe de cours n'existe pas");
 				}
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un groupe de cours ainsi que l'affichage des groupes de cours de la promotion enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Groupe_Cours::formulaireAjoutGroupeCours($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des groupes de cours</h2>\n";
 			Groupe_Cours::liste_groupeCours_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}	
-		
-		public function toString() {
-			$string = "";
-			foreach (Groupe_Cours::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
 	}

@@ -1,4 +1,7 @@
 <?php
+	/*
+	 * Classe qui permet de gérer les Groupe_Etudiants
+	 */
 	class Groupe_Etudiants{
 		
 		public static $nomTable = "Groupe_Etudiants";
@@ -8,10 +11,23 @@
 			"identifiant"
 		);
 		
+		/**
+		 * Getter du nom du Groupe_Etudiants
+		 * @return string : nom du Groupe_Etudiants
+		 */
 		public function getNom() { return $this->nom; }
+		
+		/**
+		 * Getter du identifiant du Groupe_Etudiants
+		 * @return string : identifiant du Groupe_Etudiants
+		 */
 		public function getIdentifiant() { return $this->identifiant; }
 		
-		
+		/**
+		 * Constructeur de la classe Groupe_Etudiants
+		 * Récupère les informations de Groupe_Etudiants dans la base de données depuis l'id
+		 * @param $id : int id du Groupe_Etudiants
+		 */
 		public function Groupe_Etudiants($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -33,6 +49,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un groupe d'étudiants
+		 * @param $id : int id du groupe d'étudiants
+		 */
 		public static function existe_groupeEtudiants($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -52,6 +72,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction renvoyant le nombre de groupe d'étudiants de la promotion
+		 * @param $idPromotion : int idPromotion du groupe d'étudiants
+		 */
 		public function getNbreGroupeEtudiants($idPromotion) { 
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -71,6 +95,12 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un groupe d'étudiants dans la base de données
+		 * @param $idPromotion : int idPromotion du groupe d'étudiants
+		 * @param $nom : int nom du groupe d'étudiants
+		 * @param $identifiant : int identifiant du groupe d'étudiants
+		 */
 		public static function ajouter_groupeEtudiants($idPromotion, $nom, $identifiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -92,6 +122,13 @@
 			}
 		}
 		
+		/**
+		 * Modifier un groupe d'étudiants dans la base de données
+		 * @param $idGroupeEtudiants : int id du groupe d'étudiants a modifié
+		 * @param $idPromotion : int idPromotion du groupe d'étudiants
+		 * @param $nom : int nom du groupe d'étudiants
+		 * @param $identifiant : int identifiant du groupe d'étudiants
+		 */
 		public static function modifier_groupeEtudiants($idGroupeEtudiants, $idPromotion, $nom, $identifiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -112,6 +149,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un groupe d'étudiants dans la base de données
+		 * @param $idGroupeEtudiants int : id du groupe d'étudiants a supprimé
+		 */
 		public static function supprimer_groupeEtudiants($idGroupeEtudiants) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -129,6 +170,11 @@
 			}
 		}
 		
+		/**
+		 * Liste des groupes d'étudiants de la promotion enregistrée dans la base de donnée
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @return List<Groupe_Etudiants> liste des groupes d'étudiants
+		 */
 		public static function liste_groupeEtudiants($idPromotion) {
 			$listeId = Array();
 			try {
@@ -150,7 +196,14 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des groupes d'étudiants créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_groupeEtudiants_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des groupes d'étudiants de la promotion enregistrée dans la base de donnée
 			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -178,10 +231,13 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
+					
+					// Gestion de l'affichage des informations du groupes d'étudiants
 					foreach (Groupe_Etudiants::$attributs as $att) {
 						echo $tab."\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
 					}
 					
+					// Création des liens pour la modification et la suppression des groupes d'étudiants et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutGroupeEtudiants&amp;modifier_groupeEtudiants=$idGroupeEtudiants";
 						$pageSuppression = "./index.php?page=ajoutGroupeEtudiants&amp;supprimer_groupeEtudiants=$idGroupeEtudiants";
@@ -201,9 +257,15 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un groupe d'étudiants
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutGroupeEtudiants($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie d'un groupe d'étudiants
 			if (isset($_GET['modifier_groupeEtudiants'])) { 
 				$titre = "Modifier un groupe d'étudiant";
 				$Groupe_Etudiants = new Groupe_Etudiants($_GET['modifier_groupeEtudiants']);
@@ -260,6 +322,9 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}			
 		}		
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])) {
@@ -310,6 +375,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un groupe d'étudiants, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_groupeEtudiants'])) {	
@@ -325,26 +393,13 @@
 			}
 		}		
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un groupe d'étudiants ainsi que l'affichage des groupes de cours de la promotion enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Groupe_Etudiants::formulaireAjoutGroupeEtudiants($_GET['idPromotion'], $nombreTabulations + 1);
 			echo $tab."<h2>Liste des groupes d'étudiants</h2>\n";
 			Groupe_Etudiants::liste_groupeEtudiants_to_table($_GET['idPromotion'], $nombreTabulations + 1);
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Groupe_Etudiants::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Groupe_Etudiants::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Groupe_Etudiants::$nomTable);
 		}
 	}
