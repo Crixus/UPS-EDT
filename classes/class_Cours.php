@@ -758,7 +758,7 @@
 			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach ($liste_salle as $idSalle) {
-				$_salle = new V_listeSalles($idSalle);
+				$_salle = new V_liste_Salles($idSalle);
 				$nomBatiment = $_salle->getNomBatiment();
 				$nomSalle = $_salle->getNomSalle();
 				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
