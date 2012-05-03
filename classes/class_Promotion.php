@@ -15,16 +15,35 @@
 		
 		/**
 		 * Getter du nom de la Promotion
-		 * @return String nom de la Promotion
+		 * @return String : nom de la Promotion
 		 */
 		public function getNom() { 
 			return $this->nom;
 		}
 		
+		/**
+		 * Getter de l'année de la Promotion
+		 * @return int : annee de la Promotion
+		 */
 		public function getAnnee() { return $this->annee; }
+		
+		/**
+		 * Getter du timestamp correspondant à la date de début de la Promotion
+		 * @return timestamp : tsDebut de la Promotion
+		 */
 		public function getTsDebut() { return $this->tsDebut; }
+		
+		/**
+		 * Getter du timestamp correspondant à la date de fin de la Promotion
+		 * @return timestamp : tsFin de la Promotion
+		 */
 		public function getTsFin() { return $this->tsFin; }
 		
+		/**
+		 * Constructeur de la classe Promotion
+		 * Récupère les informations de Promotion dans la base de données depuis l'id
+		 * @param $id : int id du Promotion
+		 */
 		public function Promotion($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -45,6 +64,13 @@
 			}
 		}
 		
+		/**
+		 * Ajouter une promotion dans la base de données
+		 * @param $nom : string nom de la promotion
+		 * @param $annee : int année de la promotion
+		 * @param $tsDebut : timestamp correspondant à la date de début de la promotion
+		 * @param $tsFin : timestamp correspondant à la date de fin de la promotion
+		 */
 		public static function ajouter_promotion($nom, $annee, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -66,6 +92,14 @@
 			}
 		}
 		
+		/**
+		 * Modifier une promotion dans la base de données
+		 * @param $idPromotion : int id de la promotion a modifiée
+		 * @param $nom : string nom de la promotion
+		 * @param $annee : int année de la promotion
+		 * @param $tsDebut : timestamp correspondant à la date de début de la promotion
+		 * @param $tsFin : timestamp correspondant à la date de fin de la promotion
+		 */
 		public static function modifier_promotion($idPromotion, $nom, $annee, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -86,6 +120,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une promotion
+		 * @param id : int id de la promotion
+		 */
 		public static function existe_promotion($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -105,6 +143,10 @@
 			}
 		}
 		
+		/**
+		 * Liste les informations des promotions
+		 * @return List<Promotion> : informations des promotions
+		 */
 		public static function liste_promotion() {
 			$listeId = Array();
 			try {
@@ -124,6 +166,10 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Retourne le nombre de promotions enregistrées dans la base de données
+		 * @return int : nombre de promotions
+		 */
 		public static function nb_promotion() {
 			$listeId = Array();
 			try {
@@ -141,6 +187,11 @@
 			return $ligne['nb'];
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du select pour le choix de la promotion a sélectionnée
+		 * @param $idPromotion : int id de la promotion sélectionnée (null initialement)
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function liste_promotion_for_select($idPromotion = null, $nombreTabulations = 0) {
 			$liste_promotion = Promotion::liste_promotion();
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
@@ -161,7 +212,13 @@
 			echo $tab."</select>\n";
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des promotions créés 
+		 * @param $administration boolean : possibilité de modification si egal à 1 (ATTENTION : On ne peut supprimer une promotion)
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_promotion_to_table($administration, $nombreTabulations = 0) {
+			//Liste des promotions enregistrées dans la base de données
 			$liste_promotion = Promotion::liste_promotion();
 			$nbListePromotion = sizeof($liste_promotion);
 			
@@ -184,6 +241,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des promotions
 				foreach ($liste_promotion as $idPromo) {
 					$Promotion = new Promotion($idPromo);
 					
@@ -207,6 +265,8 @@
 						}
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des promotions et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutPromotion&amp;modifier_promotion=$idPromo";
 						if (isset($_GET['idPromotion'])) {
@@ -223,6 +283,11 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la date de la promotion (dateDebut à dateFin)
+		 * @param $dateDebut timestamp : correspondant à la date de début de la promotion
+		 * @param $dateFin timestamp : correspondant à la date de fin de la promotion
+		 */
 		public function dateCours($dateDebut, $dateFin) {
 			$chaineDateDebut = explode(' ', $dateDebut);
 			$chaineJMADebut = explode('-', $chaineDateDebut[0]);
@@ -241,6 +306,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée par la fonction dateCours pour l'affichage de la date d'une promotion 
+		 * @param $jour timestamp : int correspondant au nombre de jours d'une promotion 
+		 * @param $mois timestamp : int correspondant au nombre de mois d'une promotion 
+		 * @param $annee timestamp : int correspondant au nombre d'années d'une promotion 
+		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
 				$numero_jour = '1er';
@@ -292,9 +363,14 @@
 			echo "{$numero_jour} {$nom_mois} {$annee}";
 		}		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'une promotion
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutPromotion($idPromotion, $nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
+			// Gestion du formulaire suivant si on ajoute ou on modifie une promotion
 			if (isset($_GET['modifier_promotion'])) { 
 				$titre = "Modifier une promotion";
 				$Promotion = new Promotion($_GET['modifier_promotion']);
@@ -381,9 +457,13 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutPromotion'])) {
+				// Vérification des champs
 				$nom = $_POST['nom'];
 				$nomCorrect = true;
 				$annee = $_POST['annee'];
@@ -393,6 +473,7 @@
 				$tsFin = $_POST['tsFin'];
 				$tsFin_correct = true;
 				if ($nomCorrect && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+					// Ajout d'une nouvelle promotion
 					Promotion::ajouter_promotion($nom, $annee, $tsDebut, $tsFin);
 					array_push($messagesNotifications, "La promotion a bien été ajouté");
 				}
@@ -401,6 +482,7 @@
 				}
 			}
 			else if (isset($_POST['validerModificationPromotion'])) {
+				// Vérification des champs
 				$id = $_POST['id']; 
 				$idCorrect = Promotion::existe_promotion($id);
 				$nom = $_POST['nom'];
@@ -412,6 +494,7 @@
 				$tsFin = $_POST['tsFin'];
 				$tsFin_correct = true;
 				if ($idCorrect && $nomCorrect && $annee_correct && $tsDebut_correct && $tsFin_correct) {
+					// Modification d'une promotion
 					Promotion::modifier_promotion($_GET['modifier_promotion'], $nom, $annee, $tsDebut, $tsFin);
 					array_push($messagesNotifications, "La promotion a bien été modifié");
 				}
@@ -421,26 +504,13 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'une promotion ainsi que l'affichage des promotions enregistrées dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Promotion::formulaireAjoutPromotion($nombreTabulations + 1);
 			echo $tab."<h2>Liste des promotions</h2>\n";
 			Promotion::liste_promotion_to_table(true, $nombreTabulations + 1);
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Promotion::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Promotion::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Promotion::$nomTable);
 		}
 	}
