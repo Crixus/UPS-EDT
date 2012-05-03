@@ -139,8 +139,8 @@
 		 */
 		public static function liste_type_cours_to_table($administration, $nombreTabulations = 0) {
 			//Liste des types de cours enregistrés dans la base de donnée
-			$liste_type_cours = Type_Cours::liste_id_type_cours();
-			$nbre_type_cours = sizeof($liste_type_cours);
+			$listeTypeCours = Type_Cours::liste_id_type_cours();
+			$nbre_type_cours = sizeof($listeTypeCours);
 			
 			//Liste des types de salles enregistrés dans la base de donnée
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
@@ -174,14 +174,14 @@
 				
 				$cpt = 0;
 				// Gestion de l'affichage des informations du type de cours
-				foreach ($liste_type_cours as $idTypeCours) {
-					$Type_Cours = new Type_Cours($idTypeCours);
+				foreach ($listeTypeCours as $idTypeCours) {
+					$_TypeCours = new Type_Cours($idTypeCours);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					foreach (Type_Cours::$attributs as $att) {
-						echo $tab."\t\t<td>".$Type_Cours->$att."</td>\n";
+						echo $tab."\t\t<td>".$_TypeCours->$att."</td>\n";
 					}
 					
 					foreach ($liste_type_salle as $idTypeSalle) {					
@@ -290,8 +290,8 @@
 			// Gestion du formulaire suivant si on ajoute ou on modifie un type de cours
 			if (isset($_GET['modifier_type_cours'])) { 
 				$titre = "Modifier un type de cours";
-				$Type_Cours = new Type_Cours($_GET['modifier_type_cours']);
-				$nomModif = "value=\"{$Type_Cours->getNom()}\"";
+				$_TypeCours = new Type_Cours($_GET['modifier_type_cours']);
+				$nomModif = "value=\"{$_TypeCours->getNom()}\"";
 				$valueSubmit = "Modifier le type de cours";
 				$nameSubmit = "validerModificationTypeCours";				
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_type_cours']}\" />";
@@ -320,7 +320,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -332,20 +332,20 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutTypeCours']) || isset($_POST['validerModificationTypeCours'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutTypeCours'])) {
 					// Ajout d'un nouveau type de cours					
 					if ($nomCorrect) {		
 						Type_Cours::ajouter_type_cours($nom);
 						array_push($messagesNotifications, "Le type de cours a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else {			
@@ -355,12 +355,12 @@
 					if ($idCorrect && $nomCorrect) {
 						Type_Cours::modifier_type_cours($_GET['modifier_type_cours'], $nom);
 						array_push($messagesNotifications, "Le type de cours a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id du type de cours n'est pas correct, contacter un administrateur");
@@ -375,7 +375,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un type de cours, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_type_cours'])) {	
 				if (Type_Cours::existe_typeCours($_GET['supprimer_type_cours'])) {

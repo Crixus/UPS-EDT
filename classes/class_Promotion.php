@@ -200,8 +200,8 @@
 			echo $tab."\t<option value=0>--</option>\n";
 			
 			foreach ($liste_promotion as $idPromotionListe) {
-				$Promotion = new Promotion($idPromotionListe);
-				$nom = $Promotion->getNom();
+				$_Promotion = new Promotion($idPromotionListe);
+				$nom = $_Promotion->getNom();
 				
 				if ($idPromotionListe == $idPromotion)
 					echo $tab."\t<option value={$idPromotionListe} selected>{$nom}</option>\n";
@@ -243,7 +243,7 @@
 				$cpt = 0;
 				// Gestion de l'affichage des informations des promotions
 				foreach ($liste_promotion as $idPromo) {
-					$Promotion = new Promotion($idPromo);
+					$_Promotion = new Promotion($idPromo);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -253,15 +253,15 @@
 					$valTemp2="";
 					foreach (Promotion::$attributs as $att) {
 						if ($cptBoucle == 2)
-							$valTemp = $Promotion->$att;
+							$valTemp = $_Promotion->$att;
 						else if ($cptBoucle == 3) {
-							$valTemp2 = $Promotion->$att;
+							$valTemp2 = $_Promotion->$att;
 							echo $tab."\t\t<td>";
 							Promotion::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
 						}
 						else {
-							echo $tab."\t\t<td>".$Promotion->$att."</td>\n";
+							echo $tab."\t\t<td>".$_Promotion->$att."</td>\n";
 						}
 						$cptBoucle++;
 					}
@@ -373,11 +373,11 @@
 			// Gestion du formulaire suivant si on ajoute ou on modifie une promotion
 			if (isset($_GET['modifier_promotion'])) { 
 				$titre = "Modifier une promotion";
-				$Promotion = new Promotion($_GET['modifier_promotion']);
-				$nomModif = "value=\"{$Promotion->getNom()}\"";
-				$anneeModif = "value=\"{$Promotion->getAnnee()}\"";
-				$tsDebutModif = $Promotion->getTsDebut();
-				$tsFinModif = $Promotion->getTsFin();
+				$_Promotion = new Promotion($_GET['modifier_promotion']);
+				$nomModif = "value=\"{$_Promotion->getNom()}\"";
+				$anneeModif = "value=\"{$_Promotion->getAnnee()}\"";
+				$tsDebutModif = $_Promotion->getTsDebut();
+				$tsFinModif = $_Promotion->getTsFin();
 				$valueSubmit = "Modifier la promotion"; 
 				$nameSubmit = "validerModificationPromotion";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_promotion']}\" />";
@@ -448,7 +448,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -460,7 +460,7 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutPromotion'])) {
 				// Vérification des champs

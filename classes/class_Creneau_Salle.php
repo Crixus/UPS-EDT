@@ -252,7 +252,7 @@
 							if ($idSalle == 0)
 								echo $tab."\t\t<td></td>\n";
 							else {
-								$_salle = new V_Liste_Salles($idSalle);
+								$_salle = new V_listeSalles($idSalle);
 								$nomBatiment = $_salle->getNomBatiment();
 								$nomSalle = $_salle->getNomSalle();
 								echo $tab."\t\t<td>".$nomBatiment." ".$nomSalle."</td>\n";
@@ -377,7 +377,7 @@
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
 			// Liste des salles enregistrée dans la base de donnée
-			$liste_Salle = V_Liste_Salles::liste_salles();
+			$liste_Salle = V_Liste_Salles::listeSalles();
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie un creneau salle
 			if (isset($_GET['modifier_creneauSalle'])) { 
@@ -416,7 +416,7 @@
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach ($liste_Salle as $idSalle) {
 				if ($idSalle != 0) {
-					$_salle = new V_Liste_Salles($idSalle);
+					$_salle = new V_listeSalles($idSalle);
 					$nomBatiment = $_salle->getNomBatiment();
 					$nomSalle = $_salle->getNomSalle();
 					if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
@@ -556,7 +556,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -569,7 +569,7 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCreneauSalle']) || isset($_POST['validerModificationCreneauSalle'])) {
 				// Vérification des champs
@@ -588,7 +588,7 @@
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutCreneauSalle'])) {
 					// Ajout d'un nouveau creneau Salle
 					$recursivite = $_POST['recursivite'];
@@ -596,7 +596,7 @@
 					if ($idSalle_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Salle::ajouter_creneauSalle($idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
 						array_push($messagesNotifications, "Le creneau Salle a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else  {
@@ -606,12 +606,12 @@
 					if ($idSalle_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Salle::modifier_creneauSalle($_GET['modifier_creneauSalle'], $idSalle, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 						array_push($messagesNotifications, "Le creneau Salle a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id du creneau Salle n'est pas correct, contacter un administrateur");
@@ -626,7 +626,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un creneau salle, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_creneauSalle'])) {	
 				if (Creneau_Salle::existe_creneauSalle($_GET['supprimer_creneauSalle'])) {

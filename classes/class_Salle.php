@@ -369,11 +369,11 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSalle'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
 				$nomCorrect = true;
@@ -392,7 +392,7 @@
 			else if (isset($_POST['validerModificationSalle'])) {
 				// Vérification des champs
 				$id = htmlentities($_POST['id']);
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
 				$idCorrect = Salle::existeSalle($id);
@@ -413,7 +413,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une salle, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_salle'])) {
 				if (Salle::existeSalle($_GET['supprimer_salle'])) { // Test de saisie

@@ -46,8 +46,11 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$requete = "SHOW TABLES FROM ".DB_NAME." LIKE \"$nomTable\"";
-				$req = $bdd->query($requete);
+				$requete = "SHOW TABLES FROM ".DB_NAME." LIKE \".\"";
+				$req = $bbd->prepare($requete);
+				$req = $bdd->execute(
+					Array($nomTable)
+				);
 				return ($req->rowCount() != 0);
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";

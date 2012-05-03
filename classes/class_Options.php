@@ -220,7 +220,7 @@
 			echo $tab . "</table>\n";
 		}
 		
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			$name_formulaire = "valider_formulaire_administration_stype_typeCours";
 			if (isset($_POST[$name_formulaire])) {

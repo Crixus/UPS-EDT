@@ -287,8 +287,8 @@
 		 */
 		public static function liste_intervenant_to_table($administration, $nombreTabulations = 0) {
 			// Liste des intervenants enregistrée dans la base de donnée
-			$liste_intervenant = Intervenant::listeIdIntervenants();			
-			$nbre_intervenant = sizeof($liste_intervenant);
+			$listeIntervenants = Intervenant::listeIdIntervenants();			
+			$nbre_intervenant = sizeof($listeIntervenants);
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			if ($nbre_intervenant <= 1) {
@@ -315,34 +315,34 @@
 				
 				$cpt = 0;
 				// Gestion de l'affichage des informations de l'intervenant
-				foreach ($liste_intervenant as $idIntervenant) {
+				foreach ($listeIntervenants as $idIntervenant) {
 					if ($idIntervenant != 0) {
 						$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 						
-						$Intervenant = new Intervenant($idIntervenant);
-						$listeIdUE = $Intervenant->liste_id_UE();
+						$_Intervenant = new Intervenant($idIntervenant);
+						$listeIdUE = $_Intervenant->liste_id_UE();
 						
 						echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-						echo $tab."\t\t<td>".$Intervenant->nom."</td>\n";
-						echo $tab."\t\t<td>".$Intervenant->prenom."</td>\n";
-						echo $tab."\t\t<td>".$Intervenant->email."</td>\n";
-						echo $tab."\t\t<td>".$Intervenant->telephone."</td>\n";
-						$checked = ($Intervenant->notificationsActives) ? "checked = \"checked\"" : $checked = "";
+						echo $tab."\t\t<td>".$_Intervenant->nom."</td>\n";
+						echo $tab."\t\t<td>".$_Intervenant->prenom."</td>\n";
+						echo $tab."\t\t<td>".$_Intervenant->email."</td>\n";
+						echo $tab."\t\t<td>".$_Intervenant->telephone."</td>\n";
+						$checked = ($_Intervenant->notificationsActives) ? "checked = \"checked\"" : $checked = "";
 						$nomCheckbox = "{$idIntervenant}_notifications";
 						echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_notifications\" value=\"{$idIntervenant}\" onclick=\"intervenant_notificationsActives({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
-						$checked = ($Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
+						$checked = ($_Intervenant->actif) ? "checked = \"checked\"" : $checked = "";
 						$nomCheckbox = "{$idIntervenant}_actif";
 						echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idIntervenant}_actif\" value=\"{$idIntervenant}\" onclick=\"intervenant_actif ({$idIntervenant},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						
 						$nbUE = sizeof($listeIdUE); $cptBoucle = 1;
 						echo $tab."\t\t<td>";
 						foreach ($listeIdUE as $idUE) {
-							$UE = new UE($idUE);
+							$_UE = new UE($idUE);
 							if ($cptBoucle != 1) {
 								if ($cptBoucle != $nbUE) { echo ", "; }
 								else { echo" et "; }
 							}
-							echo "{$UE->getNom()}({$UE->getAnnee()})";
+							echo "{$_UE->getNom()}({$_UE->getAnnee()})";
 							$cptBoucle ++;
 						}
 						echo "</td>\n";
@@ -378,11 +378,11 @@
 			// Gestion du formulaire suivant si on ajoute ou on modifie un intervenant
 			if (isset($_GET['modifier_intervenant'])) { 
 				$titre = "Modifier un intervenant";
-				$Intervenant = new Intervenant($_GET['modifier_intervenant']);
-				$nomModif = "value=\"{$Intervenant->getNom()}\"";
-				$prenomModif = "value=\"{$Intervenant->getPrenom()}\"";
-				$emailModif = "value=\"{$Intervenant->getEmail()}\"";
-				$telephoneModif = "value=\"{$Intervenant->getTelephone()}\"";
+				$_Intervenant = new Intervenant($_GET['modifier_intervenant']);
+				$nomModif = "value=\"{$_Intervenant->getNom()}\"";
+				$prenomModif = "value=\"{$_Intervenant->getPrenom()}\"";
+				$emailModif = "value=\"{$_Intervenant->getEmail()}\"";
+				$telephoneModif = "value=\"{$_Intervenant->getTelephone()}\"";
 				$valueSubmit = "Modifier l'intervenant"; 
 				$nameSubmit = "validerModificationIntervenant";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_intervenant']}\" />";
@@ -435,7 +435,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -447,26 +447,26 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutIntervenant']) || isset($_POST['validerModificationIntervenant'])) {
 				// Vérification des champs			
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
-				$prenom = htmlentities($_POST['prenom'],ENT_QUOTES,'UTF-8');
+				$prenom = htmlentities($_POST['prenom'], ENT_QUOTES, 'UTF-8');
 				$prenomCorrect = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
 				$email_correct = PregMatch::est_mail($email);
 				$telephone = $_POST['telephone'];
 				$telephoneCorrect = PregMatch::est_telephone($telephone);
 			
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutIntervenant'])) {
 					// Ajout d'un nouveau intervenant
 					if ($nomCorrect && $prenomCorrect && $email_correct && $telephoneCorrect) {		
 						Intervenant::ajouter_intervenant($nom, $prenom, $email, $telephone);
 						array_push($messagesNotifications, "L'intervenant a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else {
@@ -476,12 +476,12 @@
 					if ($idCorrect && $nomCorrect && $prenomCorrect && $email_correct && $telephoneCorrect) {	
 						Intervenant::modifier_intervenant($_GET['modifier_intervenant'], $nom, $prenom, $email, $telephone);
 						array_push($messagesNotifications, "L'intervenant a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id de l'intervenant n'est pas correct, contacter un administrateur");
@@ -505,7 +505,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un intervenant, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_intervenant'])) {	
 				if (Intervenant::existe_intervenant($_GET['supprimer_intervenant'])) {

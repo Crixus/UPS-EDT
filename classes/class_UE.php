@@ -124,7 +124,7 @@
 		 * @param idResponsable : int idResponsable de l'UE
 		 * @param $idPromotion : int idPromotion de l'UE
 		 */
-		public static function ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion) {
+		public static function ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idResponsable, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -139,7 +139,7 @@
 						$nbHeuresCours, 
 						$nbHeuresTD, 
 						$nbHeuresTP, 
-						$ECTS,
+						$ects,
 						$idResponsable,
 						$idPromotion,
 					)
@@ -155,8 +155,8 @@
 		 * @return string : année de l'UE
 		 */
 		public function getAnnee() {
-			$Promotion = new Promotion($this->idPromotion);
-			return $Promotion->getAnnee();
+			$_Promotion = new Promotion($this->idPromotion);
+			return $_Promotion->getAnnee();
 		}
 		
 		/**
@@ -170,7 +170,7 @@
 		 * @param idResponsable : int idResponsable de l'UE
 		 * @param $idPromotion : int idPromotion de l'UE
 		 */
-		public static function modifier_UE($idUE, $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion) {
+		public static function modifier_UE($idUE, $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idResponsable, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -183,7 +183,7 @@
 						$nbHeuresCours, 
 						$nbHeuresTD, 
 						$nbHeuresTP, 
-						$ECTS,
+						$ects,
 						$idResponsable,
 						$idPromotion,
 						$idUE
@@ -294,8 +294,8 @@
 			}
 			
 			//Liste des UE de la promotion
-			$liste_UE = V_Infos_UE::liste_UE($idPromotion);
-			$nbUE = sizeof($liste_UE);
+			$listeUE = V_Infos_UE::liste_UE($idPromotion);
+			$nbUE = sizeof($listeUE);
 			
 			if ($nbUE == 0) {
 				echo $tab."<b>Aucune UE n'est enregistré pour cette promotion</b>\n";
@@ -327,21 +327,21 @@
 				
 				$cpt = 0;
 				// Gestion de l'affichage des informations des UE
-				foreach ($liste_UE as $idUE) {
-					$UE = new V_Infos_UE($idUE);
+				foreach ($listeUE as $idUE) {
+					$_UE = new V_Infos_UE($idUE);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					$cptBoucle=0;
-					$val_temp = "";
+					$valTemp = "";
 					foreach (V_Infos_UE::$attributs as $att) {
 						if ($cptBoucle == 6)
-							$val_temp = $UE->$att;
+							$valTemp = $_UE->$att;
 						else if ($cptBoucle == 7)
-							echo $tab."\t\t<td>".$UE->$att." ".$val_temp."</td>\n";
+							echo $tab."\t\t<td>".$_UE->$att." ".$valTemp."</td>\n";
 						else
-							echo $tab."\t\t<td>".$UE->$att."</td>\n";
+							echo $tab."\t\t<td>".$_UE->$att."</td>\n";
 						$cptBoucle++;
 					}
 					
@@ -378,19 +378,19 @@
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
 			//Liste des intervenants enregistrés dans la base de données
-			$liste_intervenant = Intervenant::listeIdIntervenants();
+			$listeIntervenants = Intervenant::listeIdIntervenants();
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie une UE
 			if (isset($_GET['modifier_UE'])) { 
 				$titre = "Modifier une UE";
-				$UE = new UE($_GET['modifier_UE']);
-				$nomModif = "value=\"{$UE->getNom()}\"";
-				$intituleModif = "value=\"{$UE->getIntitule()}\"";
-				$nbHeuresCoursModif = "value=\"{$UE->getNbHeuresCours()}\"";
-				$nbHeuresTDModif = "value=\"{$UE->getNbHeuresTD()}\"";
-				$nbHeuresTPModif = "value=\"{$UE->getNbHeuresTP()}\"";
-				$ectsModif = "value=\"{$UE->getECTS()}\"";
-				$idResponsableModif = $UE->getIdResponsable();
+				$_UE = new UE($_GET['modifier_UE']);
+				$nomModif = "value=\"{$_UE->getNom()}\"";
+				$intituleModif = "value=\"{$_UE->getIntitule()}\"";
+				$nbHeuresCoursModif = "value=\"{$_UE->getNbHeuresCours()}\"";
+				$nbHeuresTDModif = "value=\"{$_UE->getNbHeuresTD()}\"";
+				$nbHeuresTPModif = "value=\"{$_UE->getNbHeuresTP()}\"";
+				$ectsModif = "value=\"{$_UE->getECTS()}\"";
+				$idResponsableModif = $_UE->getIdResponsable();
 				$valueSubmit = "Modifier l'UE"; 
 				$nameSubmit = "validerModificationUE";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_UE']}\" />";
@@ -466,10 +466,10 @@
 			
 			$selected = (isset($idResponsableModif) && ($idResponsableModif == 0)) ? "selected=\"selected\" " : "";
 			echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnue -----</option>\n";
-			foreach ($liste_intervenant as $idIntervenant) {
+			foreach ($listeIntervenants as $idIntervenant) {
 				if ($idIntervenant != 0) {
-					$Intervenant = new Intervenant($idIntervenant);
-					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+					$_Intervenant = new Intervenant($idIntervenant);
+					$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 					$selected = (isset($idResponsableModif) && ($idResponsableModif == $idIntervenant)) ? "selected=\"selected\" " : "";
 					echo $tab."\t\t\t\t\t<option value=\"".$idIntervenant."\" ".$selected.">".$nomIntervenant." ".$prenomIntervenant."</option>\n";
 				}
@@ -480,7 +480,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -494,47 +494,47 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutUE']) || isset($_POST['validerModificationUE'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
-				$intitule = htmlentities($_POST['intitule'],ENT_QUOTES,'UTF-8');
-				$intitule_correct = PregMatch::est_intitule($intitule);
+				$intitule = htmlentities($_POST['intitule'], ENT_QUOTES, 'UTF-8');
+				$intituleCorrect = PregMatch::est_intitule($intitule);
 				$nbHeuresCours = $_POST['nbHeuresCours'];
-				$nbHeuresCours_correct = PregMatch::est_nbre_heures($nbHeuresCours);
+				$nbHeuresCoursCorrect = PregMatch::est_nbre_heures($nbHeuresCours);
 				$nbHeuresTD = $_POST['nbHeuresTD'];
-				$nbHeuresTD_correct = PregMatch::est_nbre_heures($nbHeuresTD);
+				$nbHeuresTDCorrect = PregMatch::est_nbre_heures($nbHeuresTD);
 				$nbHeuresTP = $_POST['nbHeuresTP'];
-				$nbHeuresTP_correct = PregMatch::est_nbre_heures($nbHeuresTP);
+				$nbHeuresTPCorrect = PregMatch::est_nbre_heures($nbHeuresTP);
 				$ects = $_POST['ects'];
-				$ects_correct = PregMatch::est_nbre_heures($ects);
+				$ectsCorrect = PregMatch::est_nbre_heures($ects);
 				$idIntervenant = $_POST['idIntervenant'];
 				$idIntervenantCorrecte = Intervenant::existe_intervenant($idIntervenant);
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutUE'])) {				
 					// Ajout d'une nouvelle UE
-					if ($nomCorrect && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct && $idIntervenantCorrecte) {		
+					if ($nomCorrect && $intituleCorrect && $nbHeuresCoursCorrect && $nbHeuresTDCorrect && $nbHeuresTPCorrect && $ectsCorrect && $idIntervenantCorrecte) {		
 						UE::ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
 						array_push($messagesNotifications, "L'UE a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else {				
 					// Modification d'une nouvelle UE
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = UE::existe_UE($id);
-					if ($idCorrect && $nomCorrect && $intitule_correct && $nbHeuresCours_correct && $nbHeuresTD_correct && $nbHeuresTP_correct && $ects_correct && $idIntervenantCorrecte) {			
+					if ($idCorrect && $nomCorrect && $intituleCorrect && $nbHeuresCoursCorrect && $nbHeuresTDCorrect && $nbHeuresTPCorrect && $ectsCorrect && $idIntervenantCorrecte) {			
 						UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
 						array_push($messagesNotifications, "L'UE a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id de l'UE n'est pas correct, contacter un administrateur");
@@ -542,19 +542,19 @@
 					if (!$nomCorrect) {
 						array_push($messagesErreurs, "Le nom n'est pas correct");
 					}
-					if (!$intitule_correct) {
+					if (!$intituleCorrect) {
 						array_push($messagesErreurs, "L'intitulé n'est pas correct");
 					}
-					if (!$nbHeuresCours_correct) {
+					if (!$nbHeuresCoursCorrect) {
 						array_push($messagesErreurs, "Le nombre d'heures de cours n'est pas correct");
 					}
-					if (!$nbHeuresTD_correct) {
+					if (!$nbHeuresTDCorrect) {
 						array_push($messagesErreurs, "Le nombre d'heures de TD n'est pas correct");
 					}
-					if (!$nbHeuresTP_correct) {
+					if (!$nbHeuresTPCorrect) {
 						array_push($messagesErreurs, "Le nombre d'heures de TP n'est pas correct");
 					}
-					if (!$ects_correct) {
+					if (!$ectsCorrect) {
 						array_push($messagesErreurs, "L'ECTS n'est pas correct");
 					}
 					if (!$idIntervenantCorrecte) {
@@ -567,7 +567,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une UE, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_UE'])) {	
 				if (UE::existe_UE($_GET['supprimer_UE'])) {
@@ -609,8 +609,8 @@
 		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		*/
 		public static function liste_UE_to_table_for_listeCoursParUE($idPromotion, $administration, $nombreTabulations = 0) {
-			$liste_UE = V_Infos_UE::liste_UE($idPromotion);
-			$nbUE = sizeof($liste_UE);
+			$listeUE = V_Infos_UE::liste_UE($idPromotion);
+			$nbUE = sizeof($listeUE);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbUE == 0) {
@@ -626,9 +626,9 @@
 				echo $tab."\t\t<th>\n";
 				echo $tab."\t\t\t<select name=\"idUE\" id=\"idUE\" onChange='listeCoursParUE({$idPromotion})'>\n";
 				echo $tab."\t\t\t\t<option value=\"0\">----- Sélection de l'UE -----</option>\n";
-				foreach ($liste_UE as $idUE) {	
-					$UE = new UE($idUE);
-					echo $tab."\t\t\t\t<option value=\"".$idUE."\">".$UE->getNom()."</option>\n";
+				foreach ($listeUE as $idUE) {	
+					$_UE = new UE($idUE);
+					echo $tab."\t\t\t\t<option value=\"".$idUE."\">".$_UE->getNom()."</option>\n";
 				}
 				echo $tab."\t\t\t</select>\n";
 				echo $tab."\t\t</th>\n";

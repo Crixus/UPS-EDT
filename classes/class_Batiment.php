@@ -141,7 +141,7 @@
 		public static function supprimerBatiment($idBatiment) {
 			if ($idBatiment != 0) {
 				$_batiment = new Batiment($idBatiment);
-				foreach ($_batiment->liste_salles() as $_salle) {
+				foreach ($_batiment->listeSalles() as $_salle) {
 					Cours::modifier_salle_tout_cours($_salle->getId(), 0);
 				}
 				try {
@@ -162,7 +162,7 @@
 		 * Renvoi la liste des salles du batiment
 		 * @return List<Salle> liste des salles du batiment
 		 */
-		public function liste_salles() {
+		public function listeSalles() {
 			$listeSalle = Array();
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -233,7 +233,7 @@
 		 */
 		public function table_salles($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
-			$liste_salles = $this->liste_salles();
+			$liste_salles = $this->listeSalles();
 			
 			if (sizeof($liste_salles) == 0) {
 				echo $tab."<p class=\"erreur\">Pas de salles</p>\n";	
@@ -406,14 +406,14 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutBatiment'])) { //pour l'Ajout d'un batiment
 				if (!isset($_POST['nom']) || !isset($_POST['lat']) || !isset($_POST['lon'])) {
 					array_push($messagesErreurs, "Problème de formulaire");
 				}
 				else {
-					$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+					$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 					$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 					$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 					$nomCorrect = true; // Pas de vérifications spéciales pour un nom de batiment
@@ -432,7 +432,7 @@
 				}
 			}
 			if (isset($_POST['validerModificationBatiment'])) { //pour la modification d'un batiment
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$lat = ($_POST['lat'] == '') ? NULL : htmlentities($_POST['lat']);
 				$lon = ($_POST['lon'] == '') ? NULL : htmlentities($_POST['lon']);
 				$id = $_POST['id'];
@@ -457,7 +457,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un batiment, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_batiment'])) {			
 				if (Batiment::existeBatiment($_GET['supprimer_batiment'])) {

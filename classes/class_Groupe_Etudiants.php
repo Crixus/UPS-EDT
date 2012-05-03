@@ -53,7 +53,7 @@
 		 * Fonction testant l'existence d'un groupe d'étudiants
 		 * @param $id : int id du groupe d'étudiants
 		 */
-		public static function existe_groupeEtudiants($id) {
+		public static function existeGroupeEtudiants($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -204,7 +204,7 @@
 		 */
 		public static function liste_groupeEtudiants_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			// Liste des groupes d'étudiants de la promotion enregistrée dans la base de donnée
-			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
+			$listeGroupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
@@ -225,8 +225,8 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
-				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
+				foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+					$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -234,7 +234,7 @@
 					
 					// Gestion de l'affichage des informations du groupes d'étudiants
 					foreach (Groupe_Etudiants::$attributs as $att) {
-						echo $tab."\t\t<td>".$Groupe_Etudiants->$att."</td>\n";
+						echo $tab."\t\t<td>".$_GroupeEtudiants->$att."</td>\n";
 					}
 					
 					// Création des liens pour la modification et la suppression des groupes d'étudiants et gestion de l'URL 
@@ -268,13 +268,13 @@
 			// Gestion du formulaire suivant si on ajoute ou on modifie d'un groupe d'étudiants
 			if (isset($_GET['modifier_groupeEtudiants'])) { 
 				$titre = "Modifier un groupe d'étudiant";
-				$Groupe_Etudiants = new Groupe_Etudiants($_GET['modifier_groupeEtudiants']);
-				$nomModif = "value=\"{$Groupe_Etudiants->getNom()}\"";
-				$Promotion = new Promotion($idPromotion);
-				$nom_promotion = $Promotion->getNom();
-				$annee_promotion = $Promotion->getAnnee();
-				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiantModif = "value=\"{$Groupe_Etudiants->getIdentifiant()}\"";
+				$_GroupeEtudiants = new Groupe_Etudiants($_GET['modifier_groupeEtudiants']);
+				$nomModif = "value=\"{$_GroupeEtudiants->getNom()}\"";
+				$_Promotion = new Promotion($idPromotion);
+				$nomPromotion = $_Promotion->getNom();
+				$anneePromotion = $_Promotion->getAnnee();
+				$preIdentifiant = "{$anneePromotion}-{$nomPromotion}-";
+				$identifiantModif = "value=\"{$_GroupeEtudiants->getIdentifiant()}\"";
 				$valueSubmit = "Modifier le groupe d'étudiant"; 
 				$nameSubmit = "validerModificationGroupeEtudiants";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_groupeEtudiants']}\" />";
@@ -286,11 +286,11 @@
 			else {
 				$titre = "Ajouter un groupe d'étudiant";
 				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
-				$Promotion = new Promotion($idPromotion);
-				$nom_promotion = $Promotion->getNom();
-				$annee_promotion = $Promotion->getAnnee();
-				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiantModif = "value=\"{$pre_identifiant}\"";
+				$_Promotion = new Promotion($idPromotion);
+				$nomPromotion = $_Promotion->getNom();
+				$anneePromotion = $_Promotion->getAnnee();
+				$preIdentifiant = "{$anneePromotion}-{$nomPromotion}-";
+				$identifiantModif = "value=\"{$preIdentifiant}\"";
 				$valueSubmit = "Ajouter le groupe d'étudiant"; 
 				$nameSubmit = "validerAjoutGroupeEtudiants";
 				$hidden = "";
@@ -302,7 +302,7 @@
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td><label>Nom</label></td>\n";
 			echo $tab."\t\t\t<td>\n";
-			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" onChange=\"modification_identifiant('{$pre_identifiant}')\" required {$nomModif}/>\n";
+			echo $tab."\t\t\t\t<input name=\"nom\" type=\"text\" onChange=\"modification_identifiant('{$preIdentifiant}')\" required {$nomModif}/>\n";
 			echo $tab."\t\t\t</td>\n";
 			echo $tab."\t\t</tr>\n";
 			
@@ -313,7 +313,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -325,42 +325,42 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutGroupeEtudiants']) || isset($_POST['validerModificationGroupeEtudiants'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
 				
-				$Promotion = new Promotion($_GET['idPromotion']);
-				$nom_promotion = $Promotion->getNom();
-				$annee_promotion = $Promotion->getAnnee();
-				$pre_identifiant = "{$annee_promotion}-{$nom_promotion}-";
-				$identifiant = $pre_identifiant.$nom;
-				$identifiant_correct = $nomCorrect;
+				$_Promotion = new Promotion($_GET['idPromotion']);
+				$nomPromotion = $_Promotion->getNom();
+				$anneePromotion = $_Promotion->getAnnee();
+				$preIdentifiant = "{$anneePromotion}-{$nomPromotion}-";
+				$identifiant = $preIdentifiant.$nom;
+				$identifiantCorrect = $nomCorrect;
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutGroupeEtudiants'])) {
 					// Ajout d'un nouveau groupe d'étudiants				
-					if ($nomCorrect && $identifiant_correct) {	
+					if ($nomCorrect && $identifiantCorrect) {	
 						Groupe_Etudiants::ajouter_groupeEtudiants($_GET['idPromotion'], $nom, $identifiant);
 						array_push($messagesNotifications, "Le groupe d'étudiant a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else {
 					// Modification d'un groupe d'étudiants
 					$id = htmlentities($_POST['id']);
-					$idCorrect = Groupe_Etudiants::existe_groupeEtudiants($id);
-					if ($idCorrect && $nomCorrect && $identifiant_correct) {	
+					$idCorrect = Groupe_Etudiants::existeGroupeEtudiants($id);
+					if ($idCorrect && $nomCorrect && $identifiantCorrect) {	
 						Groupe_Etudiants::modifier_groupeEtudiants($_GET['modifier_groupeEtudiants'], $_GET['idPromotion'], $nom, $identifiant);
 						array_push($messagesNotifications, "Le groupe d'étudiant a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id du groupe d'étudiants n'est pas correct, contacter un administrateur");
@@ -368,7 +368,7 @@
 					if (!$nomCorrect) {
 						array_push($messagesErreurs, "Le nom n'est pas correct");
 					}
-					if (!$identifiant_correct) {
+					if (!$identifiantCorrect) {
 						array_push($messagesErreurs, "L'identifiant n'est pas correct");
 					}
 				}
@@ -378,10 +378,10 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un groupe d'étudiants, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_groupeEtudiants'])) {	
-				if (Groupe_Etudiants::existe_groupeEtudiants($_GET['supprimer_groupeEtudiants'])) {
+				if (Groupe_Etudiants::existeGroupeEtudiants($_GET['supprimer_groupeEtudiants'])) {
 					// Le groupe d'étudiant existe
 					Groupe_Etudiants::supprimer_groupeEtudiants($_GET['supprimer_groupeEtudiants']);
 					array_push($messagesNotifications, "Le groupe d'étudiant à bien été supprimé");

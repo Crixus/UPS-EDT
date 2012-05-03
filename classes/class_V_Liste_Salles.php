@@ -43,7 +43,7 @@
 		 * Récupère les informations de V_Liste_Salles dans la base de données depuis l'id
 		 * @param $id : int id du V_Liste_Salles
 		 */
-		public function V_Liste_Salles($id) {
+		public function V_listeSalles($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -68,7 +68,7 @@
 		 * Renvoi la liste des salles
 		 * @return List<V_Liste_Salles> liste des salles enregistrés dans la base de donnée
 		 */
-		public static function liste_salles() {
+		public static function listeSalles() {
 			$listeId = Array();
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;

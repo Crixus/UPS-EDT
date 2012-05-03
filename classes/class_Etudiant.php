@@ -343,7 +343,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -355,15 +355,15 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutEtudiant']) || isset($_POST['validerModificationEtudiant'])) {
 				// Vérification des champs
 				$numeroEtudiant = $_POST['numeroEtudiant'];
 				$numeroEtudiant_correct = PregMatch::est_numero_etudiant($numeroEtudiant);
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
-				$prenom = htmlentities($_POST['prenom'],ENT_QUOTES,'UTF-8');
+				$prenom = htmlentities($_POST['prenom'], ENT_QUOTES, 'UTF-8');
 				$prenomCorrect = PregMatch::est_prenom($prenom);
 				$email = $_POST['email'];
 				$email_correct = PregMatch::est_mail($email);
@@ -372,13 +372,13 @@
 				$idSpecialite = $_POST['idSpecialite'];
 				$idSpecialiteCorrecte = Specialite::existe_specialite($idSpecialite);
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutEtudiant'])) {
 					// Ajout d'un nouveau étudiant
 					if ($numeroEtudiant_correct && $nomCorrect && $prenomCorrect && $email_correct && $telephoneCorrect && $idSpecialiteCorrecte) {		
 						Etudiant::ajouter_etudiant($numeroEtudiant, $nom, $prenom, $email, $telephone, $_GET['idPromotion'], $idSpecialite);
 						array_push($messagesNotifications, "L'étudiant a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else  {
@@ -388,12 +388,12 @@
 					if ($idCorrect && $numeroEtudiant_correct && $nomCorrect && $prenomCorrect && $email_correct && $telephoneCorrect && $idSpecialiteCorrecte) {		
 						Etudiant::modifier_etudiant($_GET['modifier_etudiant'], $numeroEtudiant, $nom, $prenom, $email, $telephone, $idSpecialite);
 						array_push($messagesNotifications, "L'étudiant a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id de l'étudiant n'est pas correct, contacter un administrateur");
@@ -423,7 +423,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un étudiant, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_etudiant'])) {	
 				if (Etudiant::existe_etudiant($_GET['supprimer_etudiant'])) {

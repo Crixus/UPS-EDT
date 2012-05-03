@@ -85,10 +85,10 @@
 			$this->Ln();
 			
 			foreach ($jours as $j => $t) {
-				$coursDuJours = $listeCoursSemaine[$t];
-				$nombresCours = sizeof($coursDuJours);
+				$_CoursDuJours = $listeCoursSemaine[$t];
+				$nombresCours = sizeof($_CoursDuJours);
 				$premierParcours = true;
-				while ($premierParcours || sizeof($coursDuJours) > 0) {
+				while ($premierParcours || sizeof($_CoursDuJours) > 0) {
 					if ($premierParcours) {
 						$this->Cell(17, 5, $j, 1);
 					} else {
@@ -109,8 +109,8 @@
 						}
 						$boolCours = false;
 						for ($i = 0; $i < $nombresCours; $i++) {
-							if (isset($coursDuJours[$i])) {
-								$idCours = $coursDuJours[$i];
+							if (isset($_CoursDuJours[$i])) {
+								$idCours = $_CoursDuJours[$i];
 								$_Cours = new V_Infos_Cours($idCours);
 								if ($_Cours->commence_a_heure("" . $heure . ":" . $quart . ":00")) {
 									$nbQuartsCours = $_Cours->nbQuartsHeure();
@@ -118,7 +118,7 @@
 									$this->Cell(5 * $nbQuartsCours, 5, $_Cours->getNomUE(), 1, 0, 'C');
 									$boolCours = true;
 									$nbQuartsHeure += $nbQuartsCours;
-									unset($coursDuJours[$i]); // Je supprime l'id du tableau
+									unset($_CoursDuJours[$i]); // Je supprime l'id du tableau
 									break; // On sort de la boucle
 								}
 							}
@@ -146,8 +146,8 @@
 	// Ajout d'une page
 	$pdf->AddPage();
 	
-	$coursSemaine = EmploiDuTemps::cours_semaine($_SESSION['Type'], $_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));
+	$_CoursSemaine = EmploiDuTemps::cours_semaine($_SESSION['Type'], $_SESSION['Utilisateur']->getId(), EmploiDuTemps::timestamp_debut_semaine($_GET['semaine']));
 	
-	$pdf->BasicTable($coursSemaine);
+	$pdf->BasicTable($_CoursSemaine);
 	
 	$pdf->Output();

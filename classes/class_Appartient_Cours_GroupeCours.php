@@ -41,11 +41,11 @@
 			$idPromotion = $_GET['idPromotion'];
 			
 			//liste des groupes de cours de la promotion
-			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
+			$listeGroupeCours = Groupe_Cours::listeGroupeCours($idPromotion);
 			$nbreGroupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
 			
 			//liste des futur cours de la promotion
-			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
+			$listeCours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbre_cours = V_Infos_Cours::getNbreCoursFutur($idPromotion);
 			$tab="";
 			
@@ -60,25 +60,25 @@
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
-				foreach ($liste_groupeCours as $idGroupeCours) {
-					$Groupe_Cours = new Groupe_Cours($idGroupeCours);
-					echo $tab."\t\t<td>".$Groupe_Cours->getNom()."</td>\n";
+				foreach ($listeGroupeCours as $idGroupeCours) {
+					$_GroupeCours = new Groupe_Cours($idGroupeCours);
+					echo $tab."\t\t<td>".$_GroupeCours->getNom()."</td>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr>\n";
 				echo $tab."\t<td class=\"fondGrisFonce\" rowspan='{$nbre_cours}'>Cours</td>\n";
 				$cpt = 0;
-				foreach ($liste_cours as $idCours) {
+				foreach ($listeCours as $idCours) {
 					if ($cpt == 0) { $couleurFond="fondBlanc"; }
 					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
-					$Cours = new V_Infos_Cours($idCours);
-					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Cours->getNomUE()." (".$Cours->getNomTypeCours()." / ".$Cours->getNomBatiment()."-".$Cours->getNomSalle().")</td>\n";
+					$_Cours = new V_Infos_Cours($idCours);
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_Cours->getNomUE()." (".$_Cours->getNomTypeCours()." / ".$_Cours->getNomBatiment()."-".$_Cours->getNomSalle().")</td>\n";
 					
-					foreach ($liste_groupeCours as $idGroupeCours) {
-						$Groupe_Cours = new Groupe_Cours($idGroupeCours);
+					foreach ($listeGroupeCours as $idGroupeCours) {
+						$_GroupeCours = new Groupe_Cours($idGroupeCours);
 
 						$nom_case = "case_GroupeCours_".$idGroupeCours;
 						if (Appartient_Cours_GroupeCours::appartenance_cours_groupeCours($idCours, $idGroupeCours))
@@ -94,8 +94,8 @@
 				
 				echo $tab."\t<tr>\n";
 				echo $tab."\t<th class=\"fondGrisFonce\" colspan='2'>Tous les cours</th>\n";
-				foreach ($liste_groupeCours as $idGroupeCours) {
-					$Groupe_Cours = new Groupe_Cours($idGroupeCours);
+				foreach ($listeGroupeCours as $idGroupeCours) {
+					$_GroupeCours = new Groupe_Cours($idGroupeCours);
 
 					$nom_case = "case_promotion_".$idGroupeCours;
 					if ($nbre_cours == Appartient_Cours_GroupeCours::appartenance_promotion_groupe_Cours($idGroupeCours))

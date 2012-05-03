@@ -260,8 +260,8 @@
 							if ($idIntervenant == 0)
 								echo $tab."\t\t<td></td>\n";
 							else {
-								$Intervenant = new Intervenant($idIntervenant);
-								$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+								$_Intervenant = new Intervenant($idIntervenant);
+								$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 								echo $tab."\t\t<td>".$nomIntervenant." ".$prenomIntervenant."</td>\n";
 							}
 						}
@@ -384,7 +384,7 @@
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
 			// Liste des intervenants enregistrée dans la base de donnée
-			$liste_intervenant = Intervenant::listeIdIntervenants();
+			$listeIntervenants = Intervenant::listeIdIntervenants();
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie un creneau intervenant
 			if (isset($_GET['modifier_creneauIntervenant'])) { 
@@ -421,10 +421,10 @@
 			
 			if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-			foreach ($liste_intervenant as $idIntervenant) {
+			foreach ($listeIntervenants as $idIntervenant) {
 				if ($idIntervenant != 0) {
-					$Intervenant = new Intervenant($idIntervenant);
-					$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+					$_Intervenant = new Intervenant($idIntervenant);
+					$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 					if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
 				}
@@ -562,7 +562,7 @@
 			
 			echo $tab."\t\t<tr>\n";
 			echo $tab."\t\t\t<td></td>\n";
-			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+			echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 			echo $tab."\t\t</tr>\n";
 			
 			echo $tab."\t</table>\n";
@@ -575,7 +575,7 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCreneauIntervenant']) || isset($_POST['validerModificationCreneauIntervenant'])) {
 				// Vérification des champs
@@ -594,7 +594,7 @@
 				$minuteFin = $_POST['minuteFin'];
 				$minuteFin_correct = true;
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutCreneauIntervenant'])) {
 					// Ajout d'un nouveau creneau intervenant
 					$recursivite = $_POST['recursivite'];
@@ -602,7 +602,7 @@
 					if ($idIntervenantCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
 						Creneau_Intervenant::ajouter_creneauIntervenant($idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);
 						array_push($messagesNotifications, "Le creneau intervenant a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else  {
@@ -612,12 +612,12 @@
 					if ($idIntervenantCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {	
 						Creneau_Intervenant::modifier_creneauIntervenant($_GET['modifier_creneauIntervenant'], $idIntervenant, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 						array_push($messagesNotifications, "Le creneau intervenant a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id du creneau intervenant n'est pas correct, contacter un administrateur");
@@ -632,7 +632,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un creneau intervenant, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_creneauIntervenant'])) {	
 				if (Creneau_Intervenant::existe_creneauIntervenant($_GET['supprimer_creneauIntervenant'])) {

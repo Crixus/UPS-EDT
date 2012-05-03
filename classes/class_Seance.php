@@ -251,7 +251,7 @@
 				$cpt = 0;
 				// Gestion de l'affichage des informations des séances
 				foreach ($liste_seance as $idSeance) {
-					$Seance = new V_Infos_Seance_Promotion($idSeance);
+					$_Seance = new V_Infos_Seance_Promotion($idSeance);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -261,27 +261,27 @@
 					$valTemp2="";
 					foreach (V_Infos_Seance_Promotion::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 3) || ($cptBoucle == 5) || ($cptBoucle == 12))
-							echo $tab."\t\t<td>".$Seance->$att."</td>\n";	
+							echo $tab."\t\t<td>".$_Seance->$att."</td>\n";	
 							
 						else if (($cptBoucle == 7) || ($cptBoucle == 10))
-							$valTemp = $Seance->$att;
+							$valTemp = $_Seance->$att;
 							
 						else if (($cptBoucle == 8) || ($cptBoucle == 11)) {
-							$val = $Seance->$att." ".$valTemp;
+							$val = $_Seance->$att." ".$valTemp;
 							$valTemp="";
 							echo $tab."\t\t<td>".$val."</td>\n";
 						}	
 						
 						else if ($cptBoucle == 13) {
-							$checked = ($Seance->$att) ? "checked = \"checked\"" : $checked = "";
+							$checked = ($_Seance->$att) ? "checked = \"checked\"" : $checked = "";
 							$nomCheckbox = "{$idSeance}_effectue";
 							echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idSeance}_effectue\" value=\"{$idSeance}\" onclick=\"seance_effectue({$idSeance},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 						}
 						
 						else if ($cptBoucle == 14) {
-							$idSeancePrecedente = $Seance->$att;
-							$SeancePrecedente = new Seance($idSeancePrecedente);
-							$nomSeancePrecedente = ($idSeancePrecedente == 0) ? "" :  $SeancePrecedente->getNom();
+							$idSeancePrecedente = $_Seance->$att;
+							$_SeancePrecedente = new Seance($idSeancePrecedente);
+							$nomSeancePrecedente = ($idSeancePrecedente == 0) ? "" :  $_SeancePrecedente->getNom();
 							echo $tab."\t\t<td>".$nomSeancePrecedente."</td>\n";
 						}
 												
@@ -317,25 +317,25 @@
 		 */
 		public function formulaireAjoutSeance($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
-			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
-			$nbUE = sizeof($liste_UE_promotion);
-			$liste_type_cours = Type_Cours::liste_id_type_cours();
-			$nbTypeCours = sizeof($liste_type_cours);
-			$liste_intervenant = Intervenant::listeIdIntervenants();
+			$listeUE_promotion = UE::liste_UE_promotion($idPromotion);
+			$nbUE = sizeof($listeUE_promotion);
+			$listeTypeCours = Type_Cours::liste_id_type_cours();
+			$nbTypeCours = sizeof($listeTypeCours);
+			$listeIntervenants = Intervenant::listeIdIntervenants();
 			$liste_seance_precedente_promotion = V_Infos_Seance_Promotion::liste_seance($idPromotion);
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie une séance
 			if (isset($_GET['modifier_seance'])) { 
 				$titre = "Modifier une séance";
-				$Seance = new Seance($_GET['modifier_seance']);
-				$idSeanceEnregistrer = $Seance->getId();
-				$nomModif = "value=\"{$Seance->getNom()}\"";
-				$dureeModif = "value=\"{$Seance->getDuree()}\"";
-				$effectueModif = $Seance->getEffectue();
-				$idSalleModif = $Seance->getIdSalle();
-				$idIntervenantModif = $Seance->getIdIntervenant();
-				$idTypeCoursModif = $Seance->getIdTypeCours();
-				$idSeancePrecedenteModif = $Seance->getIdSeancePrecedente();
+				$_Seance = new Seance($_GET['modifier_seance']);
+				$idSeanceEnregistrer = $_Seance->getId();
+				$nomModif = "value=\"{$_Seance->getNom()}\"";
+				$dureeModif = "value=\"{$_Seance->getDuree()}\"";
+				$effectueModif = $_Seance->getEffectue();
+				$idSalleModif = $_Seance->getIdSalle();
+				$idIntervenantModif = $_Seance->getIdIntervenant();
+				$idTypeCoursModif = $_Seance->getIdTypeCours();
+				$idSeancePrecedenteModif = $_Seance->getIdSeancePrecedente();
 				$valueSubmit = "Modifier la séance"; 
 				$nameSubmit = "validerModificationSeance";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_seance']}\" />";
@@ -382,9 +382,9 @@
 				echo $tab."\t\t\t<td><label for=\"UE\">UE</label></td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
-				foreach ($liste_UE_promotion as $idUE) {
-					$UE = new UE($idUE);
-					$nomUE = $UE->getNom();
+				foreach ($listeUE_promotion as $idUE) {
+					$_UE = new UE($idUE);
+					$nomUE = $_UE->getNom();
 					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
 				}
@@ -396,9 +396,9 @@
 				echo $tab."\t\t\t<td><label for=\"type\">Type</label></td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
-				foreach ($liste_type_cours as $idTypeCours) {
-					$Type_Cours = new Type_Cours($idTypeCours);
-					$nomTypeCours = $Type_Cours->getNom();
+				foreach ($listeTypeCours as $idTypeCours) {
+					$_TypeCours = new Type_Cours($idTypeCours);
+					$nomTypeCours = $_TypeCours->getNom();
 					if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
 				}
@@ -413,10 +413,10 @@
 				
 				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-				foreach ($liste_intervenant as $idIntervenant) {
+				foreach ($listeIntervenants as $idIntervenant) {
 					if ($idIntervenant != 0) {
-						$Intervenant = new Intervenant($idIntervenant);
-						$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+						$_Intervenant = new Intervenant($idIntervenant);
+						$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 						echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
 					}
@@ -444,8 +444,8 @@
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 				foreach ($liste_seance_precedente_promotion as $idSeance) {
 					if (!(isset($_GET['modifier_seance']) && ($idSeance == $idSeanceEnregistrer))) {
-						$Seance = new Seance($idSeance);
-						$nomSeance = $Seance->getNom();
+						$_Seance = new Seance($idSeance);
+						$nomSeance = $_Seance->getNom();
 						if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == $idSeance)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 						echo $tab."\t\t\t\t\t<option value=\"$idSeance\" $selected>$nomSeance</option>\n";
 					}
@@ -456,7 +456,7 @@
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td></td>\n";
-				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t</table>\n";
@@ -469,14 +469,14 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSeance']) || isset($_POST['validerModificationSeance'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = PregMatch::est_nom($nom);
 				$duree = $_POST['duree'];
-				$duree_correct = true;
+				$dureeCorrect = true;
 				$idUE = $_POST['UE'];
 				$idUE_correct = true;
 				$typeCours = $_POST['typeCours'];
@@ -488,28 +488,28 @@
 				$idSeancePrecedente = $_POST['seancePrecedente'];
 				$idSeancePrecedenteCorrecte = true;		
 				
-				$validation_ajout = false;
+				$validationAjout = false;
 				if (isset($_POST['validerAjoutSeance'])) {
 					// Ajout d'une nouvelle seance
-					if ($nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($nomCorrect && $dureeCorrect && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
 						Seance::ajouter_seance($nom, $duree, 0, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);				
 						array_push($messagesNotifications, "La séance a bien été ajouté");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}
 				}
 				else {
 					// Modification d'une nouvelle seance
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($idCorrect && $nomCorrect && $duree_correct && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($idCorrect && $nomCorrect && $dureeCorrect && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
 						Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
 						array_push($messagesNotifications, "La séance a bien été modifié");
-						$validation_ajout = true;
+						$validationAjout = true;
 					}				
 				}
 				
 				// Traitement des erreurs
-				if (!$validation_ajout) {
+				if (!$validationAjout) {
 					array_push($messagesErreurs, "La saisie n'est pas correcte");
 					if (isset($idCorrect) && !$idCorrect) {
 						array_push($messagesErreurs, "L'id de la séance n'est pas correct, contacter un administrateur");
@@ -524,7 +524,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une séance, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_seance'])) {	
 				if (Seance::existe_seance($_GET['supprimer_seance'])) {

@@ -62,7 +62,7 @@ if (isset($_POST['type'])) {
 			if ($idSalleInitial == 0) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach ($liste_salle as $idSalle) {
-				$_salle = new V_Liste_Salles($idSalle);
+				$_salle = new V_listeSalles($idSalle);
 				$nomBatiment = $_salle->getNomBatiment();
 				$nomSalle = $_salle->getNomSalle();
 				if ($idSalleInitial == $idSalle) { $selected = "selected=\"selected\" "; } else { $selected = ""; }

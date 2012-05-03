@@ -41,7 +41,7 @@
 			$idPromotion = $_GET['idPromotion'];
 			
 			//liste des groupes d'étudiants de la promotion
-			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
+			$listeGroupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbreGroupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			
 			//liste des étudiants de la promotion
@@ -61,9 +61,9 @@
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
-				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
-					echo $tab."\t\t<td>".$Groupe_Etudiants->getNom()."</td>\n";
+				foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+					$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
+					echo $tab."\t\t<td>".$_GroupeEtudiants->getNom()."</td>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
@@ -78,8 +78,8 @@
 					$_etudiant = new Etudiant($idEtudiant);
 					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_etudiant->getPrenom()." ".$_etudiant->getNom()."</td>\n";
 					
-					foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-						$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
+					foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+						$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 						$nom_case = "case_GroupeEtudiants_".$idGroupeEtudiants;
 						if (Appartient_Etudiant_GroupeEtudiants::appartenance_etudiant_groupeEtudiants($idEtudiant, $idGroupeEtudiants))
@@ -95,8 +95,8 @@
 				
 				echo $tab."\t<tr>\n";
 				echo $tab."\t<th class=\"fondGrisFonce\" colspan='2'>Toute la promotion</th>\n";
-				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
+				foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+					$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 					$nom_case = "case_promotion_".$idGroupeEtudiants;
 					if ($nbre_etudiants == Appartient_Etudiant_GroupeEtudiants::appartenance_promotion_groupeEtudiants($idGroupeEtudiants))

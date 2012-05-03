@@ -246,8 +246,8 @@
 		 */
 		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			// Liste des cours de la promotion enregistrée dans la base de donnée
-			$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
-			$nbCours = sizeof($liste_cours);
+			$listeCours = V_Infos_Cours::liste_cours($idPromotion);
+			$nbCours = sizeof($listeCours);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCours == 0) {
@@ -271,8 +271,8 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
-				foreach ($liste_cours as $idCours) {
-					$Cours = new V_Infos_Cours($idCours);
+				foreach ($listeCours as $idCours) {
+					$_Cours = new V_Infos_Cours($idCours);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -284,20 +284,20 @@
 					// Gestion de l'affichage des informations du cours
 					foreach (V_Infos_Cours::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
-							$valTemp = $Cours->$att;
+							$valTemp = $_Cours->$att;
 						else if (($cptBoucle == 2) || ($cptBoucle == 7)) {
-							$val = $Cours->$att." ".$valTemp;
+							$val = $_Cours->$att." ".$valTemp;
 							$valTemp="";
 							echo $tab."\t\t<td>".$val."</td>\n";
 						}
 						else if ($cptBoucle == 5) {
-							$valTemp2 = $Cours->$att;
+							$valTemp2 = $_Cours->$att;
 							echo $tab."\t\t<td>";
 							Cours::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
 						}
 						else {
-							echo $tab."\t\t<td>".$Cours->$att."</td>\n";
+							echo $tab."\t\t<td>".$_Cours->$att."</td>\n";
 						}
 						$cptBoucle++;
 					}
@@ -331,8 +331,8 @@
 		 */
 		public static function liste_cours_futurs_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			// Liste des futurs cours de la promotion enregistrée dans la base de donnée
-			$liste_cours = V_Infos_Cours::liste_cours_futur($idPromotion);
-			$nbCours = sizeof($liste_cours);
+			$listeCours = V_Infos_Cours::liste_cours_futur($idPromotion);
+			$nbCours = sizeof($listeCours);
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbCours == 0) {
@@ -356,8 +356,8 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
-				foreach ($liste_cours as $idCours) {
-					$Cours = new V_Infos_Cours($idCours);
+				foreach ($listeCours as $idCours) {
+					$_Cours = new V_Infos_Cours($idCours);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
@@ -369,20 +369,20 @@
 					// Gestion de l'affichage des informations du cours
 					foreach (V_Infos_Cours::$attributs as $att) {
 						if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
-							$valTemp = $Cours->$att;
+							$valTemp = $_Cours->$att;
 						else if (($cptBoucle == 2) || ($cptBoucle == 7)) {
-							$val = $Cours->$att." ".$valTemp;
+							$val = $_Cours->$att." ".$valTemp;
 							$valTemp="";
 							echo $tab."\t\t<td>".$val."</td>\n";
 						}
 						else if ($cptBoucle == 5) {
-							$valTemp2 = $Cours->$att;
+							$valTemp2 = $_Cours->$att;
 							echo $tab."\t\t<td>";
 							Cours::dateCours($valTemp, $valTemp2);
 							echo "</td>\n";
 						}
 						else {
-							echo $tab."\t\t<td>".$Cours->$att."</td>\n";
+							echo $tab."\t\t<td>".$_Cours->$att."</td>\n";
 						}
 						$cptBoucle++;
 					}
@@ -503,26 +503,26 @@
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
 			// Liste des UE de la promotion enregistrée dans la base de donnée
-			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
-			$nbUE = sizeof($liste_UE_promotion);
+			$listeUE_promotion = UE::liste_UE_promotion($idPromotion);
+			$nbUE = sizeof($listeUE_promotion);
 			
 			// Liste des intervenants enregistrée dans la base de donnée
-			$liste_intervenant = Intervenant::listeIdIntervenants();
+			$listeIntervenants = Intervenant::listeIdIntervenants();
 			
 			// Liste des type de cours enregistrée dans la base de donnée
-			$liste_type_cours = Type_Cours::liste_id_type_cours();
-			$nbTypeCours = sizeof($liste_type_cours);
+			$listeTypeCours = Type_Cours::liste_id_type_cours();
+			$nbTypeCours = sizeof($listeTypeCours);
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie un cours
 			if (isset($_GET['modifier_cours'])) { 
 				$titre = "Modifier un cours";
-				$Cours = new Cours($_GET['modifier_cours']);
-				$idUEModif = $Cours->getIdUE();
-				$idSalleModif = $Cours->getIdSalle();
-				$idIntervenantModif = $Cours->getIdIntervenant();
-				$idTypeCoursModif = $Cours->getIdTypeCours();
-				$tsDebutModif = $Cours->getTsDebut();
-				$tsFinModif = $Cours->getTsFin();
+				$_Cours = new Cours($_GET['modifier_cours']);
+				$idUEModif = $_Cours->getIdUE();
+				$idSalleModif = $_Cours->getIdSalle();
+				$idIntervenantModif = $_Cours->getIdIntervenant();
+				$idTypeCoursModif = $_Cours->getIdTypeCours();
+				$tsDebutModif = $_Cours->getTsDebut();
+				$tsFinModif = $_Cours->getTsFin();
 				$valueSubmit = "Modifier le cours"; 
 				$nameSubmit = "validerModificationCours";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"".$_GET['modifier_cours']."\" />";
@@ -552,9 +552,9 @@
 				echo $tab."\t\t\t<td><label for=\"UE\">UE</label></td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"UE\" id=\"UE\">\n";
-				foreach ($liste_UE_promotion as $idUE) {
-					$UE = new UE($idUE);
-					$nomUE = $UE->getNom();
+				foreach ($listeUE_promotion as $idUE) {
+					$_UE = new UE($idUE);
+					$nomUE = $_UE->getNom();
 					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"".$idUE."\" $selected>$nomUE</option>\n";
 				}
@@ -566,9 +566,9 @@
 				echo $tab."\t\t\t<td><label for=\"type\">Type</label></td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"typeCours\" id=\"typeCours\" onChange=\"update_select_typeSalle({$idSalleModif})\">\n";
-				foreach ($liste_type_cours as $idTypeCours) {
-					$Type_Cours = new Type_Cours($idTypeCours);
-					$nomTypeCours = $Type_Cours->getNom();
+				foreach ($listeTypeCours as $idTypeCours) {
+					$_TypeCours = new Type_Cours($idTypeCours);
+					$nomTypeCours = $_TypeCours->getNom();
 					if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
 				}
@@ -583,10 +583,10 @@
 				
 				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
-				foreach ($liste_intervenant as $idIntervenant) {
+				foreach ($listeIntervenants as $idIntervenant) {
 					if ($idIntervenant != 0) {
-						$Intervenant = new Intervenant($idIntervenant);
-						$nomIntervenant = $Intervenant->getNom(); $prenomIntervenant = $Intervenant->getPrenom();
+						$_Intervenant = new Intervenant($idIntervenant);
+						$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 						echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
 					}
@@ -735,7 +735,7 @@
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td></td>\n";
-				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"{$valueSubmit}\"></td>\n";
+				echo $tab."\t\t\t<td>".$hidden."<input type=\"submit\" name=\"".$nameSubmit."\" value=\"".$valueSubmit."\"></td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t</table>\n";
@@ -758,7 +758,7 @@
 			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
 				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
 			foreach ($liste_salle as $idSalle) {
-				$_salle = new V_Liste_Salles($idSalle);
+				$_salle = new V_listeSalles($idSalle);
 				$nomBatiment = $_salle->getNomBatiment();
 				$nomSalle = $_salle->getNomSalle();
 				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
@@ -769,7 +769,7 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCours'])) { //pour l'Ajout d'un cours
 				$idUE = $_POST['UE'];
@@ -838,7 +838,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un cours, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_cours'])) {	
 				if (V_Infos_Cours::existe_cours($_GET['supprimer_cours'])) {

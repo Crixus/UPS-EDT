@@ -18,7 +18,7 @@ if (isset($_POST['appartient']) && isset($_POST['type'])) {
 			$idCours = $_POST['idCours'];
 			$idGroupeCours = $_POST['idGroupeCours'];
 			
-			if ((V_Infos_Cours::existe_cours($idCours)) && (Groupe_Cours::existe_groupeCours($idGroupeCours))) { //Test de sécurité
+			if ((V_Infos_Cours::existe_cours($idCours)) && (Groupe_Cours::existeGroupeCours($idGroupeCours))) { //Test de sécurité
 				if ($appartient == 1) { //Ajout du lien dans la table Appartient_Cours_GroupeCours
 					try {
 						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -65,11 +65,11 @@ if (isset($_POST['appartient']) && isset($_POST['type'])) {
 
 			$idGroupeCours = $_POST['idGroupeCours'];
 			
-			if (Groupe_Cours::existe_groupeCours($idGroupeCours)) { //Test de sécurité
+			if (Groupe_Cours::existeGroupeCours($idGroupeCours)) { //Test de sécurité
 				$idPromotion = $_POST['idPromotion'];
-				$liste_cours = V_Infos_Cours::liste_cours($idPromotion);
+				$listeCours = V_Infos_Cours::liste_cours($idPromotion);
 				
-				foreach ($liste_cours as $idCours) {
+				foreach ($listeCours as $idCours) {
 				
 					try {
 						$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;

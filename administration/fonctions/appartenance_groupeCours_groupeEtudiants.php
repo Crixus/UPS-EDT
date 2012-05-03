@@ -12,7 +12,7 @@ if (isset($_POST['appartient']) && isset($_POST['idGroupeCours']) && isset($_POS
 	$idGroupeCours = $_POST['idGroupeCours'];
 	$idGroupeEtudiants = $_POST['idGroupeEtudiants'];
 	
-	if ((Groupe_Cours::existe_groupeCours($idGroupeCours)) && (Groupe_Etudiants::existe_groupeEtudiants($idGroupeEtudiants))) { //Test de sécurité
+	if ((Groupe_Cours::existeGroupeCours($idGroupeCours)) && (Groupe_Etudiants::existeGroupeEtudiants($idGroupeEtudiants))) { //Test de sécurité
 	
 		if ($appartient == 1) { //Ajout du lien dans la table Publication
 			try {

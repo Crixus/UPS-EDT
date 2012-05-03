@@ -42,11 +42,11 @@
 			$idPromotion = $_GET['idPromotion'];
 			
 			//liste des groupes de cours de la promotion
-			$liste_groupeCours = Groupe_Cours::liste_groupeCours($idPromotion);
+			$listeGroupeCours = Groupe_Cours::listeGroupeCours($idPromotion);
 			$nbre_groupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
 			
 			//liste des groupes d'étudiants de la promotion
-			$liste_groupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
+			$listeGroupeEtudiants = Groupe_Etudiants::liste_groupeEtudiants($idPromotion);
 			$nbre_groupeEtudiants = Groupe_Etudiants::getNbreGroupeEtudiants($idPromotion);
 			$tab="";
 			
@@ -62,24 +62,24 @@
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
-				foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-					$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
-					echo $tab."\t\t<td>".$Groupe_Etudiants->getNom()."</td>\n";
+				foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+					$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
+					echo $tab."\t\t<td>".$_GroupeEtudiants->getNom()."</td>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr>\n";
 				echo $tab."\t<th class=\"fondGrisFonce\" rowspan='{$nbre_groupeCours}'>Nom des groupes <br/>de cours</th>\n";
 				$cpt = 0;
-				foreach ($liste_groupeCours as $idGroupeCours) {
+				foreach ($listeGroupeCours as $idGroupeCours) {
 					if ($cpt == 0) { $couleurFond="fondBlanc"; }
 					else { $couleurFond="fondGris"; }
 					$cpt++; $cpt %= 2;
 					
-					$Groupe_Cours = new Groupe_Cours($idGroupeCours);
-					echo $tab."\t\t<td class=\"fondGrisFonce\">".$Groupe_Cours->getNom()."</td>\n";
-					foreach ($liste_groupeEtudiants as $idGroupeEtudiants) {
-						$Groupe_Etudiants = new Groupe_Etudiants($idGroupeEtudiants);
+					$_GroupeCours = new Groupe_Cours($idGroupeCours);
+					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_GroupeCours->getNom()."</td>\n";
+					foreach ($listeGroupeEtudiants as $idGroupeEtudiants) {
+						$_GroupeEtudiants = new Groupe_Etudiants($idGroupeEtudiants);
 
 						$nom_case = "case_".$idGroupeCours."_".$idGroupeEtudiants;
 						if (Publication::appartenance_publication ($idGroupeCours, $idGroupeEtudiants))

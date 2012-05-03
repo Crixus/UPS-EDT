@@ -35,15 +35,15 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 	
 	echo $tab."\t<tr>\n";
 	$cptBoucle=0;
-	$val_temp = "";
-	$UE = new V_Infos_UE($idUE);
+	$valTemp = "";
+	$_UE = new V_Infos_UE($idUE);
 	foreach (V_Infos_UE::$attributs as $att) {
 		if ($cptBoucle == 6)
-			$val_temp = $UE->$att;
+			$valTemp = $_UE->$att;
 		else if ($cptBoucle == 7)
-			echo $tab."\t\t<td>".$UE->$att." ".$val_temp."</td>\n";
+			echo $tab."\t\t<td>".$_UE->$att." ".$valTemp."</td>\n";
 		else
-			echo $tab."\t\t<td>".$UE->$att."</td>\n";
+			echo $tab."\t\t<td>".$_UE->$att."</td>\n";
 		$cptBoucle++;
 	}
 	$nbreUE = Inscription::nbre_etudiant_inscrit($idUE);
@@ -54,8 +54,8 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 	echo $tab."<br/>\n";
 	
 	
-	$liste_cours_passe = V_Infos_Cours::liste_cours_passe_par_UE($idPromotion, $nomUE);
-	$nbCoursPasse = sizeof($liste_cours_passe);
+	$listeCours_passe = V_Infos_Cours::liste_cours_passe_par_UE($idPromotion, $nomUE);
+	$nbCoursPasse = sizeof($listeCours_passe);
 	if ($nbCoursPasse != 0) {
 		echo $tab."\t<h2>Liste des cours terminés</h2>\n";
 		
@@ -68,8 +68,8 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 		echo $tab."\t</tr>\n";
 		
 		$cpt = 0;
-		foreach ($liste_cours_passe as $idCours) {
-			$Cours = new V_Infos_Cours($idCours);
+		foreach ($listeCours_passe as $idCours) {
+			$_Cours = new V_Infos_Cours($idCours);
 			
 			$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 			
@@ -79,21 +79,21 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 			$valTemp2="";
 			foreach (V_Infos_Cours::$attributs as $att) {
 				if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
-					$valTemp = $Cours->$att;
+					$valTemp = $_Cours->$att;
 				else if (($cptBoucle == 2) || ($cptBoucle == 7)) {
-					$val = $Cours->$att." ".$valTemp;
+					$val = $_Cours->$att." ".$valTemp;
 					$valTemp="";
 					echo $tab."\t\t<td>".$val."</td>\n";
 				}
 				else if ($cptBoucle == 5) {
-					$valTemp2 = $Cours->$att;
+					$valTemp2 = $_Cours->$att;
 					$val = "De ".$valTemp." à ".$valTemp2;
 					echo $tab."\t\t<td>";
 					Cours::dateCours($valTemp, $valTemp2);
 					echo "</td>\n";
 				}
 				else if ($cptBoucle != 0) {
-					echo $tab."\t\t<td>".$Cours->$att."</td>\n";
+					echo $tab."\t\t<td>".$_Cours->$att."</td>\n";
 				}
 				$cptBoucle++;
 			}
@@ -106,8 +106,8 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 	
 	
 	echo $tab."\t<h2>Liste des cours à venir</h2>\n";
-	$liste_cours_futur = V_Infos_Cours::liste_cours_futur_par_UE($idPromotion, $nomUE);
-	$nbCoursFutur = sizeof($liste_cours_futur);
+	$listeCours_futur = V_Infos_Cours::liste_cours_futur_par_UE($idPromotion, $nomUE);
+	$nbCoursFutur = sizeof($listeCours_futur);
 	
 	if ($nbCoursFutur == 0) {
 		echo $tab."<b>Aucun cours à venir n'est enregistré pour cette UE dans cette promotion</b>\n";
@@ -123,8 +123,8 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 		echo $tab."\t</tr>\n";
 		
 		$cpt = 0;
-		foreach ($liste_cours_futur as $idCours) {
-			$Cours = new V_Infos_Cours($idCours);
+		foreach ($listeCours_futur as $idCours) {
+			$_Cours = new V_Infos_Cours($idCours);
 			
 			$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 			
@@ -134,21 +134,21 @@ if ((isset($_POST['idUE'])) && (isset($_POST['nomUE'])) && (isset($_POST['idProm
 			$valTemp2="";
 			foreach (V_Infos_Cours::$attributs as $att) {
 				if (($cptBoucle == 1) || ($cptBoucle == 4) || ($cptBoucle == 6))
-					$valTemp = $Cours->$att;
+					$valTemp = $_Cours->$att;
 				else if (($cptBoucle == 2) || ($cptBoucle == 7)) {
-					$val = $Cours->$att." ".$valTemp;
+					$val = $_Cours->$att." ".$valTemp;
 					$valTemp="";
 					echo $tab."\t\t<td>".$val."</td>\n";
 				}
 				else if ($cptBoucle == 5) {
-					$valTemp2 = $Cours->$att;
+					$valTemp2 = $_Cours->$att;
 					$val = "De ".$valTemp." à ".$valTemp2;
 					echo $tab."\t\t<td>";
 					Cours::dateCours($valTemp, $valTemp2);
 					echo "</td>\n";
 				}
 				else if ($cptBoucle != 0) {
-					echo $tab."\t\t<td>".$Cours->$att."</td>\n";
+					echo $tab."\t\t<td>".$_Cours->$att."</td>\n";
 				}
 				$cptBoucle++;
 			}

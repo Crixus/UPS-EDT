@@ -150,8 +150,8 @@
 			$nbTypeSalles = sizeof($liste_type_salle);
 			
 			//Liste des types de cours enregistrés dans la base de donnée
-			$liste_type_cours = Type_Cours::liste_id_type_cours();
-			$nbre_type_cours = sizeof($liste_type_cours);
+			$listeTypeCours = Type_Cours::liste_id_type_cours();
+			$nbre_type_cours = sizeof($listeTypeCours);
 			
 			if ($nbTypeSalles == 0) {
 				echo $tab."<b>Aucun type de salles n'est enregistré</b>\n";
@@ -170,9 +170,9 @@
 				echo $tab."\t</tr>\n";
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				foreach ($liste_type_cours as $idType_Cours) {					
-					$Type_Cours = new Type_Cours($idType_Cours);
-					$nomType_Cours = $Type_Cours->getNom();
+				foreach ($listeTypeCours as $idType_Cours) {					
+					$_TypeCours = new Type_Cours($idType_Cours);
+					$nomType_Cours = $_TypeCours->getNom();
 					echo $tab."\t\t<th>$nomType_Cours</th>\n";
 				}
 				echo $tab."\t</tr>\n";
@@ -187,9 +187,9 @@
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 					echo $tab."\t\t<td>{$Type_Salle->getNom()}</td>\n";
 					
-					foreach ($liste_type_cours as $idTypeCours) {				
-						$Type_Cours = new Type_Cours($idTypeCours);
-						$nomType_Cours = $Type_Cours->getNom();
+					foreach ($listeTypeCours as $idTypeCours) {				
+						$_TypeCours = new Type_Cours($idTypeCours);
+						$nomType_Cours = $_TypeCours->getNom();
 						if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 
 							$checked = "checked = \"checked\"";
 						else
@@ -317,11 +317,11 @@
 		/**
 		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
 		 */
-		public static function prise_en_compte_formulaire() {
+		public static function priseEnCompteFormulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutTypeSalle'])) {
 				// Vérification des champs
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = !Type_Salle::existe_nom_type_salle($nom);
 				if ($nomCorrect) { // Test de saisie	
 					Type_Salle::ajouter_type_salle($nom);
@@ -335,7 +335,7 @@
 			else if (isset($_POST['validerModificationTypeSalle'])) {
 				// Vérification des champs
 				$id = htmlentities($_POST['id']);
-				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
+				$nom = htmlentities($_POST['nom'], ENT_QUOTES, 'UTF-8');
 				$nomCorrect = true;
 				if ($nomCorrect) { // Test de saisie	
 					Type_Salle::modifierTypeSalle($id, $nom);
@@ -350,7 +350,7 @@
 		/**
 		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un type de salle, on test s'il est bien enregistré dans la base de donnée
 		 */
-		public static function prise_en_compte_suppression() {
+		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_type_salle'])) {		
 				if (Type_Salle::existeTypeSalle($_GET['supprimer_type_salle'])) {

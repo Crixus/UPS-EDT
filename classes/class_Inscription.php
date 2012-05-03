@@ -42,7 +42,7 @@
 			$idPromotion = $_GET['idPromotion'];
 			
 			//Liste des UE de la promotion
-			$liste_UE = UE::liste_UE_promotion($idPromotion);
+			$listeUE = UE::liste_UE_promotion($idPromotion);
 			$nbre_UE = UE::getNbreUEPromotion($idPromotion);
 			
 			//Liste des étudiants de la promotion
@@ -63,9 +63,9 @@
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
-				foreach ($liste_UE as $idUE) {
-					$UE = new UE($idUE);
-					echo $tab."\t\t<td>".$UE->getNom()."</td>\n";
+				foreach ($listeUE as $idUE) {
+					$_UE = new UE($idUE);
+					echo $tab."\t\t<td>".$_UE->getNom()."</td>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
@@ -81,8 +81,8 @@
 					echo $tab."\t\t<td class=\"fondGrisFonce\">".$_etudiant->getPrenom()." ".$_etudiant->getNom()."</td>\n";
 					echo $tab."\t\t<td class=\"".$couleurFond."\" name=\"nbreUE_{$idEtudiant}\" style=\"text-align:center;\">".Inscription::nbre_UE_inscrit($idEtudiant)."</td>\n";
 					
-					foreach ($liste_UE as $idUE) {
-						$UE = new UE($idUE);
+					foreach ($listeUE as $idUE) {
+						$_UE = new UE($idUE);
 
 						$nom_case = "case_UE_".$idUE;
 						//On test si l'étudiant est inscrit à l'UE
@@ -99,8 +99,8 @@
 				
 				echo $tab."\t<tr>\n";
 				echo $tab."\t<th class=\"fondGrisFonce\" colspan='3'>Toute la promotion</th>\n";
-				foreach ($liste_UE as $idUE) {
-					$UE = new UE($idUE);
+				foreach ($listeUE as $idUE) {
+					$_UE = new UE($idUE);
 
 					$nom_case = "case_promotion_".$idUE;
 					
