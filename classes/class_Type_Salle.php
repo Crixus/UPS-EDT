@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Type_Salle - Permet de gérer les types de salles
+	 */ 
 	class Type_Salle{
 		
 		public static $nomTable = "Type_Salle";
@@ -8,9 +11,23 @@
 			"nom"
 		);
 		
+		/**
+		 * Getter de l'id du type de salle
+		 * @return int : id du type de salle
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom du type de salle
+		 * @return string : nom du type de salle
+		 */
 		public function getNom() { return $this->nom; }
 		
+		/**
+		 * Constructeur de la classe Type_Salle
+		 * Récupère les informations de Type_Salle dans la base de données depuis l'id
+		 * @param $id : int id du Type_Salle
+		 */
 		public function Type_Salle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -32,6 +49,10 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un type de salle dans la base de données
+		 * @param $nom : nom du type de salle
+		 */
 		public static function ajouter_type_salle($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -51,6 +72,11 @@
 			}
 		}
 		
+		/**
+		 * Modifier un type de salle dans la base de données
+		 * @param $idTypeSalle : int id du type de salle a modifié
+		 * @param $nom : nom du type de salle
+		 */
 		public static function modifierTypeSalle($idTypeSalle, $nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -69,6 +95,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un type de salle dans la base de données
+		 * @param $idTypeSalle int : id du type de salle a supprimé
+		 */
 		public static function supprimerTypeSalle($idTypeSalle) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -84,6 +114,10 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste d'id des types de salles
+		 * @return List<Type_Salle> liste des types de salles
+		 */
 		public static function liste_id_type_salle() {
 			$listeId = Array();
 			try {
@@ -103,10 +137,19 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des types de salles créé 
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 */
 		public static function liste_type_salle_to_table($nombreTabulations = 0, $administration = false) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
+			
+			//Liste des types de salles enregistrés dans la base de donnée
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			$nbTypeSalles = sizeof($liste_type_salle);
+			
+			//Liste des types de cours enregistrés dans la base de donnée
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbre_type_cours = sizeof($liste_type_cours);
 			
@@ -135,6 +178,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations du type de salle
 				foreach ($liste_type_salle as $idTypeSalle) {
 					$Type_Salle = new Type_Salle($idTypeSalle);
 					
@@ -156,6 +200,7 @@
 						echo "</td>\n";
 					}
 					
+					// Création des liens pour la modification et la suppression des types de salles et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutTypeSalle&amp;modifier_type_salle=$idTypeSalle";
 						$pageSuppression = "./index.php?page=ajoutTypeSalle&amp;supprimer_type_salle=$idTypeSalle";
@@ -174,6 +219,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un type de salle
+		 * @param id : int id du type de salle
+		 */
 		public static function existeTypeSalle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -193,6 +242,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un type de salle à partir de son nom
+		 * @param nom : string nom du type de salle
+		 */
 		public static function existe_nom_type_salle($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -212,9 +265,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un type de salle
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutTypeSalle($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un type de salle
 			if (isset($_GET['modifier_type_salle'])) { 
 				$titre = "Modifier un type de salle";
 				$Type_Salle = new Type_Salle($_GET['modifier_type_salle']);
@@ -256,9 +314,13 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}		
 		}	
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutTypeSalle'])) {
+				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nomCorrect = !Type_Salle::existe_nom_type_salle($nom);
 				if ($nomCorrect) { // Test de saisie	
@@ -271,6 +333,7 @@
 				}
 			}
 			else if (isset($_POST['validerModificationTypeSalle'])) {
+				// Vérification des champs
 				$id = htmlentities($_POST['id']);
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$nomCorrect = true;
@@ -284,6 +347,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un type de salle, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_type_salle'])) {		
@@ -294,6 +360,10 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un type de salles ainsi que l'affichage des types de salles enregistrés dans la base de données
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Type_Salle::formulaireAjoutTypeSalle($nombreTabulations + 1);
@@ -301,6 +371,12 @@
 			Type_Salle::liste_type_salle_to_table($nombreTabulations + 1, true);
 		}
 		
+		/**
+		 * Fonction testant l'appartenance d'une salle à un type de salle
+		 * @param $idSalle int : id de la salle
+		 * @param $idType_Salle int : id du type de salle
+		 * @return boolean : renvoi 1 si la salle appartient bien à ce type de salle, 0 sinon
+		 */
 		public function appartient_salle_typeSalle($idSalle, $idType_Salle) {
 			$appartient = 0;
 			try {

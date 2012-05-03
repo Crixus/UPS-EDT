@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Type_Cours - Permet de gérer les types de cours
+	 */ 
 	class Type_Cours{
 		
 		public static $nomTable = "Type_Cours";
@@ -7,8 +10,17 @@
 			"nom"
 		);
 		
+		/**
+		 * Getter du nom du type de cours
+		 * @return string : nom du type de cours
+		 */
 		public function getNom() { return $this->nom; }
 		
+		/**
+		 * Constructeur de la classe Type_Cours
+		 * Récupère les informations de Type_Cours dans la base de données depuis l'id
+		 * @param $id : int id du Type_Cours
+		 */
 		public function Type_Cours($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -30,6 +42,10 @@
 			}
 		}
 		
+		/**
+		 * Renvoi le nombre de ype de cours enregistré dans la base de données
+		 * @return int : nombre de type de cours
+		 */
 		public function getNbreTypeCours() { 
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -47,6 +63,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un type de cours
+		 * @param id : int id du type de cours
+		 */
 		public static function existe_typeCours($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -66,6 +86,10 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste d'id des types de cours
+		 * @return List<Type_Cours> liste des id des types de cours
+		 */
 		public function liste_id_type_cours() {
 			$listeId = Array();
 			try {
@@ -85,6 +109,10 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Renvoi la liste des noms des types de cours
+		 * @return List<Type_Cours> liste des noms des types de cours
+		 */
 		public function liste_nom_type_cours() {
 			$listeNom = Array();
 			try {
@@ -104,11 +132,20 @@
 			return $listeNom;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des types de cours créé 
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_type_cours_to_table($administration, $nombreTabulations = 0) {
+			//Liste des types de cours enregistrés dans la base de donnée
 			$liste_type_cours = Type_Cours::liste_id_type_cours();
 			$nbre_type_cours = sizeof($liste_type_cours);
+			
+			//Liste des types de salles enregistrés dans la base de donnée
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			$nbre_type_salle = sizeof($liste_type_salle);
+			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbre_type_cours == 0) {
@@ -136,6 +173,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations du type de cours
 				foreach ($liste_type_cours as $idTypeCours) {
 					$Type_Cours = new Type_Cours($idTypeCours);
 					
@@ -157,6 +195,7 @@
 						echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idTypeCours}_{$nomType_Salle}\" value=\"{$idTypeSalle}\" onclick=\"appartenance_typeSalle_typeCours({$idTypeCours},{$idTypeSalle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
 					}
 					
+					// Création des liens pour la modification et la suppression des types de cours et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutTypeCours&amp;modifier_type_cours=".$idTypeCours;
 						$pageSuppression = "./index.php?page=ajoutTypeCours&amp;supprimer_type_cours=".$idTypeCours;
@@ -175,6 +214,10 @@
 			}
 		}
 		
+		/**
+		 * Ajouter un type de cours dans la base de données
+		 * @param $nom : nom du type de cours
+		 */
 		public static function ajouter_type_cours($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -194,6 +237,11 @@
 			}
 		}
 		
+		/**
+		 * Modifier un type de cours dans la base de données
+		 * @param $idTypeSalle : int id du type de cours a modifié
+		 * @param $nom : nom du type de cours
+		 */
 		public static function modifier_type_cours($idTypeCours, $nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -212,6 +260,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un type de cours dans la base de données
+		 * @param $idTypeSalle int : id du type de cours a supprimé
+		 */
 		public static function supprimer_type_cours($idTypeCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -228,9 +280,14 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un type de cours
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutTypeCours($nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un type de cours
 			if (isset($_GET['modifier_type_cours'])) { 
 				$titre = "Modifier un type de cours";
 				$Type_Cours = new Type_Cours($_GET['modifier_type_cours']);
@@ -272,6 +329,9 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
 		}	
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutTypeCours']) || isset($_POST['validerModificationTypeCours'])) {
@@ -312,6 +372,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un type de cours, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_type_cours'])) {	
@@ -327,6 +390,10 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un type de cours ainsi que l'affichage des types de cours enregistrés dans la base de données
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			Type_Cours::formulaireAjoutTypeCours($nombreTabulations + 1);
@@ -334,6 +401,12 @@
 			Type_Cours::liste_type_cours_to_table($nombreTabulations + 1);
 		}
 		
+		/**
+		 * Fonction testant l'appartenance d'un type de cours à un type de salle
+		 * @param $idType_Cours int : id  du type de cours
+		 * @param $idType_Salle int : id du type de salle
+		 * @return boolean : renvoi 1 si le type de cours appartient bien à ce type de salle, 0 sinon
+		 */
 		public function appartenance_typeSalle_typeCours($idType_Cours, $idType_Salle) {
 			$appartient = 0;
 			try {

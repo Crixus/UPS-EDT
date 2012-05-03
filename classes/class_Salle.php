@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Salle - Permet de gérer les Salle
+	 */ 
 	class Salle{
 		
 		public static $nomTable = "Salle";
@@ -10,11 +13,35 @@
 			"capacite"
 		);
 		
+		/**
+		 * Getter de l'id de la salle
+		 * @return int : id de la salle
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom de la salle
+		 * @return string : nom de la salle
+		 */
 		public function getNom() { return $this->nom; }
+		
+		/**
+		 * Getter du nomBatiment de la salle
+		 * @return string : nom du batiment
+		 */
 		public function getNomBatiment() { return $this->nomBatiment; }
+		
+		/**
+		 * Getter du capacite de la salle
+		 * @return int : capacite de l'étudiant
+		 */
 		public function getCapacite() { return $this->capacite; }
 		
+		/**
+		 * Constructeur de la classe Salle
+		 * Récupère les informations de Salle dans la base de données depuis l'id
+		 * @param $id : int id du Salle
+		 */
 		public function Salle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -36,6 +63,12 @@
 			}
 		}
 		
+		/**
+		 * Ajouter une salle dans la base de données
+		 * @param $nom : string nom de la salle
+		 * @param $nomBatiment : string prenom de la salle
+		 * @param $capacite : int email de la salle=
+		 */
 		public static function ajouterSalle($nom, $nomBatiment, $capacite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -57,6 +90,13 @@
 			}
 		}
 		
+		/**
+		 * Modifier une salle dans la base de données
+		 * @param $idSalle : int id de la salle a modifié
+		 * @param $nom : string nom de la salle
+		 * @param $nomBatiment : string prenom de la salle
+		 * @param $capacite : int email de la salle
+		 */
 		public static function modifierSalle($idSalle, $nom, $nomBatiment, $capacite) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -77,6 +117,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime une salle dans la base de données
+		 * @param $idSalle int : id de la salle a supprimé
+		 */
 		public static function supprimerSalle($idSalle) {
 			if ($idSalle != 0) {
 				Cours::modifier_salle_tout_cours($idSalle, 0);
@@ -95,6 +139,10 @@
 			}	
 		}
 		
+		/**
+		 * Renvoi la liste d'id des salles
+		 * @return List<Salle> liste des salles
+		 */
 		public static function liste_id_salles() {
 			$listeIdSalle = Array();
 			try {
@@ -116,6 +164,10 @@
 			return $listeIdSalle;
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une salle
+		 * @param id : int id de la salle
+		 */
 		public static function existeSalle($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -135,6 +187,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une salle à partir de son nom
+		 * @param nom: string nom de la salle
+		 */
 		public static function existe_nom_salle($nom) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -154,6 +210,11 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une salle à partir de son nom ainsi que du nom du batiment
+		 * @param nom: string nom de la salle
+		 * @param nomBatiment: string nom du batiment de la salle
+		 */
 		public static function existe_salle_nomSalle_nomBatiment($nomSalle, $nomBatiment) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -173,6 +234,10 @@
 			}
 		}
 		
+		/**
+		 * Liste les informations de la salle dont l'id est en paramètre
+		 * @return Salle : informations de la salle
+		 */
 		public function infosSalles($idSalle) {
 			$listeNom = Array();
 			try {
@@ -195,7 +260,10 @@
 			}
 		}
 		
-		// Ne devrait pas être ici
+		/**
+		 * Liste les noms des batiments
+		 * @return string : nom des batiments
+		 */
 		public function listeNomBatiment() {
 			$listeNom = Array();
 			try {
@@ -215,11 +283,18 @@
 			return $listeNom;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'une salle
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutModificationSalle($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
+			
+			// Liste des noms des batiments enregistrés dans la base de donnée
 			$liste_nom_batiment = Salle::listeNomBatiment();
 			$nbBatiment = sizeof($liste_nom_batiment);
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie une salle
 			if (isset($_GET['modifier_salle'])) { 
 				$titre = "Modifier une salle";
 				$_salle = new Salle($_GET['modifier_salle']);
@@ -291,9 +366,13 @@
 			}
 		}	
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSalle'])) {
+				// Vérification des champs
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
 				$nomBatiment = htmlentities($_POST['nomBatiment']);
@@ -302,6 +381,7 @@
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
 				$_salle_inexistante = !Salle::existe_salle_nomSalle_nomBatiment($nom, $nomBatiment);
 				if ($nomCorrect && $capacite_correct && $nomBatiment_correct && $_salle_inexistante) {
+					// Ajout d'une nouvelle salle
 					Salle::ajouterSalle($nom, $nomBatiment, $capacite);
 					array_push($messagesNotifications, "La salle a bien été ajouté");
 				}
@@ -310,6 +390,7 @@
 				}
 			}
 			else if (isset($_POST['validerModificationSalle'])) {
+				// Vérification des champs
 				$id = htmlentities($_POST['id']);
 				$nom = htmlentities($_POST['nom'],ENT_QUOTES,'UTF-8');
 				$capacite = htmlentities($_POST['capacite']);
@@ -319,6 +400,7 @@
 				$capacite_correct = PregMatch::est_nombre($capacite);
 				$nomBatiment_correct = Batiment::existe_nom_batiment($nomBatiment);
 				if ($idCorrect && $nomCorrect && $capacite_correct && $nomBatiment_correct) {
+					// Modification d'une salle
 					Salle::modifierSalle($_GET['modifier_salle'], $nom, $nomBatiment, $capacite);
 					array_push($messagesNotifications, "La salle a bien étée modifiée");
 				}
@@ -328,6 +410,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une salle, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_salle'])) {
@@ -338,11 +423,19 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des salles créés 
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function table_administration_batiments($administration, $nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
+			//Liste des salles enregistrées dans la base de donnée
 			$liste_id_salles = Salle::liste_id_salles();
 			$nbSalles = sizeof($liste_id_salles);
+			
+			//Liste des types de salles enregistrées dans la base de donnée
 			$liste_type_salle = Type_Salle::liste_id_type_salle();
 			
 			if ($nbSalles <= 1) {
@@ -371,6 +464,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des salles		
 				foreach ($liste_id_salles as $idSalle) {
 					if ($idSalle != 0) {
 						$_salle = new Salle($idSalle);
@@ -398,7 +492,8 @@
 							$nomCheckbox = "{$idSalle}_{$nomType_Salle}";
 							echo $tab."\t\t<td><input type=\"checkbox\" name= \"{$idSalle}_{$nomType_Salle}\" value=\"{$idType_Salle}\" onclick=\"appartenance_salle_typeSalle({$idSalle},{$idType_Salle},this)\" style=\"cursor:pointer\" {$checked}></td>\n";
 						}
-					
+						
+						// Création des liens pour la modification et la suppression des salles et gestion de l'URL 
 						if ($administration) {
 							$pageModification = "./index.php?page=ajoutSalle&amp;modifier_salle=$idSalle";
 							$pageSuppression = "./index.php?page=ajoutSalle&amp;supprimer_salle=$idSalle";
@@ -419,6 +514,9 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'une salle ainsi que l'affichage des salles enregistrées dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Salle::formulaireAjoutModificationSalle($nombreTabulations);
@@ -426,6 +524,10 @@
 			Salle::table_administration_batiments($nombreTabulations);
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage des informations de la salle
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function page_informations($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$Batiment = Batiment::Batiment_from_nom($this->getNomBatiment());
