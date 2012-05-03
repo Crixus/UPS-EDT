@@ -7,6 +7,8 @@
 	include_once('./classes/class_Intervenant.php');
 	
 	session_start();
+	
+	$arrayErreurs = Array();
 		
 	if (isset($_POST['Validation_Connexion'])) {
 		$login = $_POST['Identifiant'];
@@ -23,8 +25,7 @@
 			$_SESSION['Type'] = $_Utilisateur->getType();
 			header('Location: ./index.php');
 		} else {
-			// A REFAIRE
-			echo "<p>Login ou pass incorrect</p>";
+			array_push($arrayErreurs, "Login ou pass incorrect");
 		}
 	}
 ?>
@@ -43,6 +44,15 @@
 					<legend>Connexion</legend>
 					<div id="imageLogoConnexion">
 						<img src="./images/logo_UPS.jpg" alt="Logo université Toulouse 3" />
+<?php
+	if (!empty($arrayErreurs)) {
+		echo "<ul class=\"erreurConnexion\">";
+		foreach ($arrayErreurs as $mess) {
+			echo "<li>$mess</li>";
+		}
+		echo "</ul>";
+	}
+?>
 					</div>
 					<div id="indications">
 						<p>Veuillez entrer :</p>

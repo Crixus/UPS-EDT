@@ -788,11 +788,7 @@
 			}
 				echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 			foreach ($liste_salle as $idSalle) {
-<<<<<<< HEAD
-				$_salle = new V_Liste_Salles($idSalle);
-=======
 				$_salle = new V_liste_Salles($idSalle);
->>>>>>> 0aadca45d7b005ef6bb97ffeeb5178ce796496c0
 				$nomBatiment = $_salle->getNomBatiment();
 				$nomSalle = $_salle->getNomSalle();
 				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) {

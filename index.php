@@ -1,4 +1,7 @@
 <?php
+	if (file_exists('./install/')) {
+		header('Location: ./install/install.php');
+	}
 	session_start();
 	
 	// Redirection si l'utilisateur vas sur la page sans être connecté

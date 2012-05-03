@@ -135,3 +135,9 @@ table#edt_semaine td.heurePaire{
 table#edt_semaine td.heureImpaire{
 	background-color:#f3f3f3;
 	}
+
+ul.erreurConnexion{
+	list-style-type:none;
+	font-weight:bold;
+	color:red;
+}

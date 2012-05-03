@@ -500,13 +500,8 @@
 				else {
 					// Modification d'une nouvelle seance
 					$id = htmlentities($_POST['id']); 
-<<<<<<< HEAD
-					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($idCorrect && $nomCorrect && $dureeCorrect && $idUECorrect && $typeCoursCorrect && $idIntervenantCorrect && $idSalleCorrect && $idSeancePrecedenteCorrecte) {
-=======
 					$idCorrect = Seance::existe_seance($id);
 					if ($idCorrect && $nomCorrect && $dureeCorrect && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
->>>>>>> 0aadca45d7b005ef6bb97ffeeb5178ce796496c0
 						Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
 						array_push($messagesNotifications, "La séance a bien été modifié");
 						$validationAjout = true;

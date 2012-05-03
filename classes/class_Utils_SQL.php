@@ -31,8 +31,10 @@
 						$finRequete = false;
 					}
 				}
+				return true;
 			} catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
+				return false;
 			}
 		}
 		
