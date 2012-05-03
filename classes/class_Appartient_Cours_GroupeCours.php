@@ -2,7 +2,7 @@
 	/** 
 	 * Classe Appartient_Cours_GroupeCours - Interface entre les groupes de cours et les cours
 	 */ 
-	class Appartient_Cours_GroupeCours{
+	class Appartient_Cours_GroupeCours {
 		
 		public static $nomTable = "Appartient_Cours_GroupeCours";
 		
@@ -46,10 +46,10 @@
 			
 			//liste des futur cours de la promotion
 			$listeCours = V_Infos_Cours::liste_cours_futur($idPromotion);
-			$nbre_cours = V_Infos_Cours::getNbreCoursFutur($idPromotion);
-			$tab="";
+			$nbCours = V_Infos_Cours::getNbreCoursFutur($idPromotion);
+			$tab = "";
 			
-			if (($nbre_cours == 0) || ($nbreGroupeCours == 0)) {
+			if (($nbCours == 0) || ($nbreGroupeCours == 0)) {
 				echo $tab."<h2>Aucun groupe de cours et/ou aucun cours n'a été créé pour cette promotion</h2>\n";
 			}
 			else {
@@ -67,11 +67,14 @@
 				echo $tab."\t</tr>\n";
 				
 				echo $tab."\t<tr>\n";
-				echo $tab."\t<td class=\"fondGrisFonce\" rowspan='{$nbre_cours}'>Cours</td>\n";
+				echo $tab."\t<td class=\"fondGrisFonce\" rowspan='{$nbCours}'>Cours</td>\n";
 				$cpt = 0;
 				foreach ($listeCours as $idCours) {
-					if ($cpt == 0) { $couleurFond="fondBlanc"; }
-					else { $couleurFond="fondGris"; }
+					if ($cpt == 0) {
+						$couleurFond="fondBlanc";
+					} else {
+						$couleurFond="fondGris";
+					}
 					$cpt++; $cpt %= 2;
 					
 					$_Cours = new V_Infos_Cours($idCours);
@@ -98,12 +101,12 @@
 					$_GroupeCours = new Groupe_Cours($idGroupeCours);
 
 					$nom_case = "case_promotion_".$idGroupeCours;
-					if ($nbre_cours == Appartient_Cours_GroupeCours::appartenance_promotion_groupe_Cours($idGroupeCours))
+					if ($nbCours == Appartient_Cours_GroupeCours::appartenance_promotion_groupe_Cours($idGroupeCours))
 						$checked = "checked = \"checked\"";
 					else
 						$checked = "";		
 						
-					echo $tab."\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_promotion_groupeCours({$idPromotion},{$idGroupeCours},{$nbre_cours},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
+					echo $tab."\t\t<td class=\"fondGrisFonce\"><input type=\"checkbox\" name= \"{$nom_case}\" value=\"{$nom_case}\" onclick=\"appartenance_promotion_groupeCours({$idPromotion},{$idGroupeCours},{$nbCours},this)\" style=\"cursor:pointer;\" {$checked}></td>\n";
 					
 				}
 				echo $tab."\t</tr>\n";

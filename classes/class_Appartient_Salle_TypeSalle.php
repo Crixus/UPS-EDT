@@ -15,7 +15,7 @@
 		 * Constructeur de la classe Appartient_Salle_TypeSalle
 		 * Récupère les informations de Appartient_Salle_TypeSalle dans la base de données depuis l'id
 		 */
-		public function Appartient_Salle_TypeSalle() {
+		public function appartientSalleTypeSalle() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);

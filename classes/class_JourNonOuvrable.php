@@ -233,7 +233,7 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					$cptBoucle=0;
+					$cptBoucle= 0;
 					$valTemp="";
 					$valTemp2="";
 					
@@ -342,7 +342,7 @@
 			echo $tab."\t\t\t<td>Heure Debut</td>\n";
 			echo $tab."\t\t\t<td>\n";
 			echo $tab."\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
-			for ($cpt=0;$cpt<=23;$cpt++) {
+			for ($cpt= 0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureDebut)
 					$selected = " selected";
 				else if (($cpt == 7) && ($valueHeureDebut == ""))
@@ -351,15 +351,15 @@
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0".$cpt."\" {$selected}>0".$cpt."</option>\n";
 				else
-					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"".$cpt."\" {$selected}>{$cpt}</option>\n";				
 			}
 			echo $tab."\t\t\t\t\t</select>\n";
 			echo $tab."\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
-			for ($cpt=0;$cpt<4;$cpt++) {
+			for ($cpt= 0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteDebut) {
 					$selected = " selected";
 				}
@@ -397,7 +397,7 @@
 			echo $tab."\t\t\t<td>Heure Fin</td>\n";
 			echo $tab."\t\t\t<td>\n";
 			echo $tab."\t\t\t\t<select name=\"heureFin\">\n";			
-			for ($cpt=0;$cpt<=23;$cpt++) {
+			for ($cpt= 0;$cpt<=23;$cpt++) {
 				if ($cpt == $valueHeureFin)
 					$selected = " selected";
 				else if (($cpt == 9) && ($valueHeureFin == ""))
@@ -406,15 +406,15 @@
 					$selected = "";
 					
 				if ($cpt < 10)
-					echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0".$cpt."\" {$selected}>0".$cpt."</option>\n";
 				else
-					echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+					echo $tab."\t\t\t\t\t<option value=\"".$cpt."\" {$selected}>{$cpt}</option>\n";				
 			}
 			echo $tab."\t\t\t\t\t</select>\n";
 			echo $tab."\t\t\t\t<select name=\"minuteFin\">\n";		
 			$tab_minute = array(0,15,30,45);
 			$first=false;
-			for ($cpt=0;$cpt<4;$cpt++) {
+			for ($cpt= 0;$cpt<4;$cpt++) {
 				if ($tab_minute[$cpt] == $valueMinuteFin) {
 					$selected = " selected";
 				}
@@ -461,14 +461,14 @@
 				$dateFin = $_POST['dateFin'];
 				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
-				$heureFin_correct = true;
+				$heureFinCorrect = true;
 				$minuteFin = $_POST['minuteFin'];
-				$minuteFin_correct = true;
+				$minuteFinCorrect = true;
 				
 				$validationAjout = false;
 				if (isset($_POST['validerAjoutJourNonOuvrable'])) {
 					// Ajout d'un nouveau jour non ouvrable
-					if ($type_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {
+					if ($type_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFinCorrect && $minuteFinCorrect) {
 						JourNonOuvrable::ajouter_jourNonOuvrable($type, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $_GET['idPromotion']);
 						array_push($messagesNotifications, "Le jour non ouvrable a bien été ajouté");
 						$validationAjout = true;
@@ -478,7 +478,7 @@
 					// Modification d'un nouveau jour non ouvrable
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($idCorrect && $type_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {
+					if ($idCorrect && $type_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFinCorrect && $minuteFinCorrect) {
 						JourNonOuvrable::modifier_jourNonOuvrable($_GET['modifier_jourNonOuvrable'], $type, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $_GET['idPromotion']);
 						array_push($messagesNotifications, "Le jour non ouvrable a bien été modifié");
 						$validationAjout = true;

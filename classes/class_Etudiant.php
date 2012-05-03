@@ -316,12 +316,12 @@
 			echo $tab."\t\t\t\t<select name=\"idSpecialite\" id=\"idSpecialite\">\n";
 			
 			if (isset($idSpecialiteModif) && ($idSpecialiteModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+				echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 			foreach ($liste_specialite as $idSpecialite) {
 				$Specialite = new Specialite($idSpecialite);
 				$nomSpecialite = $Specialite->getNom();
 				if (isset($idSpecialiteModif) && ($idSpecialiteModif == $idSpecialite)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo $tab."\t\t\t\t\t<option value=\"$idSpecialite\" $selected>$nomSpecialite</option>\n";
+				echo $tab."\t\t\t\t\t<option value=\"$idSpecialite\" ".$selected.">$nomSpecialite</option>\n";
 			}
 			echo $tab."\t\t\t\t</select>\n";
 			echo $tab."\t\t\t</td>\n";

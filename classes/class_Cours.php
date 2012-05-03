@@ -2,7 +2,7 @@
 	/** 
 	 * Classe Cours - Permet de gerer les cours
 	 */ 
-	class Cours{
+	class Cours {
 		
 		public static $nomTable = "Cours";
 		
@@ -20,43 +20,57 @@
 		 * Getter de l'id du Cours
 		 * @return int : id du Cours
 		 */
-		public function getId() { return $this->id; }
+		public function getId() {
+			return $this->id;
+		}
 		
 		/**
 		 * Getter de idUE du Cours
 		 * @return int : idUE
 		 */
-		public function getIdUE() { return $this->idUE; }
+		public function getIdUE() {
+			return $this->idUE;
+		}
 		
 		/**
 		 * Getter de idSalle du Cours
 		 * @return int : idSalle
 		 */
-		public function getIdSalle() { return $this->idSalle; }
+		public function getIdSalle() {
+			return $this->idSalle;
+		}
 		
 		/**
 		 * Getter de idIntervenant du Cours
 		 * @return int : idIntervenant
 		 */
-		public function getIdIntervenant() { return $this->idIntervenant; }
+		public function getIdIntervenant() {
+			return $this->idIntervenant;
+		}
 		
 		/**
 		 * Getter de idTypeCours du Cours
 		 * @return int : idTypeCours
 		 */
-		public function getIdTypeCours() { return $this->idTypeCours; }
+		public function getIdTypeCours() {
+			return $this->idTypeCours;
+		}
 		
 		/**
 		 * Getter de TsDebut du Cours
 		 * @return timestamp : TsDebut
 		 */
-		public function getTsDebut() { return $this->tsDebut; }
+		public function getTsDebut() {
+			return $this->tsDebut;
+		}
 		
 		/**
 		 * Getter de tsFin du Cours
 		 * @return timestamp : tsFin
 		 */
-		public function getTsFin() { return $this->tsFin; }
+		public function getTsFin() {
+			return $this->tsFin;
+		}
 		
 		/**
 		 * Constructeur de la classe Cours
@@ -93,12 +107,12 @@
 		 * @param $tsFin : timestamp tsFin du cours correspondant à la date de fin du cours
 		 * @param $recursivite : int correspondant au nombre de fois que le cours se créé récursivement la semaine suivante celle de la semaine courante (ex: recursivite=2 signifie que le cours créé va être également créer avec les mêmes informations pour les 2 semaines qui suivra)
 		 */
-		public static function ajouter_cours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite) {
+		public static function ajouterCours($idUE, $idSalle, $idIntervenant, $type, $tsDebut, $tsFin, $recursivite) {
 			
 			/**
 			* Boucle de création récursive des cours
 			*/
-			for ($i=0; $i<=$recursivite; $i++) {
+			for ($i = 0; $i <= $recursivite; $i++) {
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -133,14 +147,14 @@
 		 * @return timestam^p : retourne la date de la semaine suivante (tsDebut + 7 jours)
 		 */
 		public static function datePlusUneSemaine($tsDate) {
-			$tsDate_explode = explode(' ', $tsDate);
-			$tsDate_jma = $tsDate_explode[0];
-			$tsDate_hms = $tsDate_explode[1];
-			$tsDate_jma_explode = explode('-', $tsDate_jma);
-			$timestamp = mktime(0, 0, 0, $tsDate_jma_explode[1], $tsDate_jma_explode[2], $tsDate_jma_explode[0]);
+			$tsDateExplode = explode(' ', $tsDate);
+			$tsDateJMA = $tsDateExplode[0];
+			$tsDateHMS = $tsDateExplode[1];
+			$tsDateJMA_explode = explode('-', $tsDateJMA);
+			$timestamp = mktime(0, 0, 0, $tsDateJMA_explode[1], $tsDateJMA_explode[2], $tsDateJMA_explode[0]);
 			$timestamp_plus_une_semaine = $timestamp + (3600 * 24 * 7); //On ajoute une semaine
 			$date_jma = date('Y-m-d', $timestamp_plus_une_semaine);
-			$date = $date_jma." ".$tsDate_hms;
+			$date = $date_jma." ".$tsDateHMS;
 			return $date;
 		}
 		
@@ -154,7 +168,7 @@
 		 * @param $tsDebut : timestamp tsDebut du cours correspondant à la date de début du cours
 		 * @param $tsFin : timestamp tsFin du cours correspondant à la date de fin du cours
 		 */
-		public static function modifier_cours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin) {
+		public static function modifierCours($idCours, $idUE, $idSalle, $idIntervenant, $idTypeCours, $tsDebut, $tsFin) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -181,7 +195,7 @@
 		 * Supprime un cours dans la base de données
 		 * @param $idCours int : id du cours a supprimé
 		 */
-		public static function supprimer_cours($idCours) {
+		public static function supprimerCours($idCours) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -223,7 +237,7 @@
 		 * @param $idSalleSrc int : id de l'ancienne salle à changer
 		 * @param $idSalleDst int : id de la nouvelle salle affectée
 		 */
-		public static function modifier_salle_tout_cours($idSalleSrc, $idSalleDst) {
+		public static function modifierSalleToutCours($idSalleSrc, $idSalleDst) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -244,7 +258,7 @@
 		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
 		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		 */
-		public static function liste_cours_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+		public static function listeCoursToTable($idPromotion, $administration, $nombreTabulations = 0) {
 			// Liste des cours de la promotion enregistrée dans la base de donnée
 			$listeCours = V_Infos_Cours::liste_cours($idPromotion);
 			$nbCours = sizeof($listeCours);
@@ -277,7 +291,7 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					$cptBoucle=0;
+					$cptBoucle= 0;
 					$valTemp="";
 					$valTemp2="";
 					
@@ -329,7 +343,7 @@
 		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
 		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		 */
-		public static function liste_cours_futurs_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+		public static function listeCoursFutursToTable($idPromotion, $administration, $nombreTabulations = 0) {
 			// Liste des futurs cours de la promotion enregistrée dans la base de donnée
 			$listeCours = V_Infos_Cours::liste_cours_futur($idPromotion);
 			$nbCours = sizeof($listeCours);
@@ -445,53 +459,53 @@
 		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
-				$numero_jour = '1er';
+				$numeroJour = '1er';
 			else if ($jour < 10)
-				$numero_jour = $jour[1];
+				$numeroJour = $jour[1];
 			else 
-				$numero_jour = $jour;
+				$numeroJour = $jour;
 				
-			$nom_mois = "";
+			$nomMois = "";
 			switch ($mois) {
 				case 1 : 
-					$nom_mois = 'Janvier';
+					$nomMois = 'Janvier';
 					break;
 				case 2 : 
-					$nom_mois = 'Fevrier';
+					$nomMois = 'Fevrier';
 					break;
 				case 3 : 
-					$nom_mois = 'Mars';
+					$nomMois = 'Mars';
 					break;
 				case 4 : 
-					$nom_mois = 'Avril';
+					$nomMois = 'Avril';
 					break;
 				case 5 : 
-					$nom_mois = 'Mai';
+					$nomMois = 'Mai';
 					break;
 				case 6 : 
-					$nom_mois = 'Juin';
+					$nomMois = 'Juin';
 					break;
 				case 7 : 
-					$nom_mois = 'Juillet';
+					$nomMois = 'Juillet';
 					break;
 				case 8 : 
-					$nom_mois = 'Août';
+					$nomMois = 'Août';
 					break;
 				case 9 : 
-					$nom_mois = 'Septembre';
+					$nomMois = 'Septembre';
 					break;
 				case 10 : 
-					$nom_mois = 'Octobre';
+					$nomMois = 'Octobre';
 					break;
 				case 11 : 
-					$nom_mois = 'Novembre';
+					$nomMois = 'Novembre';
 					break;
 				case 12 : 
-					$nom_mois = 'Décembre';
+					$nomMois = 'Décembre';
 					break;
 			}
 			
-			echo $numero_jour." ".$nom_mois." ".$annee;
+			echo $numeroJour." ".$nomMois." ".$annee;
 		}		
 		
 		/**
@@ -555,8 +569,12 @@
 				foreach ($listeUE_promotion as $idUE) {
 					$_UE = new UE($idUE);
 					$nomUE = $_UE->getNom();
-					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"".$idUE."\" $selected>$nomUE</option>\n";
+					if (isset($idUEModif) && ($idUEModif == $idUE)) {
+						$selected = "selected=\"selected\" ";
+					} else {
+						$selected = "";
+					}
+					echo $tab."\t\t\t\t\t<option value=\"".$idUE."\" ".$selected.">".$nomUE."</option>\n";
 				}
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -569,8 +587,12 @@
 				foreach ($listeTypeCours as $idTypeCours) {
 					$_TypeCours = new Type_Cours($idTypeCours);
 					$nomTypeCours = $_TypeCours->getNom();
-					if ($idTypeCoursModif == $idTypeCours) { $selected = "selected=\"selected\""; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"$idTypeCours\"$selected>$nomTypeCours</option>\n";
+					if ($idTypeCoursModif == $idTypeCours) {
+						$selected = "selected=\"selected\"";
+					} else {
+						$selected = "";
+					}
+					echo $tab."\t\t\t\t\t<option value=\"".$idTypeCours."\" ".$selected.">".$nomTypeCours."</option>\n";
 				}
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -582,13 +604,17 @@
 				echo $tab."\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
 				
 				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 				foreach ($listeIntervenants as $idIntervenant) {
 					if ($idIntervenant != 0) {
 						$_Intervenant = new Intervenant($idIntervenant);
 						$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
-						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-						echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) {
+							$selected = "selected=\"selected\" ";
+						} else {
+							$selected = "";
+						}
+						echo $tab."\t\t\t\t\t<option value=\"".$idIntervenant."\" ".$selected.">".$nomIntervenant." ".$prenomIntervenant.".</option>\n";
 					}
 				}
 				echo $tab."\t\t\t\t</select>\n";
@@ -597,7 +623,7 @@
 				
 				if (isset($tsDebutModif)) {
 					$explode = explode(" ", $tsDebutModif);
-					$valueDateDebut = "value=\"{$explode[0]}\" ";
+					$valueDateDebut = "value=\"".$explode[0]."\" ";
 					$explodeHeure = explode(":", $explode[1]);
 					$valueHeureDebut = $explodeHeure[0];
 					$valueMinuteDebut = $explodeHeure[1];
@@ -609,14 +635,14 @@
 				}
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td>Date Debut</td>\n";
-				echo $tab."\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required $valueDateDebut/> aaaa-mm-jj</td>\n";
+				echo $tab."\t\t\t<td><input onchange=\"changeDateDebut(this.value)\" name=\"dateDebut\" type=\"date\" required ".$valueDateDebut."/> aaaa-mm-jj</td>\n";
 				echo $tab."\t\t</tr>\n";
 				
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td>Heure Debut</td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"heureDebut\" onchange=\"changeHeureDebut(this.value)\">\n";			
-				for ($cpt=0;$cpt<=23;$cpt++) {
+				for ($cpt= 0;$cpt<=23;$cpt++) {
 					if ($cpt == $valueHeureDebut)
 						$selected = " selected";
 					else if (($cpt == 7) && ($valueHeureDebut == ""))
@@ -625,15 +651,15 @@
 						$selected = "";
 						
 					if ($cpt < 10)
-						echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+						echo $tab."\t\t\t\t\t<option value=\"0".$cpt."\" ".$selected.">0".$cpt."</option>\n";
 					else
-						echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+						echo $tab."\t\t\t\t\t<option value=\"".$cpt."\" ".$selected.">".$cpt."</option>\n";				
 				}
 				echo $tab."\t\t\t\t\t</select>\n";
 				echo $tab."\t\t\t\t<select name=\"minuteDebut\" onchange=\"changeMinuteDebut(this.value)\">\n";		
 				$tab_minute = array(0,15,30,45);
 				$first=false;
-				for ($cpt=0;$cpt<4;$cpt++) {
+				for ($cpt= 0;$cpt<4;$cpt++) {
 					if ($tab_minute[$cpt] == $valueMinuteDebut) {
 						$selected = " selected";
 					}
@@ -665,13 +691,13 @@
 				}
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td>Date Fin</td>\n";
-				echo $tab."\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required $valueDateFin/> aaaa-mm-jj</td>\n";
+				echo $tab."\t\t\t<td><input id=\"dateFin\" name=\"dateFin\" type=\"date\" required ".$valueDateFin."/> aaaa-mm-jj</td>\n";
 				echo $tab."\t\t</tr>\n";
 				echo $tab."\t\t<tr>\n";
 				echo $tab."\t\t\t<td>Heure Fin</td>\n";
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"heureFin\">\n";			
-				for ($cpt=0;$cpt<=23;$cpt++) {
+				for ($cpt= 0;$cpt<=23;$cpt++) {
 					if ($cpt == $valueHeureFin)
 						$selected = " selected";
 					else if (($cpt == 9) && ($valueHeureFin == ""))
@@ -680,15 +706,15 @@
 						$selected = "";
 						
 					if ($cpt < 10)
-						echo $tab."\t\t\t\t\t<option value=\"0{$cpt}\" {$selected}>0{$cpt}</option>\n";
+						echo $tab."\t\t\t\t\t<option value=\"0".$cpt."\" {$selected}>0".$cpt."</option>\n";
 					else
-						echo $tab."\t\t\t\t\t<option value=\"{$cpt}\" {$selected}>{$cpt}</option>\n";				
+						echo $tab."\t\t\t\t\t<option value=\"".$cpt."\" {$selected}>{$cpt}</option>\n";				
 				}
 				echo $tab."\t\t\t\t\t</select>\n";
 				echo $tab."\t\t\t\t<select name=\"minuteFin\">\n";		
 				$tab_minute = array(0,15,30,45);
 				$first=false;
-				for ($cpt=0;$cpt<4;$cpt++) {
+				for ($cpt= 0;$cpt<4;$cpt++) {
 					if ($tab_minute[$cpt] == $valueMinuteFin) {
 						$selected = " selected";
 					}
@@ -712,7 +738,7 @@
 				echo $tab."\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
 				
 				// Affichage des salles suivant le type de cours sélectionée
-				Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
+				Cours::listeSalleSuivantTypeCours($idSalleModif, $idTypeCoursModif);
 				
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -724,7 +750,7 @@
 					echo $tab."\t\t\t<td>\n";
 					echo $tab."\t\t\t\t<select name=\"recursivite\" id=\"recursivite\">\n";
 					
-					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Aucune -----</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Aucune -----</option>\n";
 					for ($i=1; $i<=10; $i++) {
 						echo $tab."\t\t\t\t\t<option value=\"".$i."\">$i</option>\n";					
 					}
@@ -751,18 +777,26 @@
 		 * @param $idSalleModif int : id de la salle pour le formulaire de modification du cours
 		 * @param $idTypeCours int : correspond au type de cours sélectionné
 		 */
-		public static function liste_salle_suivant_typeCours($idSalleModif, $idTypeCours) {
+		public static function listeSalleSuivantTypeCours($idSalleModif, $idTypeCours) {
 			$tab = "";
 			$liste_salle = V_Liste_Salles::liste_salles_appartenant_typeCours($idTypeCours);
 			
-			if (isset($idSalleModif) && ($idSalleModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+			if (isset($idSalleModif) && ($idSalleModif == 0)) {
+				$selected = "selected=\"selected\" ";
+			} else {
+				$selected = "";
+			}
+				echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 			foreach ($liste_salle as $idSalle) {
-				$_salle = new V_listeSalles($idSalle);
+				$_salle = new V_Liste_Salles($idSalle);
 				$nomBatiment = $_salle->getNomBatiment();
 				$nomSalle = $_salle->getNomSalle();
-				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo $tab."\t\t\t\t\t<option value=\"$idSalle\" $selected>$nomBatiment $nomSalle</option>\n";
+				if (isset($idSalleModif) && ($idSalleModif == $idSalle)) {
+					$selected = "selected=\"selected\" ";
+				} else {
+					$selected = "";
+				}
+				echo $tab."\t\t\t\t\t<option value=\"".$idSalle."\" ".$selected.">".$nomBatiment." ".$nomSalle."</option>\n";
 			}
 		}
 		
@@ -773,13 +807,13 @@
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutCours'])) { //pour l'Ajout d'un cours
 				$idUE = $_POST['UE'];
-				$idUE_correct = true;
+				$idUECorrect = true;
 				$idSalle = $_POST['salle'];
-				$idSalle_correct = true;
+				$idSalleCorrect = true;
 				$idIntervenant = $_POST['intervenant'];
 				$idIntervenantCorrect = true;
 				$typeCours = $_POST['typeCours'];
-				$typeCours_correct = true;
+				$typeCoursCorrect = true;
 				$dateDebut = $_POST['dateDebut'];
 				$dateDebutCorrect = true;
 				$heureDebut = $_POST['heureDebut'];
@@ -789,13 +823,13 @@
 				$dateFin = $_POST['dateFin'];
 				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
-				$heureFin_correct = true;
+				$heureFinCorrect = true;
 				$minuteFin = $_POST['minuteFin'];
-				$minuteFin_correct = true;
+				$minuteFinCorrect = true;
 				$recursivite = $_POST['recursivite'];
-				$recursivite_correct = true;
-				if ($idUE_correct && $idSalle_correct && $idIntervenantCorrect && $typeCours_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct && $recursivite_correct) {	
-					Cours::ajouter_cours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);				
+				$recursiviteCorrect = true;
+				if ($idUECorrect && $idSalleCorrect && $idIntervenantCorrect && $typeCoursCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFinCorrect && $minuteFinCorrect && $recursiviteCorrect) {	
+					Cours::ajouterCours($idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00", $recursivite);				
 					array_push($messagesNotifications, "Le cours a bien été ajouté");
 				}
 				else {
@@ -806,13 +840,13 @@
 				$id = $_POST['id']; 
 				$idCorrect = V_Infos_Cours::existe_cours($id);			
 				$idUE = $_POST['UE'];
-				$idUE_correct = true;
+				$idUECorrect = true;
 				$idSalle = $_POST['salle'];
-				$idSalle_correct = true;
+				$idSalleCorrect = true;
 				$idIntervenant = $_POST['intervenant'];
 				$idIntervenantCorrect = true;
 				$typeCours = $_POST['typeCours'];
-				$typeCours_correct = true;
+				$typeCoursCorrect = true;
 				$dateDebut = $_POST['dateDebut'];
 				$dateDebutCorrect = true;
 				$heureDebut = $_POST['heureDebut'];
@@ -822,11 +856,11 @@
 				$dateFin = $_POST['dateFin'];
 				$dateFinCorrect = true;
 				$heureFin = $_POST['heureFin'];
-				$heureFin_correct = true;
+				$heureFinCorrect = true;
 				$minuteFin = $_POST['minuteFin'];
-				$minuteFin_correct = true;
-				if ($idCorrect && $idUE_correct && $idSalle_correct && $idIntervenantCorrect && $typeCours_correct && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFin_correct && $minuteFin_correct) {
-					Cours::modifier_cours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
+				$minuteFinCorrect = true;
+				if ($idCorrect && $idUECorrect && $idSalleCorrect && $idIntervenantCorrect && $typeCoursCorrect && $dateDebutCorrect && $heureDebutCorrect && $minuteDebutCorrect && $dateFinCorrect && $heureFinCorrect && $minuteFinCorrect) {
+					Cours::modifierCours($_GET['modifier_cours'], $idUE, $idSalle, $idIntervenant, $typeCours, "$dateDebut $heureDebut:$minuteDebut:00", "$dateFin $heureFin:$minuteFin:00");
 					array_push($messagesNotifications, "Le cours a bien été modifié");
 				}
 				else {
@@ -843,7 +877,7 @@
 			if (isset($_GET['supprimer_cours'])) {	
 				if (V_Infos_Cours::existe_cours($_GET['supprimer_cours'])) {
 					// Le cours existe
-					Cours::supprimer_cours($_GET['supprimer_cours']);
+					Cours::supprimerCours($_GET['supprimer_cours']);
 					array_push($messagesNotifications, "Le cours à bien été supprimé");
 				}
 				else {
@@ -863,9 +897,9 @@
 			
 			//Affichage des cours à venir
 			echo $tab."<h2>Liste des cours à venir</h2>\n";
-			Cours::liste_cours_futurs_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
+			Cours::listeCoursFutursToTable($_GET['idPromotion'], true, $nombreTabulations + 1);
 			
 			// Commande test pour l'affichage de tous les cours de la promotion
-			//Cours::liste_cours_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
+			//Cours::listeCoursToTable($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}		
 	}

@@ -21,49 +21,65 @@
 		 * Getter de l'id de l'UE
 		 * @return int : id de l'UE
 		 */
-		public function getId() { return $this->id; }
+		public function getId() {
+			return $this->id;
+		}
 		
 		/**
 		 * Getter du nom de l'UE
 		 * @return string : nom de l'UE
 		 */
-		public function getNom() { return $this->nom; }
+		public function getNom() {
+			return $this->nom;
+		}
 		
 		/**
 		 * Getter de l'intitule de l'UE
 		 * @return string : intitule l'UE
 		 */
-		public function getIntitule() { return $this->intitule; }
+		public function getIntitule() {
+			return $this->intitule;
+		}
 		
 		/**
 		 * Getter du nombres d'heures de cours de l'UE
 		 * @return int : nbHeuresCours de l'UE
 		 */
-		public function getNbHeuresCours() { return $this->nbHeuresCours; }
+		public function getNbHeuresCours() {
+			return $this->nbHeuresCours;
+		}
 		
 		/**
 		 * Getter du nombres d'heures de TD de l'UE
 		 * @return int : nbHeuresTD de l'UE
 		 */
-		public function getNbHeuresTD() { return $this->nbHeuresTD; }
+		public function getNbHeuresTD() {
+			return $this->nbHeuresTD;
+		}
 		
 		/**
 		 * Getter du nombres d'heures de TP de l'UE
 		 * @return int : nbHeuresTP de l'UE
 		 */
-		public function getNbHeuresTP() { return $this->nbHeuresTP; }
+		public function getNbHeuresTP() {
+			return $this->nbHeuresTP;
+		}
 		
 		/**
 		 * Getter du nombres d'ECTS de l'UE
 		 * @return int : ECTS de l'UE
 		 */
-		public function getECTS() { return $this->ECTS; }
+		public function getECTS() {
+			return $this->ECTS;
+		}
 		
 		/**
 		 * Getter de l'idResponsable de l'UE (id de l'intervenant nommé responsable de l'UE)
 		 * @return int : idResponsable de l'UE
 		 */
-		public function getIdResponsable() { return $this->idResponsable; }
+		public function getIdResponsable() {
+			return $this->idResponsable;
+		}
 		
 		/**
 		 * Constructeur de la classe UE
@@ -95,7 +111,7 @@
 		 * Fonction testant l'existence d'une UE
 		 * @param id : int id de l'UE
 		 */
-		public static function existe_UE($id) {
+		public static function existeUE($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -333,7 +349,7 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					$cptBoucle=0;
+					$cptBoucle= 0;
 					$valTemp = "";
 					foreach (V_Infos_UE::$attributs as $att) {
 						if ($cptBoucle == 6)
@@ -465,7 +481,7 @@
 			echo $tab."\t\t\t\t<select name=\"idIntervenant\" id=\"idIntervenant\">\n";
 			
 			$selected = (isset($idResponsableModif) && ($idResponsableModif == 0)) ? "selected=\"selected\" " : "";
-			echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnue -----</option>\n";
+			echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnue -----</option>\n";
 			foreach ($listeIntervenants as $idIntervenant) {
 				if ($idIntervenant != 0) {
 					$_Intervenant = new Intervenant($idIntervenant);
@@ -525,7 +541,7 @@
 				else {				
 					// Modification d'une nouvelle UE
 					$id = htmlentities($_POST['id']); 
-					$idCorrect = UE::existe_UE($id);
+					$idCorrect = UE::existeUE($id);
 					if ($idCorrect && $nomCorrect && $intituleCorrect && $nbHeuresCoursCorrect && $nbHeuresTDCorrect && $nbHeuresTPCorrect && $ectsCorrect && $idIntervenantCorrecte) {			
 						UE::modifier_UE($_GET['modifier_UE'], $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ects, $idIntervenant, $_GET['idPromotion']);
 						array_push($messagesNotifications, "L'UE a bien été modifié");
@@ -570,7 +586,7 @@
 		public static function priseEnCompteSuppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_UE'])) {	
-				if (UE::existe_UE($_GET['supprimer_UE'])) {
+				if (UE::existeUE($_GET['supprimer_UE'])) {
 					// L'UE existe
 					UE::supprimer_UE($_GET['supprimer_UE']);
 					array_push($messagesNotifications, "L'UE à bien été supprimé");

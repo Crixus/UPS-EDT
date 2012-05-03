@@ -47,7 +47,7 @@
 			//liste des étudiants de la promotion
 			$liste_etudiants = V_Infos_Etudiant::liste_etudiant($idPromotion);
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
-			$tab="";
+			$tab = "";
 			
 			if (($nbre_etudiants == 0) || ($nbreGroupeEtudiants == 0)) {
 				echo $tab."<h2>Aucun groupe d'étudiants n'a été créé pour cette promotion et aucun etudiants n'y a été inscrits</h2>\n";

@@ -153,7 +153,7 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT * FROM ".Promotion::$nomTable." WHERE id!=0 ORDER BY nom");
+				$req = $bdd->prepare("SELECT * FROM ".Promotion::$nomTable." WHERE id!= 0 ORDER BY nom");
 				$req->execute();
 				while ($ligne = $req->fetch()) {
 					array_push($listeId, $ligne['id']);
@@ -176,7 +176,7 @@
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 				$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
 				$bdd->query("SET NAMES utf8");
-				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Promotion::$nomTable." WHERE id!=0 ORDER BY nom");
+				$req = $bdd->prepare("SELECT COUNT(id) AS nb FROM ".Promotion::$nomTable." WHERE id!= 0 ORDER BY nom");
 				$req->execute();
 				$ligne = $req->fetch();
 				$req->closeCursor();
@@ -197,7 +197,7 @@
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			echo $tab."<select onChange='selection_promotion(this)'>\n";
 			
-			echo $tab."\t<option value=0>--</option>\n";
+			echo $tab."\t<option value= 0>--</option>\n";
 			
 			foreach ($liste_promotion as $idPromotionListe) {
 				$_Promotion = new Promotion($idPromotionListe);
@@ -248,7 +248,7 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					$cptBoucle=0;
+					$cptBoucle= 0;
 					$valTemp="";
 					$valTemp2="";
 					foreach (Promotion::$attributs as $att) {
@@ -314,53 +314,53 @@
 		 */
 		public function getDate($jour, $mois, $annee) {
 			if ($jour == 1)  
-				$numero_jour = '1er';
+				$numeroJour = '1er';
 			else if ($jour < 10)
-				$numero_jour = $jour[1];
+				$numeroJour = $jour[1];
 			else 
-				$numero_jour = $jour;
+				$numeroJour = $jour;
 			
-			$nom_mois = "";
+			$nomMois = "";
 			switch ($mois) {
 				case 1 : 
-					$nom_mois = 'Janvier';
+					$nomMois = 'Janvier';
 					break;
 				case 2 : 
-					$nom_mois = 'Fevrier';
+					$nomMois = 'Fevrier';
 					break;
 				case 3 : 
-					$nom_mois = 'Mars';
+					$nomMois = 'Mars';
 					break;
 				case 4 : 
-					$nom_mois = 'Avril';
+					$nomMois = 'Avril';
 					break;
 				case 5 : 
-					$nom_mois = 'Mai';
+					$nomMois = 'Mai';
 					break;
 				case 6 : 
-					$nom_mois = 'Juin';
+					$nomMois = 'Juin';
 					break;
 				case 7 : 
-					$nom_mois = 'Juillet';
+					$nomMois = 'Juillet';
 					break;
 				case 8 : 
-					$nom_mois = 'Août';
+					$nomMois = 'Août';
 					break;
 				case 9 : 
-					$nom_mois = 'Septembre';
+					$nomMois = 'Septembre';
 					break;
 				case 10 : 
-					$nom_mois = 'Octobre';
+					$nomMois = 'Octobre';
 					break;
 				case 11 : 
-					$nom_mois = 'Novembre';
+					$nomMois = 'Novembre';
 					break;
 				case 12 : 
-					$nom_mois = 'Décembre';
+					$nomMois = 'Décembre';
 					break;
 			}
 			
-			echo "{$numero_jour} {$nom_mois} {$annee}";
+			echo "{$numeroJour} {$nomMois} {$annee}";
 		}		
 		
 		/**

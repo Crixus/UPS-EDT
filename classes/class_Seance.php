@@ -256,7 +256,7 @@
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt++; $cpt %= 2;
 					
 					echo $tab."\t<tr class=\"".$couleurFond."\">\n";
-					$cptBoucle=0;
+					$cptBoucle= 0;
 					$valTemp="";
 					$valTemp2="";
 					foreach (V_Infos_Seance_Promotion::$attributs as $att) {
@@ -386,7 +386,7 @@
 					$_UE = new UE($idUE);
 					$nomUE = $_UE->getNom();
 					if (isset($idUEModif) && ($idUEModif == $idUE)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"$idUE\" $selected>$nomUE</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"$idUE\" ".$selected.">$nomUE</option>\n";
 				}
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -412,13 +412,13 @@
 				echo $tab."\t\t\t\t<select name=\"intervenant\" id=\"intervenant\">\n";
 				
 				if (isset($idIntervenantModif) && ($idIntervenantModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-					echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+					echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 				foreach ($listeIntervenants as $idIntervenant) {
 					if ($idIntervenant != 0) {
 						$_Intervenant = new Intervenant($idIntervenant);
 						$nomIntervenant = $_Intervenant->getNom(); $prenomIntervenant = $_Intervenant->getPrenom();
 						if (isset($idIntervenantModif) && ($idIntervenantModif == $idIntervenant)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-						echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" $selected>$nomIntervenant $prenomIntervenant.</option>\n";
+						echo $tab."\t\t\t\t\t<option value=\"$idIntervenant\" ".$selected.">$nomIntervenant $prenomIntervenant.</option>\n";
 					}
 				}
 				echo $tab."\t\t\t\t</select>\n";
@@ -430,7 +430,7 @@
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"salle\" id=\"salle\">\n";
 				
-				Cours::liste_salle_suivant_typeCours($idSalleModif, $idTypeCoursModif);
+				Cours::listeSalleSuivantTypeCours($idSalleModif, $idTypeCoursModif);
 				
 				echo $tab."\t\t\t\t</select>\n";
 				echo $tab."\t\t\t</td>\n";
@@ -441,13 +441,13 @@
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"seancePrecedente\" id=\"seancePrecedente\">\n";
 				if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == 0)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-				echo $tab."\t\t\t\t\t<option value=\"0\" $selected>----- Inconnu -----</option>\n";
+				echo $tab."\t\t\t\t\t<option value=\"0\" ".$selected.">----- Inconnu -----</option>\n";
 				foreach ($liste_seance_precedente_promotion as $idSeance) {
 					if (!(isset($_GET['modifier_seance']) && ($idSeance == $idSeanceEnregistrer))) {
 						$_Seance = new Seance($idSeance);
 						$nomSeance = $_Seance->getNom();
 						if (isset($idSeancePrecedenteModif) && ($idSeancePrecedenteModif == $idSeance)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-						echo $tab."\t\t\t\t\t<option value=\"$idSeance\" $selected>$nomSeance</option>\n";
+						echo $tab."\t\t\t\t\t<option value=\"$idSeance\" ".$selected.">$nomSeance</option>\n";
 					}
 				}
 				echo $tab."\t\t\t\t</select>\n";
@@ -478,20 +478,20 @@
 				$duree = $_POST['duree'];
 				$dureeCorrect = true;
 				$idUE = $_POST['UE'];
-				$idUE_correct = true;
+				$idUECorrect = true;
 				$typeCours = $_POST['typeCours'];
-				$typeCours_correct = true;
+				$typeCoursCorrect = true;
 				$idIntervenant = $_POST['intervenant'];
 				$idIntervenantCorrect = true;
 				$idSalle = $_POST['salle'];
-				$idSalle_correct = true;
+				$idSalleCorrect = true;
 				$idSeancePrecedente = $_POST['seancePrecedente'];
 				$idSeancePrecedenteCorrecte = true;		
 				
 				$validationAjout = false;
 				if (isset($_POST['validerAjoutSeance'])) {
 					// Ajout d'une nouvelle seance
-					if ($nomCorrect && $dureeCorrect && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($nomCorrect && $dureeCorrect && $idUECorrect && $typeCoursCorrect && $idIntervenantCorrect && $idSalleCorrect && $idSeancePrecedenteCorrecte) {
 						Seance::ajouter_seance($nom, $duree, 0, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);				
 						array_push($messagesNotifications, "La séance a bien été ajouté");
 						$validationAjout = true;
@@ -501,7 +501,7 @@
 					// Modification d'une nouvelle seance
 					$id = htmlentities($_POST['id']); 
 					$idCorrect = JourNonOuvrable::existe_jourNonOuvrable($id);
-					if ($idCorrect && $nomCorrect && $dureeCorrect && $idUE_correct && $typeCours_correct && $idIntervenantCorrect && $idSalle_correct && $idSeancePrecedenteCorrecte) {
+					if ($idCorrect && $nomCorrect && $dureeCorrect && $idUECorrect && $typeCoursCorrect && $idIntervenantCorrect && $idSalleCorrect && $idSeancePrecedenteCorrecte) {
 						Seance::modifier_seance($_GET['modifier_seance'], $nom, $duree, $idUE, $idSalle, $idIntervenant, $typeCours, $idSeancePrecedente);
 						array_push($messagesNotifications, "La séance a bien été modifié");
 						$validationAjout = true;

@@ -143,8 +143,8 @@
 			$nbre_type_cours = sizeof($listeTypeCours);
 			
 			//Liste des types de salles enregistrés dans la base de donnée
-			$liste_type_salle = Type_Salle::liste_id_type_salle();
-			$nbre_type_salle = sizeof($liste_type_salle);
+			$listeTypeSalle = Type_Salle::liste_id_type_salle();
+			$nbre_type_salle = sizeof($listeTypeSalle);
 			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
@@ -165,7 +165,7 @@
 				echo $tab."\t</tr>\n";
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				foreach ($liste_type_salle as $idType_Salle) {					
+				foreach ($listeTypeSalle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
 					echo $tab."\t\t<th>".$nomType_Salle."</th>\n";
@@ -184,7 +184,7 @@
 						echo $tab."\t\t<td>".$_TypeCours->$att."</td>\n";
 					}
 					
-					foreach ($liste_type_salle as $idTypeSalle) {					
+					foreach ($listeTypeSalle as $idTypeSalle) {					
 						$Type_Salle = new Type_Salle($idTypeSalle);
 						$nomType_Salle = $Type_Salle->getNom();
 						if (Type_Cours::appartenance_typeSalle_typeCours($idTypeCours, $idTypeSalle)) 

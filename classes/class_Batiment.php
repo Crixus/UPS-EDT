@@ -142,7 +142,7 @@
 			if ($idBatiment != 0) {
 				$_batiment = new Batiment($idBatiment);
 				foreach ($_batiment->listeSalles() as $_salle) {
-					Cours::modifier_salle_tout_cours($_salle->getId(), 0);
+					Cours::modifierSalleToutCours($_salle->getId(), 0);
 				}
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -483,7 +483,7 @@
 		* Fonction pour l'affichage des infos du batiment et de la liste de ses salles 
 		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		*/
-		public function page_informations($nombreTabulations = 0) {
+		public function pageInformations($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$latitude = ($this->getLat() == NULL) ? "<span class=\"erreur\">Pas de latitude saisie</span>" : $this->getLat();
 			$longitude = ($this->getLon() == NULL) ? "<span class=\"erreur\">Pas de longitude saisie</span>" : $this->getLon();

@@ -17,25 +17,33 @@
 		 * Getter de l'id de la salle
 		 * @return int : id de la salle
 		 */
-		public function getId() { return $this->id; }
+		public function getId() {
+			return $this->id;
+		}
 		
 		/**
 		 * Getter du nom de la salle
 		 * @return string : nom de la salle
 		 */
-		public function getNom() { return $this->nom; }
+		public function getNom() {
+			return $this->nom;
+		}
 		
 		/**
 		 * Getter du nomBatiment de la salle
 		 * @return string : nom du batiment
 		 */
-		public function getNomBatiment() { return $this->nomBatiment; }
+		public function getNomBatiment() {
+			return $this->nomBatiment;
+		}
 		
 		/**
 		 * Getter du capacite de la salle
 		 * @return int : capacite de l'étudiant
 		 */
-		public function getCapacite() { return $this->capacite; }
+		public function getCapacite() {
+			return $this->capacite;
+		}
 		
 		/**
 		 * Constructeur de la classe Salle
@@ -123,7 +131,7 @@
 		 */
 		public static function supprimerSalle($idSalle) {
 			if ($idSalle != 0) {
-				Cours::modifier_salle_tout_cours($idSalle, 0);
+				Cours::modifierSalleToutCours($idSalle, 0);
 				try {
 					$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 					$bdd = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_LOGIN, DB_PASSWORD, $pdoOptions);
@@ -143,7 +151,7 @@
 		 * Renvoi la liste d'id des salles
 		 * @return List<Salle> liste des salles
 		 */
-		public static function liste_id_salles() {
+		public static function listeIdsSalles() {
 			$listeIdSalle = Array();
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -298,9 +306,9 @@
 			if (isset($_GET['modifier_salle'])) { 
 				$titre = "Modifier une salle";
 				$_salle = new Salle($_GET['modifier_salle']);
-				$nomModif = "value=\"{$_salle->getNom()}\"";
+				$nomModif = "value=\"".$_salle->getNom()."\"";
 				$nomBatimentModif = $_salle->getNomBatiment();
-				$capaciteModif = "value=\"{$_salle->getCapacite()}\"";
+				$capaciteModif = "value=\"".$_salle->getCapacite()."\"";
 				$valueSubmit = "Modifier la salle";
 				$nameSubmit = "validerModificationSalle";
 				$hidden = "<input name=\"id\" type=\"hidden\" value=\"{$_GET['modifier_salle']}\" />";
@@ -344,10 +352,14 @@
 				echo $tab."\t\t\t<td>\n";
 				echo $tab."\t\t\t\t<select name=\"nomBatiment\" id=\"nomBatiment\">\n";
 				
-				foreach ($liste_nom_batiment as $nom_batiment) {
-					if ($nom_batiment != 'DEFAULT') {
-						if (isset($nomBatimentModif) && ($nomBatimentModif == $nom_batiment)) { $selected = "selected=\"selected\" "; } else { $selected = ""; }
-						echo $tab."\t\t\t\t\t<option value=\"$nom_batiment\" $selected>$nom_batiment</option>\n";
+				foreach ($liste_nom_batiment as $nomBatiment) {
+					if ($nomBatiment != 'DEFAULT') {
+						if (isset($nomBatimentModif) && ($nomBatimentModif == $nomBatiment)) {
+							$selected = "selected=\"selected\" ";
+						} else {
+							$selected = "";
+						}
+						echo $tab."\t\t\t\t\t<option value=\"".$nomBatiment."\" ".$selected.">$nomBatiment</option>\n";
 					}
 				}
 				echo $tab."\t\t\t\t</select>\n";
@@ -432,11 +444,11 @@
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			//Liste des salles enregistrées dans la base de donnée
-			$liste_id_salles = Salle::liste_id_salles();
+			$liste_id_salles = Salle::listeIdsSalles();
 			$nbSalles = sizeof($liste_id_salles);
 			
 			//Liste des types de salles enregistrées dans la base de donnée
-			$liste_type_salle = Type_Salle::liste_id_type_salle();
+			$listeTypeSalle = Type_Salle::liste_id_type_salle();
 			
 			if ($nbSalles <= 1) {
 				echo $tab."<b>Aucunes salles n'est enregistrées</b>\n";
@@ -449,17 +461,17 @@
 				echo $tab."\t\t<th rowspan=\"2\">Batiment</th>\n";
 				echo $tab."\t\t<th rowspan=\"2\">Salle</th>\n";
 				echo $tab."\t\t<th rowspan=\"2\">Capacité</th>\n";
-				echo $tab."\t\t<th colspan=\"".sizeof($liste_type_salle)."\">Type de salles</th>\n";
+				echo $tab."\t\t<th colspan=\"".sizeof($listeTypeSalle)."\">Type de salles</th>\n";
 				if ($administration) {
 					echo $tab."\t\t<th rowspan=\"2\">Actions</th>\n";
 				}
 				echo $tab."\t</tr>\n";
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				
-				foreach ($liste_type_salle as $idType_Salle) {					
+				foreach ($listeTypeSalle as $idType_Salle) {					
 					$Type_Salle = new Type_Salle($idType_Salle);
 					$nomType_Salle = $Type_Salle->getNom();
-					echo $tab."\t\t<th>$nomType_Salle</th>\n";
+					echo $tab."\t\t<th>".$nomType_Salle."</th>\n";
 				}
 				echo $tab."\t</tr>\n";
 				
@@ -476,16 +488,16 @@
 						
 						echo $tab."\t<tr class=\"".$couleurFond."\">\n";
 						echo $tab."\t\t<td>";
-						echo "<a href=\"$lienInfosSalle\">{$_salle->getNomBatiment()} - {$_salle->getNom()}</a>";
+						echo "<a href=\"".$lienInfosSalle."\">".$_salle->getNomBatiment()." - ".$_salle->getNom()."</a>";
 						echo "</td>\n";
-						echo $tab."\t\t<td>{$_salle->getNomBatiment()}</td>\n";
-						echo $tab."\t\t<td>{$_salle->getNom()}</td>\n";
-						echo $tab."\t\t<td>{$_salle->getCapacite()}</td>\n";
+						echo $tab."\t\t<td>".$_salle->getNomBatiment()."</td>\n";
+						echo $tab."\t\t<td>".$_salle->getNom()."</td>\n";
+						echo $tab."\t\t<td>".$_salle->getCapacite()."</td>\n";
 										
-						foreach ($liste_type_salle as $idType_Salle) {					
+						foreach ($listeTypeSalle as $idType_Salle) {					
 							$Type_Salle = new Type_Salle($idType_Salle);
 							$nomType_Salle = $Type_Salle->getNom();
-							if (Type_Salle::appartient_salle_typeSalle($idSalle, $idType_Salle)) 
+							if (Type_Salle::appartientSalleTypeSalle($idSalle, $idType_Salle)) 
 								$checked = "checked = \"checked\"";
 							else
 								$checked = "";
@@ -528,16 +540,16 @@
 		 * Fonction utilisée pour l'affichage des informations de la salle
 		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		 */
-		public function page_informations($nombreTabulations = 0) {
+		public function pageInformations($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			$Batiment = Batiment::Batiment_from_nom($this->getNomBatiment());
 			echo $tab."<h2>Salle {$this->getNomBatiment()} - {$this->getNom()}</h2>\n";
 			echo $tab."<h3>Informations</h3>\n";
 			echo $tab."<ul>\n";
 			echo $tab."\t<li>Nom : {$this->getNom()}</li>\n";
-			echo $tab."\t<li>Batiment : {$this->getNomBatiment()}</li>\n";
-			echo $tab."\t<li>Capacite : {$this->getCapacite()}</li>\n";
+			echo $tab."\t<li>Batiment : ".$this->getNomBatiment()."</li>\n";
+			echo $tab."\t<li>Capacite : ".$this->getCapacite()."</li>\n";
 			echo $tab."</ul>\n";
-			$Batiment->page_informations($nombreTabulations);
+			$Batiment->pageInformations($nombreTabulations);
 		}
 	}

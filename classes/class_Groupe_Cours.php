@@ -210,19 +210,20 @@
 			// Liste des groupes de cours de la promotion enregistrée dans la base de donnée
 			$listeGroupeCours = Groupe_Cours::listeGroupeCours($idPromotion);
 			$nbreGroupeCours = Groupe_Cours::getNbreGroupeCours($idPromotion);
-			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
+			$tab = ""; 
+			while ($nombreTabulations > 0) {
+				$tab .= "\t"; $nombreTabulations--;
+			}
 			
 			if ($nbreGroupeCours == 0) {
 				echo $tab."<h2>Aucun groupe de cours n'a été créés pour cette promotion</h2>\n";
-			}
-			else {
+			} else {
 				echo $tab."<table class=\"table_liste_administration\">\n";
 				
 				echo $tab."\t<tr class=\"fondGrisFonce\">\n";
 				echo $tab."\t\t<th>Nom</th>\n";
 				echo $tab."\t\t<th>Identifiant</th>\n";
 				
-			
 				if ($administration) {
 					echo $tab."\t\t<th>Actions</th>\n";
 				}
@@ -243,15 +244,17 @@
 					
 					// Création des liens pour la modification et la suppression des groupes de cours et gestion de l'URL 
 					if ($administration) {
-						$pageModification = "./index.php?page=ajoutGroupeCours&amp;modifier_groupeCours=$idGroupeCours";
-						$pageSuppression = "./index.php?page=ajoutGroupeCours&amp;supprimer_groupeCours=$idGroupeCours";
+						$pageModification = "./index.php?page=ajoutGroupeCours&amp;modifier_groupeCours=".$idGroupeCours;
+						$pageSuppression = "./index.php?page=ajoutGroupeCours&amp;supprimer_groupeCours=".$idGroupeCours;
 						if (isset($_GET['idPromotion'])) {
 							$pageModification .= "&amp;idPromotion=".$_GET['idPromotion'];
 							$pageSuppression .= "&amp;idPromotion=".$_GET['idPromotion'];
 						}
 						echo $tab."\t\t<td>";
 						echo "<a href=\"".$pageModification."\"><img src=\"../images/modify.png\" alt=\"icone de modification\" /></a>";
-						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le groupe de cours ?')\"><img src=\"../images/delete.png\" alt=\"icone de suppression\" /></a>";
+						echo "<a href=\"".$pageSuppression."\" onclick=\"return confirm('Supprimer le groupe de cours ?')\">";
+						echo "<img src=\"../images/delete.png\" alt=\"icone de suppression\" />";
+						echo "</a>";
 						echo "</td>\n";
 					}
 					echo $tab."\t</tr>\n";
@@ -267,7 +270,10 @@
 		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
 		 */
 		public function formulaireAjoutGroupeCours($idPromotion, $nombresTabulations = 0) {
-			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			$tab = ""; 
+			while ($nombresTabulation = 0) {
+				$tab .= "\t"; $nombresTabulations--;
+			}
 			
 			// Gestion du formulaire suivant si on ajoute ou on modifie d'un groupe de cours
 			if (isset($_GET['modifier_groupeCours'])) { 
@@ -286,8 +292,7 @@
 				if (isset($_GET['idPromotion'])) {
 					$lienAnnulation .= "&amp;idPromotion=".$_GET['idPromotion'];
 				}
-			}
-			else {
+			} else {
 				$titre = "Ajouter un groupe de cours";
 				$nomModif = (isset($_POST['nom'])) ? "value=\"".$_POST['nom']."\"" : "value=\"\"";
 				$_Promotion = new Promotion($idPromotion);
@@ -324,7 +329,8 @@
 			echo $tab."</form>\n";
 			
 			if (isset($lienAnnulation)) {
-				echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}				
+				echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";
+			}				
 		}		
 		
 		/**
@@ -389,8 +395,7 @@
 					// Le groupe de cours existe
 					Groupe_Cours::supprimerGroupeCours($_GET['supprimer_groupeCours']);
 					array_push($messagesNotifications, "Le groupe de cours à bien été supprimé");
-				} 
-				else {
+				} else {
 					// Le groupe de cours n'existe pas
 					array_push($messagesErreurs, "Le groupe de cours n'existe pas");
 				}

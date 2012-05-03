@@ -146,8 +146,8 @@
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			
 			//Liste des types de salles enregistrés dans la base de donnée
-			$liste_type_salle = Type_Salle::liste_id_type_salle();
-			$nbTypeSalles = sizeof($liste_type_salle);
+			$listeTypeSalle = Type_Salle::liste_id_type_salle();
+			$nbTypeSalles = sizeof($listeTypeSalle);
 			
 			//Liste des types de cours enregistrés dans la base de donnée
 			$listeTypeCours = Type_Cours::liste_id_type_cours();
@@ -179,7 +179,7 @@
 				
 				$cpt = 0;
 				// Gestion de l'affichage des informations du type de salle
-				foreach ($liste_type_salle as $idTypeSalle) {
+				foreach ($listeTypeSalle as $idTypeSalle) {
 					$Type_Salle = new Type_Salle($idTypeSalle);
 					
 					$couleurFond = ($cpt == 0) ? "fondBlanc" : "fondGris"; $cpt = ($cpt + 1)%2;
@@ -377,7 +377,7 @@
 		 * @param $idType_Salle int : id du type de salle
 		 * @return boolean : renvoi 1 si la salle appartient bien à ce type de salle, 0 sinon
 		 */
-		public function appartient_salle_typeSalle($idSalle, $idType_Salle) {
+		public function appartientSalleTypeSalle($idSalle, $idType_Salle) {
 			$appartient = 0;
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
