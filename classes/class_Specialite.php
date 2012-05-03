@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Specialite - Permet de gérer les Specialites
+	 */ 
 	class Specialite{
 		
 		public static $nomTable = "Specialite";
@@ -8,10 +11,29 @@
 			"intitule"
 		);
 		
+		/**
+		 * Getter de l'id de la spécialité
+		 * @return int : id de la spécialité
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom de la spécialité
+		 * @return string : nom de la spécialité
+		 */
 		public function getNom() { return $this->nom; }
+		
+		/**
+		 * Getter de l'intitule de la spécialité
+		 * @return string : intitule de la spécialité
+		 */
 		public function getIntitule() { return $this->intitule; }
 		
+		/**
+		 * Constructeur de la classe Specialite
+		 * Récupère les informations de Specialite dans la base de données depuis l'id
+		 * @param $id : int id du Specialite
+		 */
 		public function Specialite($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -33,6 +55,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une spécialité
+		 * @param id : int id de la spécialité
+		 */
 		public static function existe_specialite($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -52,6 +78,12 @@
 			}
 		}
 		
+		/**
+		 * Ajouter une spécialité dans la base de données
+		 * @param $nom : string nom de la spécialité
+		 * @param $intitule : string intitulé de la spécialité
+		 * @param $idPromotion : int idPromotion de la spécialité
+		 */
 		public static function ajouter_specialite($nom, $intitule, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -73,6 +105,13 @@
 			}
 		}
 		
+		/**
+		 * Modifier une spécialité dans la base de données
+		 * @param $idSpecialite : int id de la spécialité a modifié
+		 * @param $nom : string nom de la spécialité
+		 * @param $intitule : string intitulé de la spécialité
+		 * @param $idPromotion : int idPromotion de la spécialité
+		 */
 		public static function modifier_specialite($idSpecialite, $nom, $intitule, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -93,6 +132,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime une spécialité dans la base de données
+		 * @param $idSpecialite int : id de la spécialité a supprimé
+		 */
 		public static function supprimer_specialite($idSpecialite) {
 		
 			//MAJ de la table "Etudiant" on met idSpecialite à 0 pour l'idSpecialite correspondant
@@ -128,9 +171,15 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'une spécialité
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutSpecialite($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie une spécialité
 			if (isset($_GET['modifier_specialite'])) { 
 				$titre = "Modifier une spécialité";
 				$Specialite = new Specialite($_GET['modifier_specialite']);
@@ -183,6 +232,9 @@
 			}				
 		}	
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSpecialite']) || isset($_POST['validerModificationSpecialite'])) {
@@ -228,6 +280,9 @@
 			}			
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une spécialité, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_specialite'])) {	
@@ -243,6 +298,10 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'une spécialité ainsi que l'affichage des spécialités de la promotion enregistrées dans la base de données
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Specialite::formulaireAjoutSpecialite($_GET['idPromotion'], $nombreTabulations + 1);
@@ -250,7 +309,11 @@
 			Specialite::liste_specialite_to_table($_GET['idPromotion'], $nombreTabulations + 1);
 		}
 		
-		
+		/**
+		 * Liste des spécialités de la promotion sélectionnée
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @return List<Specialite> : informations des spécialités de la promotion sélectionnée
+		 */
 		public static function liste_specialite($idPromotion) {
 			$listeId = Array();
 			try {
@@ -272,9 +335,17 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des spécialités créés 
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_specialite_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			//Liste des spécialités de la promotion
 			$liste_specialite = Specialite::liste_specialite($idPromotion);
 			$nbSpecialite = sizeof($liste_specialite);
+			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbSpecialite == 0) {
@@ -294,6 +365,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des spécialités
 				foreach ($liste_specialite as $idSpecialite) {
 					$Specialite = new Specialite($idSpecialite);
 					
@@ -303,6 +375,8 @@
 					foreach (Specialite::$attributs as $att) {
 						echo $tab."\t\t<td>".$Specialite->$att."</td>\n";
 					}
+					
+					// Création des liens pour la modification et la suppression des spécialités et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutSpecialite&amp;modifier_specialite=".$idSpecialite;
 						$pageSuppression = "./index.php?page=ajoutSpecialite&amp;supprimer_specialite=".$idSpecialite;

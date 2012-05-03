@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe UE - Permet de gérer les UE
+	 */ 
 	class UE {
 		
 		public static $nomTable = "UE";
@@ -14,6 +17,59 @@
 			"idPromotion"
 		);
 		
+		/**
+		 * Getter de l'id de l'UE
+		 * @return int : id de l'UE
+		 */
+		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom de l'UE
+		 * @return string : nom de l'UE
+		 */
+		public function getNom() { return $this->nom; }
+		
+		/**
+		 * Getter de l'intitule de l'UE
+		 * @return string : intitule l'UE
+		 */
+		public function getIntitule() { return $this->intitule; }
+		
+		/**
+		 * Getter du nombres d'heures de cours de l'UE
+		 * @return int : nbHeuresCours de l'UE
+		 */
+		public function getNbHeuresCours() { return $this->nbHeuresCours; }
+		
+		/**
+		 * Getter du nombres d'heures de TD de l'UE
+		 * @return int : nbHeuresTD de l'UE
+		 */
+		public function getNbHeuresTD() { return $this->nbHeuresTD; }
+		
+		/**
+		 * Getter du nombres d'heures de TP de l'UE
+		 * @return int : nbHeuresTP de l'UE
+		 */
+		public function getNbHeuresTP() { return $this->nbHeuresTP; }
+		
+		/**
+		 * Getter du nombres d'ECTS de l'UE
+		 * @return int : ECTS de l'UE
+		 */
+		public function getECTS() { return $this->ECTS; }
+		
+		/**
+		 * Getter de l'idResponsable de l'UE (id de l'intervenant nommé responsable de l'UE)
+		 * @return int : idResponsable de l'UE
+		 */
+		public function getIdResponsable() { return $this->idResponsable; }
+		
+		/**
+		 * Constructeur de la classe UE
+		 * Récupère les informations de UE dans la base de données depuis l'id
+		 * @param $id : int id du UE
+		 */
 		public function UE($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -35,15 +91,10 @@
 			}
 		}
 		
-		public function getId() { return $this->id; }
-		public function getNom() { return $this->nom; }
-		public function getIntitule() { return $this->intitule; }
-		public function getNbHeuresCours() { return $this->nbHeuresCours; }
-		public function getNbHeuresTD() { return $this->nbHeuresTD; }
-		public function getNbHeuresTP() { return $this->nbHeuresTP; }
-		public function getECTS() { return $this->ECTS; }
-		public function getIdResponsable() { return $this->idResponsable; }
-		
+		/**
+		 * Fonction testant l'existence d'une UE
+		 * @param id : int id de l'UE
+		 */
 		public static function existe_UE($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -63,6 +114,16 @@
 			}
 		}
 		
+		/**
+		 * Ajouter une UE dans la base de données
+		 * @param $nom : string nom de l'UE
+		 * @param $intitule : string intitulé de l'UE
+		 * @param nbHeuresCours : int nbHeuresCours de l'UE
+		 * @param nbHeuresTP : int nbHeuresTP de l'UE
+		 * @param ECTS : int ECTS de l'UE
+		 * @param idResponsable : int idResponsable de l'UE
+		 * @param $idPromotion : int idPromotion de l'UE
+		 */
 		public static function ajouter_UE($nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -89,11 +150,26 @@
 			}
 		}
 		
+		/**
+		 * Permet de savoir l'année de l'UE en récupérant l'heure de la promotion associée
+		 * @return string : année de l'UE
+		 */
 		public function getAnnee() {
 			$Promotion = new Promotion($this->idPromotion);
 			return $Promotion->getAnnee();
 		}
 		
+		/**
+		 * Modifier une UE dans la base de données
+		 * @param $idUE : int id de l'UE a modifié
+		 * @param $nom : string nom de l'UE
+		 * @param $intitule : string intitulé de l'UE
+		 * @param nbHeuresCours : int nbHeuresCours de l'UE
+		 * @param nbHeuresTP : int nbHeuresTP de l'UE
+		 * @param ECTS : int ECTS de l'UE
+		 * @param idResponsable : int idResponsable de l'UE
+		 * @param $idPromotion : int idPromotion de l'UE
+		 */
 		public static function modifier_UE($idUE, $nom, $intitule, $nbHeuresCours, $nbHeuresTD, $nbHeuresTP, $ECTS, $idResponsable, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -119,6 +195,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime une UE dans la base de données
+		 * @param $idUE int : id de l'UE a supprimé
+		 */
 		public static function supprimer_UE($idUE) {
 			//Suppression de l'UE dans la table "Inscription"
 			try {
@@ -153,6 +233,11 @@
 			}
 		}
 		
+		/**
+		 * Récupère le nombre d'UE crées pour la promotion sélectionnée
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @return int : nombre d'UE de la promotion sélectionnée
+		 */
 		public function getNbreUEPromotion($idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -171,6 +256,11 @@
 			}
 		}
 		
+		/**
+		 * Liste des UE de la promotion sélectionnée
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @return List<UE> : informations des UE de la promotion sélectionnée
+		 */
 		public static function liste_UE_promotion($idPromotion) {
 			$listeId = Array();
 			try {
@@ -191,12 +281,19 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des UE créés 
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_UE_to_table($idPromotion, $administration, $nombreTabulations = 0) {
 			$tab = ""; 
 			while ($nombreTabulations > 0) {
 				$tab .= "\t"; $nombreTabulations--;
 			}
 			
+			//Liste des UE de la promotion
 			$liste_UE = V_Infos_UE::liste_UE($idPromotion);
 			$nbUE = sizeof($liste_UE);
 			
@@ -229,6 +326,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des UE
 				foreach ($liste_UE as $idUE) {
 					$UE = new V_Infos_UE($idUE);
 					
@@ -247,9 +345,11 @@
 						$cptBoucle++;
 					}
 					
+					//On récupère le nombre d'étudiant inscrit à l'UE
 					$nbreUE = Inscription::nbre_etudiant_inscrit($idUE);
 					echo $tab."\t\t<td>".$nbreUE."</td>\n";
 					
+					// Création des liens pour la modification et la suppression des UE et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutUE&amp;modifier_UE=".$idUE;
 						$pageSuppression = "./index.php?page=ajoutUE&amp;supprimer_UE=".$idUE;
@@ -269,11 +369,18 @@
 			}
 		}
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'une UE
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutUE($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
+			
+			//Liste des intervenants enregistrés dans la base de données
 			$liste_intervenant = Intervenant::listeIdIntervenants();
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie une UE
 			if (isset($_GET['modifier_UE'])) { 
 				$titre = "Modifier une UE";
 				$UE = new UE($_GET['modifier_UE']);
@@ -384,6 +491,9 @@
 			}		
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutUE']) || isset($_POST['validerModificationUE'])) {
@@ -454,6 +564,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une UE, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_UE'])) {	
@@ -469,6 +582,10 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'une UE ainsi que l'affichage des UE de la promotion enregistrées dans la base de données
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {			
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			UE::formulaireAjoutUE($_GET['idPromotion'], $nombreTabulations + 1);
@@ -476,11 +593,21 @@
 			UE::liste_UE_to_table($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}	
 		
+		/**
+		* Fonction listant les nom des UE pour l'utiliser dans la page affichant tous les informations sur les cours d'une UE sélectionné
+		* @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function page_administration_listeCoursParUE($nombreTabulations = 0) {	
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			UE::liste_UE_to_table_for_listeCoursParUE($_GET['idPromotion'], true, $nombreTabulations + 1);
 		}
 		
+		/**
+		* Fonction affichant la liste des UE a sélectionné pour la liste des cours d'une UE
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		*/
 		public static function liste_UE_to_table_for_listeCoursParUE($idPromotion, $administration, $nombreTabulations = 0) {
 			$liste_UE = V_Infos_UE::liste_UE($idPromotion);
 			$nbUE = sizeof($liste_UE);
