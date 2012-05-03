@@ -1,4 +1,8 @@
-
+/*
+* Permet de changer la valeur de effectue de la Seance (0 si seance a venir, 1 si seance termine)
+* @param idSeance : int id de la seance
+* @param element : int correspondant a la valeur de effectue a MAJ
+*/
 var seance_effectue = function (idSeance, element) {
 
 	if (element.checked)

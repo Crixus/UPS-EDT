@@ -1,3 +1,9 @@
+/*
+* Permet de modifier l'appartenance d'une salle à un type de salle
+* @param idSalle : int id de la salle
+* @param idType_Salle : int id du type de salle
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var appartenance_salle_typeSalle = function (idSalle, idType_Salle, element) {
 
 	if (element.checked)

@@ -1,3 +1,8 @@
+/*
+* Permet de changer la valeur de notificationsActives de l'Etudiant
+* @param idEtudiant : int id de l'Etudiant
+* @param element : int correspondant a la valeur de notificationsActives a MAJ
+*/
 var etudiant_notificationsActives = function (idEtudiant, element) {
 
 	if (element.checked)
@@ -18,7 +23,11 @@ var etudiant_notificationsActives = function (idEtudiant, element) {
 	});
 }
 
-
+/*
+* Permet de changer la valeur de notificationsActives de l'Intervenant
+* @param idIntervenant : int id de l'Intervenant
+* @param element : int correspondant a la valeur de notificationsActives a MAJ
+*/
 var intervenant_notificationsActives = function (idIntervenant, element) {
 
 	if (element.checked)
@@ -39,7 +48,11 @@ var intervenant_notificationsActives = function (idIntervenant, element) {
 	});
 }
 
-
+/*
+* Permet de changer la valeur de actif de l'Intervenant
+* @param idIntervenant : int id de l'Intervenant
+* @param element : int correspondant a la valeur de actif a MAJ
+*/
 var intervenant_actif = function (idIntervenant, element) {
 
 	if (element.checked)

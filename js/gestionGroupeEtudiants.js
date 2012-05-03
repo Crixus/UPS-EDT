@@ -1,4 +1,9 @@
-
+/*
+* Permet de modifier l'appartenance d'un etudiant à un groupe d'etudiants
+* @param idEtudiant : int id de l'etudiant
+* @param idGroupeEtudiants : int id du groupe d'etudiants
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var appartenance_etudiant_groupeEtudiants = function (idEtudiant, idGroupeEtudiants ,element) {
 	if (element.checked) {
 		var appartient = 1; //Ajout du lien dans la table Appartient_Etudiant_GroupeEtudiants
@@ -25,7 +30,13 @@ var appartenance_etudiant_groupeEtudiants = function (idEtudiant, idGroupeEtudia
 	});
 }
 
-
+/*
+* Permet de modifier l'appartenance d'un groupe d'etudiants à toute les etudiants d'une promotion
+* @param idPromotion : int id de la promotion selectionnnee
+* @param idGroupeEtudiants : int id du groupe d'etudiants
+* @param nbre_etudiants : int nombre d'etudiants inscrits dans cette promotion
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var appartenance_promotion_groupeEtudiants = function (idPromotion, idGroupeEtudiants, nbre_etudiants, element) {
 	if (element.checked) {
 		var appartient = 1; //Ajout du lien dans la table Appartient_Etudiant_GroupeEtudiants

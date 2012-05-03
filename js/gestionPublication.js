@@ -1,4 +1,9 @@
-
+/*
+* Permet de modifier l'appartenance d'un groupe de cours à un groupe d'etudiants
+* @param idGroupeCours : int id du groupe de cours
+* @param idGroupeEtudiants : int id du groupe d'etudiants
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var appartenance_groupeCours_groupeEtudiants = function (idGroupeCours, idGroupeEtudiants ,element) {
 
 	if (element.checked)
