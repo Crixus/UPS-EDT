@@ -1,4 +1,7 @@
-
+/*
+* Permet de modifier l'affichage de la page pour les liste de cours d'une UE d'une promotion suivant l'UE que l'on selectionne
+* @param idPromotion : int id de la promotion selectionnnee
+*/
 var listeCoursParUE = function(idPromotion) {
 	var idUE = document.getElementsByName("idUE")[0].options[document.getElementsByName("idUE")[0].selectedIndex].value;
 	var nomUE = document.getElementsByName("idUE")[0].options[document.getElementsByName("idUE")[0].selectedIndex].text;

@@ -1,4 +1,9 @@
-
+/*
+* Permet de modifier l'inscription d'un etudiant à une UE
+* @param idEtudiant : int id de l'Etudiant
+* @param idUE : int id de l'UE
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var inscription_UE = function (idEtudiant, idUE ,element) {
 	var nbreUE = parseInt(document.getElementsByName("nbreUE_"+idEtudiant)[0].innerHTML);
 	
@@ -29,7 +34,13 @@ var inscription_UE = function (idEtudiant, idUE ,element) {
 	});
 }
 
-
+/*
+* Permet de modifier l'inscription de tous les etudiants d'une promotion à une UE
+* @param idPromotion : int id de la promotion selectionnnee
+* @param idUE : int id de l'UE
+* @param nbre_etudiants : int nombre des etudiants inscrits à cette promotion
+* @param element : boolean 1 pour un ajout et 0 pour une suppression
+*/
 var inscription_UE_promotion = function (idPromotion, idUE, nbre_etudiants, element) {
 	if (element.checked) {
 		var appartient = 1; //Ajout du lien dans la table Inscription
