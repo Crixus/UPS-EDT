@@ -142,7 +142,7 @@
 				</section>
 			</div>
 			<div id="page_administration_bas">
-				<p>Manuel Administration</p>
+				<a href="../manuels/Manuel_Administration.pdf">Manuel Administration</a>
 			</div>
 		</div>
 	</body>
