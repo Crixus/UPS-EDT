@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `Appartient_Salle_TypeSalle` (
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
-(1, 2),
+(1, 1),
 (2, 2),
 (3, 2),
 (4, 2),
@@ -394,7 +394,8 @@ INSERT INTO `Appartient_Salle_TypeSalle` (`idSalle`, `idTypeSalle`) VALUES
 (13, 2),
 (14, 2),
 (15, 2),
-(16, 2);
+(16, 2),
+(17, 2);
 
 CREATE TABLE IF NOT EXISTS `Appartient_TypeSalle_TypeCours`(
   `idTypeSalle` int(11) NOT NULL,

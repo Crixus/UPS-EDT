@@ -112,44 +112,56 @@ INSERT INTO `UE` (`nom`, `intitule`, `nbHeuresCours`, `nbHeuresTD`, `nbHeuresTP`
 ('ASDSI', 'Algorithmes et Structures de Données pour la Synthèse d''Images', 10, 10, 12, 3, 9, 4),
 ('IVO', 'Introduction à la Vision par Ordinateur', 10, 10, 12, 3, 32, 4);
 
-INSERT INTO `Groupe_Etudiants` (`nom`, `identifiant`, `idPromotion`) VALUES
-('Promotion', '2011-M1 Informatique-Promotion', 4),
-('Promotion TD1', '2011-M1 Informatique-Promotion TD1', 4),
-('Promotion TD2', '2011-M1 Informatique-Promotion TD2', 4),
-('Promotion TP1', '2011-M1 Informatique-Promotion TP1', 4),
-('Promotion TP2', '2011-M1 Informatique-Promotion TP2', 4),
-('Promotion TP3', '2011-M1 Informatique-Promotion TP3', 4),
-('Promotion TP4', '2011-M1 Informatique-Promotion TP4', 4),
-('Etudiants de CISI', '2011-M1 Informatique-CISI', 4),
-('Etudiants de CISI TD', '2011-M1 Informatique-CISI TD', 4),
-('Etudiants de CISI TP1', '2011-M1 Informatique-CISI TP1', 4),
-('Etudiants de CISI TP2', '2011-M1 Informatique-CISI TP2', 4),
-('Etudiants de R', '2011-M1 Informatique-R', 4);
+INSERT INTO `Groupe_Etudiants` (`id`, `nom`, `identifiant`, `idPromotion`) VALUES
+(1, 'Promotion', '2011-M1 Informatique-Promotion', 4),
+(2, 'Promotion TD1', '2011-M1 Informatique-Promotion TD1', 4),
+(3, 'Promotion TD2', '2011-M1 Informatique-Promotion TD2', 4),
+(4, 'Promotion TP1', '2011-M1 Informatique-Promotion TP1', 4),
+(5, 'Promotion TP2', '2011-M1 Informatique-Promotion TP2', 4),
+(6, 'Promotion TP3', '2011-M1 Informatique-Promotion TP3', 4),
+(7, 'Promotion TP4', '2011-M1 Informatique-Promotion TP4', 4),
+(8, 'Etudiants de CISI', '2011-M1 Informatique-CISI', 4),
+(9, 'Etudiants de CISI TD', '2011-M1 Informatique-CISI TD', 4),
+(10, 'Etudiants de CISI TP1', '2011-M1 Informatique-CISI TP1', 4),
+(11, 'Etudiants de CISI TP2', '2011-M1 Informatique-CISI TP2', 4),
+(12, 'Etudiants de R', '2011-M1 Informatique-R', 4),
+(13, 'Etudiants de RC', '2011-M1 Informatique-Etudiants de RC', 4);
 
-INSERT INTO `Groupe_Cours` (`nom`, `identifiant`, `idPromotion`) VALUES
-('Cours Tronc Commun', '2011-M1 Informatique-Cours Tronc Commun', 4),
-('TD1 Tronc Commun', '2011-M1 Informatique-TD1 Tronc Commun', 4),
-('TD2 Tronc Commun', '2011-M1 Informatique-TD2 Tronc Commun', 4),
-('TP1 Tronc Commun', '2011-M1 Informatique-TP1 Tronc Commun', 4),
-('TP2 Tronc Commun', '2011-M1 Informatique-TP2 Tronc Commun', 4),
-('TP3 Tronc Commun', '2011-M1 Informatique-TP3 Tronc Commun', 4),
-('TP4 Tronc Commun', '2011-M1 Informatique-TP4 Tronc Commun', 4),
-('Cours CISI', '2011-M1 Informatique-Cours CISI', 4),
-('TD CISI', '2011-M1 Informatique-TD CISI', 4),
-('TP1 CISI', '2011-M1 Informatique-TP1 CISI', 4),
-('TP2 CISI', '2011-M1 Informatique-TP2 CISI', 4);
+INSERT INTO `Groupe_Cours` (`id`, `nom`, `identifiant`, `idPromotion`) VALUES
+(1, 'Cours Tronc Commun', '2011-M1 Informatique-Cours Tronc Commun', 4),
+(2, 'TD1 Tronc Commun', '2011-M1 Informatique-TD1 Tronc Commun', 4),
+(3, 'TD2 Tronc Commun', '2011-M1 Informatique-TD2 Tronc Commun', 4),
+(4, 'TP1 Tronc Commun', '2011-M1 Informatique-TP1 Tronc Commun', 4),
+(5, 'TP2 Tronc Commun', '2011-M1 Informatique-TP2 Tronc Commun', 4),
+(6, 'TP3 Tronc Commun', '2011-M1 Informatique-TP3 Tronc Commun', 4),
+(7, 'TP4 Tronc Commun', '2011-M1 Informatique-TP4 Tronc Commun', 4),
+(8, 'Cours CISI', '2011-M1 Informatique-Cours CISI', 4),
+(9, 'TD CISI', '2011-M1 Informatique-TD CISI', 4),
+(10, 'TP1 CISI', '2011-M1 Informatique-TP1 CISI', 4),
+(11, 'TP2 CISI', '2011-M1 Informatique-TP2 CISI', 4),
+(12, 'Cours RC', '2011-M1 Informatique-Cours RC', 4);
 
 INSERT INTO `Cours` (`id`, `idUE`, `idSalle`, `idIntervenant`, `idTypeCours`, `tsDebut`, `tsFin`) VALUES
 (1, 2, 1, 4, 1, '2012-05-07 05:45:00', '2012-05-07 07:45:00'),
 (2, 12, 3, 27, 2, '2012-05-07 08:00:00', '2012-05-07 10:00:00'),
 (3, 2, 4, 4, 2, '2012-05-07 08:15:00', '2012-05-07 10:15:00'),
-(4, 6, 1, 29, 1, '2012-05-07 11:30:00', '2012-05-07 14:30:00');
+(4, 6, 1, 29, 1, '2012-05-07 11:30:00', '2012-05-07 14:30:00'),
+(5, 5, 1, 7, 1, '2012-05-08 05:45:00', '2012-05-08 10:45:00'),
+(6, 9, 7, 1, 3, '2012-05-08 11:30:00', '2012-05-08 13:30:00'),
+(7, 9, 14, 6, 3, '2012-05-08 11:30:00', '2012-05-08 13:30:00'),
+(8, 10, 1, 29, 1, '2012-05-08 11:30:00', '2012-05-08 15:30:00'),
+(9, 31, 1, 13, 5, '2012-05-09 08:45:00', '2012-05-09 10:45:00');
 
 INSERT INTO `Appartient_Cours_GroupeCours` (`idCours`, `idGroupeCours`) VALUES
 (1, 1),
 (4, 1),
+(5, 1),
+(9, 1),
 (2, 2),
-(3, 3);
+(3, 3),
+(7, 10),
+(6, 11),
+(8, 12);
 
 INSERT INTO `Appartient_Etudiant_GroupeEtudiants` (`idEtudiant`, `idGroupeEtudiants`) VALUES
 (1, 1),
@@ -184,7 +196,8 @@ INSERT INTO `Appartient_Etudiant_GroupeEtudiants` (`idEtudiant`, `idGroupeEtudia
 (4, 10),
 (2, 11),
 (3, 11),
-(6, 11);
+(6, 11),
+(5, 13);
 
 INSERT INTO `Publication` (`idGroupeEtudiants`, `idGroupeCours`) VALUES
 (1, 1),
@@ -197,4 +210,5 @@ INSERT INTO `Publication` (`idGroupeEtudiants`, `idGroupeCours`) VALUES
 (8, 8),
 (9, 9),
 (10, 10),
-(11, 11);
+(11, 11),
+(13, 12);
