@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Inscription - Permet de gérer les Inscriptions des étudiants aux UE
+	 */ 
 	class Inscription {
 		
 		public static $nomTable = "Inscription";
@@ -8,6 +11,11 @@
 			"idEtudiant"
 		);
 		
+		/**
+		 * Constructeur de la classe Inscription
+		 * Récupère les informations de Inscription dans la base de données depuis l'id
+		 * @param $id : int id du Inscription
+		 */
 		public function Inscription() {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -27,10 +35,17 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage du tableau des inscriptions des étudiants aux UE 
+		 */
 		public function liste_inscription() {
 			$idPromotion = $_GET['idPromotion'];
+			
+			//Liste des UE de la promotion
 			$liste_UE = UE::liste_UE_promotion($idPromotion);
 			$nbre_UE = UE::getNbreUEPromotion($idPromotion);
+			
+			//Liste des étudiants de la promotion
 			$liste_etudiants = V_Infos_Etudiant::liste_etudiant($idPromotion);
 			$nbre_etudiants = V_Infos_Etudiant::getNbreEtudiants($idPromotion);
 			$tab="";
@@ -70,6 +85,7 @@
 						$UE = new UE($idUE);
 
 						$nom_case = "case_UE_".$idUE;
+						//On test si l'étudiant est inscrit à l'UE
 						if (Inscription::est_inscrit($idEtudiant, $idUE))
 							$checked = "checked = \"checked\"";
 						else
@@ -87,6 +103,8 @@
 					$UE = new UE($idUE);
 
 					$nom_case = "case_promotion_".$idUE;
+					
+					//On test si tous les étudiants sont inscrit à l'UE
 					if ($nbre_etudiants == Inscription::est_inscrit_promotion($idUE))
 						$checked = "checked = \"checked\"";
 					else
@@ -100,6 +118,12 @@
 			}
 		}
 		
+		/**
+		 * Fonction utilisée pour tester si un étudiant est inscrit à une UE
+		 * @param int idEtudiant : int id de l'étudiant
+		 * @param int idUE : int id de l'UE
+		 * @return boolean : 1 si l'étudiant est inscrit à l'UE, 0 sinon
+		 */
 		public function est_inscrit ($idEtudiant, $idUE) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -124,6 +148,11 @@
 			}		
 		}
 		
+		/**
+		 * Fonction utilisée pour tester si toute une promotion d'étudiants est inscrit à une UE
+		 * @param int idUE : int id de l'UE
+		 * @return boolean : 1 si toute la promotion est inscrit à l'UE, 0 sinon
+		 */
 		public function est_inscrit_promotion ($idUE) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -147,6 +176,11 @@
 			}		
 		}		
 		
+		/**
+		 * Renvoi le nombre d'UE auquel l'étudiant est inscrit
+		 * @param int idEtudiant : int id de l'étudiant
+		 * @return int : le nombre d'UE
+		 */
 		public function nbre_UE_inscrit ($idEtudiant) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -168,6 +202,11 @@
 			}
 		}
 		
+		/**
+		 * Renvoi le nombre d'étudiants qui est inscrit à une UE
+		 * @param int idUE : int id de l'UE
+		 * @return int : le nombre d'étudiants
+		 */
 		public function nbre_etudiant_inscrit ($idUE) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -187,21 +226,5 @@
 			catch (Exception $e) {
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (Inscription::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
-		}
-		
-		public static function creer_table() {
-			return Utils_SQL::sql_from_file("./sql/".Inscription::$nomTable.".sql");
-		}
-		
-		public static function supprimer_table() {
-			return Utils_SQL::sql_supprimer_table(Inscription::$nomTable);
 		}
 	}

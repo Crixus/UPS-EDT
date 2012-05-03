@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe JourNonOuvrable - Permet de gerer les jours non ouvrables (jours feriés ou jours en période de vacance scolaire)
+	 */ 
 	class JourNonOuvrable{
 		
 		public static $nomTable = "JourNonOuvrable";
@@ -11,12 +14,41 @@
 			"idPromotion"
 		);
 		
+		/**
+		 * Getter de l'id du jour non ouvrable
+		 * @return int : id du jour non ouvrable
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du type du jour non ouvrable
+		 * @return string : type du jour non ouvrable
+		 */
 		public function getType() { return $this->type; }
+		
+		/**
+		 * Getter de TsDebut du jour non ouvrable
+		 * @return timestamp : TsDebut
+		 */
 		public function getTsDebut() { return $this->tsDebut; }
+		
+		/**
+		 * Getter de tsFin du jour non ouvrable
+		 * @return timestamp : tsFin
+		 */
 		public function getTsFin() { return $this->tsFin; }
+		
+		/**
+		 * Getter de l'idPromotion du jour non ouvrable
+		 * @return int : idPromotion du jour non ouvrable
+		 */
 		public function getIdPromotion() { return $this->idPromotion; }
 		
+		/**
+		 * Constructeur de la classe JourNonOuvrable
+		 * Récupère les informations de JourNonOuvrable dans la base de données depuis l'id
+		 * @param $id : int id du JourNonOuvrable
+		 */
 		public function JourNonOuvrable($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -38,6 +70,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'un jour non ouvrable
+		 * @param id : int id du jour non ouvrable
+		 */
 		public static function existe_jourNonOuvrable($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -57,7 +93,10 @@
 			}
 		}
 		
-		
+		/**
+		 * Renvoi la liste des jours non ouvrables
+		 * @return List<JourNonOuvrable> liste des jours non ouvrables
+		 */
 		public static function liste_jourNonOuvrable($idPromotion) {
 			$listeId = Array();
 			try {
@@ -79,7 +118,13 @@
 			return $listeId;
 		}
 		
-		
+		/**
+		 * Ajouter un jour non ouvrable dans la base de données
+		 * @param $type : string type du jour non ouvrable
+		 * @param $tsDebut : timestamp tsDebut du jour non ouvrable correspondant à la date de début du jour non ouvrable
+		 * @param $tsFin : timestamp tsFin du jour non ouvrable correspondant à la date de fin du jour non ouvrable
+		 * @param $idPromotion : int idPromotion du jour non ouvrable
+		 */
 		public static function ajouter_jourNonOuvrable($type, $tsDebut, $tsFin, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -101,6 +146,14 @@
 			}		
 		}
 		
+		/**
+		 * Modifier un jour non ouvrable dans la base de données
+		 * @param $idJourNonOuvrable : int id du jour non ouvrable a modifié
+		 * @param $type : string type du jour non ouvrable
+		 * @param $tsDebut : timestamp tsDebut du jour non ouvrable correspondant à la date de début du jour non ouvrable
+		 * @param $tsFin : timestamp tsFin du jour non ouvrable correspondant à la date de fin du jour non ouvrable
+		 * @param $idPromotion : int idPromotion du jour non ouvrable
+		 */
 		public static function modifier_jourNonOuvrable($idJourNonOuvrable, $type, $tsDebut, $tsFin, $idPromotion) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -122,6 +175,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime un jour non ouvrable dans la base de données
+		 * @param $idCours int : id du jour non ouvrable a supprimé
+		 */
 		public static function supprimer_jourNonOuvrable($idJourNonOuvrable) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -139,10 +196,17 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des jour non ouvrable créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_jourNonOuvrable_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des jour non ouvrable de la promotion enregistrée dans la base de donnée
 			$liste_jourNonOuvrable = JourNonOuvrable::liste_jourNonOuvrable($idPromotion);
 			$nbJourNonOuvrable = sizeof($liste_jourNonOuvrable);
+			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbJourNonOuvrable == 0) {
@@ -172,6 +236,8 @@
 					$cptBoucle=0;
 					$valTemp="";
 					$valTemp2="";
+					
+					// Gestion de l'affichage des informations du jour non ouvrable
 					foreach (JourNonOuvrable::$attributs as $att) {
 						if ($cptBoucle == 1) 
 							echo $tab."\t\t<td>".$JourNonOuvrable->$att."</td>\n";	
@@ -190,6 +256,8 @@
 												
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des jour non ouvrable et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutJourNonOuvrable&modifier_jourNonOuvrable=$idJourNonOuvrable";
 						$pageSuppression = "./index.php?page=ajoutJourNonOuvrable&supprimer_jourNonOuvrable=$idJourNonOuvrable";
@@ -211,10 +279,15 @@
 		}
 		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'un jour non ouvrable
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutJourNonOuvrable($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie un jour non ouvrable
 			if (isset($_GET['modifier_jourNonOuvrable'])) { 
 				$titre = "Modifier un jour non ouvrable";
 				$JourNonOuvrable = new JourNonOuvrable($_GET['modifier_jourNonOuvrable']);
@@ -370,7 +443,9 @@
 			if (isset($lienAnnulation)) {echo $tab."<p><a href=\"".$lienAnnulation."\">Annuler modification</a></p>";}	
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutJourNonOuvrable']) || isset($_POST['validerModificationJourNonOuvrable'])) {
@@ -423,6 +498,9 @@
 			}
 		}
 		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'un jour non ouvrable, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_jourNonOuvrable'])) {	
@@ -438,6 +516,9 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'un jour non ouvrable ainsi que l'affichage des jours non ouvrables de la promotion enregistrée dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			JourNonOuvrable::formulaireAjoutJourNonOuvrable($_GET['idPromotion'], $nombreTabulations + 1);
