@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe V_Liste_Salles - Permet de gerer la vue V_Liste_Salles
+	 */
 	class V_Liste_Salles {
 		
 		public static $nomTable = "V_Liste_Salles";
@@ -11,18 +14,35 @@
 			"lon"
 		);
 		
+		/**
+		 * Getter de l'id de la vue V_Liste_Salles
+		 * @return int : id de V_Liste_Salles
+		 */
 		public function getId() {
 			return $this->id;
 		}
 		
+		/**
+		 * Getter du nom de la salle de la vue V_Liste_Salles
+		 * @return string : nomSalle
+		 */
 		public function getNomSalle() {
 			return $this->nomSalle;
 		}
 		
+		/**
+		 * Getter du nom du batiment de la vue V_Liste_Salles
+		 * @return string : nomBatiment
+		 */
 		public function getNomBatiment() {
 			return $this->nomBatiment;
 		}
 		
+		/**
+		 * Constructeur de la classe V_Liste_Salles
+		 * Récupère les informations de V_Liste_Salles dans la base de données depuis l'id
+		 * @param $id : int id du V_Liste_Salles
+		 */
 		public function V_Liste_Salles($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -44,6 +64,10 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste des salles
+		 * @return List<V_Liste_Salles> liste des salles enregistrés dans la base de donnée
+		 */
 		public static function liste_salles() {
 			$listeId = Array();
 			try {
@@ -63,6 +87,11 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Renvoi la liste des salles appartenant au type de cours placé en paramètre
+		 * @param $idTypeCours : int id du type de cours sélectionné
+		 * @return List<V_Liste_Salles> liste des salles enregistrés lié au type de cours placé en paramètre
+		 */
 		public static function liste_salles_appartenant_typeCours($idTypeCours) {
 			$listeId = Array();
 			try {

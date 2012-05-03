@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe V_Infos_Etudiant - Permet de gerer la vue V_Infos_Etudiant
+	 */
 	class V_Infos_Etudiant {
 		
 		public static $nomTable = "V_Infos_Etudiant";
@@ -13,8 +16,17 @@
 			"notificationsActives"
 		);
 		
+		/**
+		 * Getter de l'id de la vue V_Infos_Etudiant
+		 * @return int : id de V_Infos_Etudiant
+		 */
 		public function getId() {return $this->id;}
 
+		/**
+		 * Constructeur de la classe V_Infos_Etudiant
+		 * Récupère les informations de V_Infos_Etudiant dans la base de données depuis l'id
+		 * @param $id : int id du V_Infos_Etudiant
+		 */
 		public function V_Infos_Etudiant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -36,6 +48,10 @@
 			}
 		}
 		
+		/**
+		 * Renvoi le nombre d'étudiants de la promotion
+		 * @return id : int nombre d'étudiants de la promotion
+		 */
 		public function getNbreEtudiants($idPromotion) { 
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -55,6 +71,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'étudiants dans la vue V_Infos_Cours
+		 * @param id : int id de l'étudiant
+		 */
 		public static function existe_etudiant($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -74,6 +94,11 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste des étudiants de la promotion
+		 * @param $idPromotion : int id de la promotion
+		 * @return List<V_Infos_Etudiant> liste des étudiants de la promotion
+		 */
 		public static function liste_etudiant($idPromotion) {
 			$listeId = Array();
 			try {
@@ -95,9 +120,17 @@
 			return $listeId;
 		}
 		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des étudiants créé 
+		 * @param $idPromotion int : id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_etudiant_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			// Liste des étudiants de la promotion enregistrée dans la base de donnée
 			$liste_etudiant = V_Infos_Etudiant::liste_etudiant($idPromotion);
 			$nbEtudiants = sizeof($liste_etudiant);
+			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbEtudiants == 0) {
@@ -122,6 +155,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des étudiants
 				foreach ($liste_etudiant as $idEtudiant) {
 					$_etudiant = new V_Infos_Etudiant($idEtudiant);
 					
@@ -137,6 +171,8 @@
 						else
 							echo $tab."\t\t<td>".$_etudiant->$att."</td>\n";
 					}
+					
+					// Création des liens pour la modification et la suppression des étudiants et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutEtudiant&amp;modifier_etudiant=$idEtudiant";
 						$pageSuppression = "./index.php?page=ajoutEtudiant&amp;supprimer_etudiant=$idEtudiant";
@@ -154,14 +190,6 @@
 				
 				echo $tab."</table>\n";
 			}
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (V_Infos_Etudiant::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
 		}
 	}
 ?>

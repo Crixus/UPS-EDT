@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe V_Cours_Etudiants - Permet de gerer la vue V_Cours_Etudiants
+	 */
 	class V_Cours_Etudiants{
 		
 		public static $nomTable = "V_Cours_Etudiants";
@@ -7,7 +10,12 @@
 			"idCours",
 			"idEtudiant"
 		);
-				
+			
+		/**
+		 * Constructeur de la classe V_Cours_Etudiants
+		 * Récupère les informations de V_Cours_Etudiants dans la base de données depuis l'id
+		 * @param $id : int id du V_Cours_Etudiants
+		 */
 		public function V_Cours_Etudiants($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -29,6 +37,11 @@
 			}
 		}
 		
+		/**
+		 * Renvoi la liste des cours de l'étudiant
+		 * @param $idEtudiant : int id de l'étudiant
+		 * @return List<V_Cours_Etudiants> liste des cours de l'étudiants
+		 */
 		public static function liste_idCours_Un_Etudiants($idEtudiant) {
 			$listeId = Array();
 			try {
@@ -49,13 +62,5 @@
 				echo "Erreur : ".$e->getMessage()."<br />";
 			}
 			return $listeId;
-		}
-		
-		public function toString() {
-			$string = "";
-			foreach (V_Cours_Etudiants::$attributs as $att) {
-				$string .= "$att".":".$this->$att." ";
-			}
-			return $string;
 		}
 	}
