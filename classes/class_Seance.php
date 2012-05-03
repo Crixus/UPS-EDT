@@ -1,4 +1,7 @@
 <?php
+	/** 
+	 * Classe Seance - Permet de gérer les Séances
+	 */ 
 	class Seance{
 		
 		public static $nomTable = "Seance";
@@ -15,16 +18,65 @@
 			"idSeancePrecedente"
 		);
 		
+		/**
+		 * Getter de l'id de la Séance
+		 * @return int : id de la Séance
+		 */
 		public function getId() { return $this->id; }
+		
+		/**
+		 * Getter du nom de la séance
+		 * @return string : nom
+		 */
 		public function getNom() { return $this->nom; }
-		public function getDuree() { return $this->duree; }
+		
+		/**
+		 * Getter de la durée de la séance
+		 * @return string : duree
+		 */
+		public function getDuree() { return $this->duree; }		
+		
+		/**
+		 * Getter du boolean effectue (1 si la seance a été effectué)
+		 * @return boolean : effectue
+		 */
 		public function getEffectue() { return $this->effectue; }
+		
+		/**
+		 * Getter de idUE de la séance
+		 * @return int : idUE
+		 */
 		public function getIdUE() { return $this->idUE; }
+		
+		/**
+		 * Getter de idSalle de la séance
+		 * @return int : idSalle
+		 */
 		public function getIdSalle() { return $this->idSalle; }
+		
+		/**
+		 * Getter de idIntervenant de la séance
+		 * @return int : idIntervenant
+		 */
 		public function getIdIntervenant() { return $this->idIntervenant; }
+		
+		/**
+		 * Getter de idTypeCours de la séance
+		 * @return int : idTypeCours 
+		 */
 		public function getIdTypeCours() { return $this->idTypeCours; }
+		
+		/**
+		 * Getter de l'id de la séance précèdente de la séance
+		 * @return int : idSeancePrecedente
+		 */
 		public function getIdSeancePrecedente() { return $this->idSeancePrecedente; }
 		
+		/**
+		 * Constructeur de la classe Seance
+		 * Récupère les informations de Seance dans la base de données depuis l'id
+		 * @param $id : int id du Seance
+		 */
 		public function Seance($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -46,6 +98,10 @@
 			}
 		}
 		
+		/**
+		 * Fonction testant l'existence d'une séance
+		 * @param id : int id de la séance
+		 */
 		public static function existe_seance($id) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -65,6 +121,16 @@
 			}
 		}
 		
+		/**
+		 * Ajouter une séance dans la base de données
+		 * @param $nom : string nom de la séance
+		 * @param $duree : int duree de la séance
+		 * @param $effectue : boolean effectue de la séance
+		 * @param $idUE : int idUE de la séance
+		 * @param $idIntervenant : int idIntervenant de la séance
+		 * @param $idTypeCours : int idTypeCours de la séance
+		 * @param $idSeancePrecedente : int idSeancePrecedente de la séance
+		 */
 		public static function ajouter_seance($nom, $duree, $effectue, $idUE, $idSalle, $idIntervenant, $idTypeCours, $idSeancePrecedente) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -90,6 +156,17 @@
 			}		
 		}
 		
+		/**
+		 * Modifier une séance dans la base de données
+		 * @param $idSeance : int id de la séance a modifiée
+		 * @param $nom : string nom de la séance
+		 * @param $duree : int duree de la séance
+		 * @param $effectue : boolean effectue de la séance
+		 * @param $idUE : int idUE de la séance
+		 * @param $idIntervenant : int idIntervenant de la séance
+		 * @param $idTypeCours : int idTypeCours de la séance
+		 * @param $idSeancePrecedente : int idSeancePrecedente de la séance
+		 */
 		public static function modifier_seance($idSeance, $nom, $duree, $idUE, $idSalle, $idIntervenant, $idTypeCours, $idSeancePrecedente) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -114,6 +191,10 @@
 			}
 		}
 		
+		/**
+		 * Supprime une séance dans la base de données
+		 * @param $idSalle int : id de la séance a supprimé
+		 */
 		public static function supprimer_seance($idSeance) {
 			try {
 				$pdoOptions[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -131,10 +212,17 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction utilisée pour l'affichage de la liste des séances créés 
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $administration boolean : possibilité de modification et suppression si egal à 1
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public static function liste_seance_to_table($idPromotion, $administration, $nombreTabulations = 0) {
+			//Liste des séances enregistrées dans la base de donnée
 			$liste_seance = V_Infos_Seance_Promotion::liste_seance($idPromotion);
 			$nbSeance = sizeof($liste_seance);
+			
 			$tab = ""; while ($nombreTabulations > 0) { $tab .= "\t"; $nombreTabulations--; }
 			
 			if ($nbSeance == 0) {
@@ -161,6 +249,7 @@
 				echo $tab."\t</tr>\n";
 				
 				$cpt = 0;
+				// Gestion de l'affichage des informations des séances
 				foreach ($liste_seance as $idSeance) {
 					$Seance = new V_Infos_Seance_Promotion($idSeance);
 					
@@ -198,6 +287,8 @@
 												
 						$cptBoucle++;
 					}
+					
+					// Création des liens pour la modification et la suppression des séances et gestion de l'URL 
 					if ($administration) {
 						$pageModification = "./index.php?page=ajoutSeance&modifier_seance=$idSeance";
 						$pageSuppression = "./index.php?page=ajoutSeance&supprimer_seance=$idSeance";
@@ -219,7 +310,11 @@
 		}
 		
 		
-		// Formulaire
+		/**
+		 * Fonction utilisée pour l'affichage du formulaire utilisé pour l'ajout d'une séance
+		 * @param $idPromotion : int id de la promotion sélectionnée
+		 * @param $nombreTabulations int : correspond au nombre de tabulations pour le fichier source
+		 */
 		public function formulaireAjoutSeance($idPromotion, $nombresTabulations = 0) {
 			$tab = ""; while ($nombresTabulation = 0) { $tab .= "\t"; $nombresTabulations--; }
 			$liste_UE_promotion = UE::liste_UE_promotion($idPromotion);
@@ -229,6 +324,7 @@
 			$liste_intervenant = Intervenant::listeIdIntervenants();
 			$liste_seance_precedente_promotion = V_Infos_Seance_Promotion::liste_seance($idPromotion);
 			
+			// Gestion du formulaire suivant si on ajoute ou on modifie une séance
 			if (isset($_GET['modifier_seance'])) { 
 				$titre = "Modifier une séance";
 				$Seance = new Seance($_GET['modifier_seance']);
@@ -370,7 +466,9 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte les informations validées dans le formulaire pour la MAJ de la base de données
+		 */
 		public static function prise_en_compte_formulaire() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_POST['validerAjoutSeance']) || isset($_POST['validerModificationSeance'])) {
@@ -423,7 +521,9 @@
 			}
 		}
 		
-		
+		/**
+		 * Fonction permettant de prendre en compte la validation d'une demande de suppression d'une séance, on test s'il est bien enregistré dans la base de donnée
+		 */
 		public static function prise_en_compte_suppression() {
 			global $messagesNotifications, $messagesErreurs;
 			if (isset($_GET['supprimer_seance'])) {	
@@ -439,6 +539,9 @@
 			}
 		}
 		
+		/**
+		* Fonction principale permettant l'affichage du formulaire d'ajout ou de modification d'une séance ainsi que l'affichage des séances enregistrées dans la base de données
+		*/
 		public static function pageAdministration($nombreTabulations = 0) {
 			$tab = ""; for ($i = 0; $i < $nombreTabulations; $i++) { $tab .= "\t"; }
 			Seance::formulaireAjoutSeance($_GET['idPromotion'], $nombreTabulations + 1);

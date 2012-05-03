@@ -67,7 +67,7 @@
 		 * Ajouter une salle dans la base de données
 		 * @param $nom : string nom de la salle
 		 * @param $nomBatiment : string prenom de la salle
-		 * @param $capacite : int email de la salle=
+		 * @param $capacite : int email de la salle
 		 */
 		public static function ajouterSalle($nom, $nomBatiment, $capacite) {
 			try {
@@ -92,7 +92,7 @@
 		
 		/**
 		 * Modifier une salle dans la base de données
-		 * @param $idSalle : int id de la salle a modifié
+		 * @param $idSalle : int id de la salle a modifiée
 		 * @param $nom : string nom de la salle
 		 * @param $nomBatiment : string prenom de la salle
 		 * @param $capacite : int email de la salle
